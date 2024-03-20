@@ -1,0 +1,12 @@
+<% current_page = ->(page) { current == page ? "current" : "" } %>
+
+<header>
+  <h1><%= title %></h1>
+
+  <nav>
+    <%= link_to("List: Inbox", web_tasks_incomplete_path) %>
+    <%= link_to("Profile", web_settings_profile_path, class: current_page["profile"] ) %>
+    <%= link_to("API", '#', class: current_page["api"] ) %>
+    <%= link_to("Log out", web_users_sign_out_path, method: :delete) %>
+  </nav>
+</header>

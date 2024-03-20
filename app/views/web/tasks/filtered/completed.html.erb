@@ -1,0 +1,13 @@
+<%= render("web/tasks/shared/header", current: "tasks", title: "List: Inbox") %>
+
+<main>
+    <center>
+    <p>
+      <strong>Filter:</strong>
+      <%= link_to("Incomplete", web_tasks_incomplete_path, style: "color: var(--text) !important;")%> |
+      <%= link_to("Completed (1)", web_tasks_completed_path)%>
+    </p>
+  </center>
+
+  <%= render("web/tasks/filtered/items", action_to_toggle_state: "incomplete") %>
+</main>

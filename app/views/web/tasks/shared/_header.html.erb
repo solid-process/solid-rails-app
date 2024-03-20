@@ -1,0 +1,13 @@
+<% current_page = ->(page) { current == page ? "current" : "" } %>
+
+<header>
+  <h1><%= title %></h1>
+
+  <nav>
+    <%= link_to("+ New".html_safe, web_tasks_new_path, class: current_page["new"] ) %>
+    <%= link_to("Tasks", web_tasks_incomplete_path, class: current_page["tasks"]) %>
+    <%= link_to("Lists", web_tasks_lists_path, class: current_page["lists"]) %>
+    <%= link_to("Settings", web_settings_profile_path) %>
+    <%= link_to("Log out", web_users_sign_out_path, method: :delete) %>
+  </nav>
+</header>

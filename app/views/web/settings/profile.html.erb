@@ -1,0 +1,38 @@
+<%= render("web/settings/shared/header", current: "profile", title: "Settings: Profile") %>
+
+<main>
+  <%= form_with(model: current_user, scope: :user, url: web_users_password_path, method: :put) do |f| %>
+    <% if f.object.errors.any? %>
+      <ul>
+        <% f.object.errors.full_messages.each do |message| %>
+          <li><code><%= message %></code></li>
+        <% end %>
+      </ul>
+    <% end %>
+
+    <p>
+      <%= f.label :email %>
+      <%= f.email_field :email, disabled: true %>
+    </p>
+
+    <p>
+      <%= f.label :password_challenge, "Current Password" %>
+      <%= f.password_field :password_challenge, required: true %>
+    <p>
+
+    <p>
+      <%= f.label :password, "New Password" %>
+      <%= f.password_field :password, required: true %>
+    <p>
+
+    <p>
+      <%= f.label :password_confirmation %>
+      <%= f.password_field :password_confirmation, required: true %>
+    <p>
+
+    <p>
+      <%= f.submit "Update Password" %>
+      <%= link_to("Cancel", web_tasks_incomplete_path, style: "margin-left: 10px") %>
+    <p>
+  <% end %>
+</main>

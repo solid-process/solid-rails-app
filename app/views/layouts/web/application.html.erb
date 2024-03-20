@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Solid To-do</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag "simpledotcss", "application" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body class="web-application">
+    <% flash.each do |_type, message| %>
+      <p class="notice"><strong><%= message %></strong></p>
+    <% end %>
+
+    <%= yield %>
+  </body>
+</html>

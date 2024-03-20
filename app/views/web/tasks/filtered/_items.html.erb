@@ -1,0 +1,16 @@
+<table>
+  <thead>
+    <tr>
+      <th>Description</th>
+      <th colspan="3">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Buy Milk</td>
+      <td><%= render("web/tasks/filtered/actions/edit") %></td>
+      <td><%= render("web/tasks/filtered/actions/delete") %></td>
+      <td><%= render("web/tasks/filtered/actions/#{action_to_toggle_state}") %></td>
+    </tr>
+  </tbody>
+</table>

@@ -1,0 +1,40 @@
+<%= render("web/guest/shared/header") %>
+
+<main>
+  <h2>Sign up</h2>
+
+  <p>Please fill in this form to create an account!</p>
+
+  <%= form_with(model: user, scope: :guest, url: web_guests_sign_up_path) do |f| %>
+    <% if f.object.errors.any? %>
+      <ul>
+        <% f.object.errors.full_messages.each do |message| %>
+          <li><code><%= message %></code></li>
+        <% end %>
+      </ul>
+    <% end %>
+
+    <p>
+      <%= f.label :email %>
+      <%= f.email_field :email, required: true, autofocus: true, autocomplete: "email" %>
+    </p>
+
+    <p>
+      <%= f.label :password %>
+      <%= f.password_field :password, required: true, autocomplete: "new-password" %>
+    </p>
+
+    <p>
+      <%= f.label :password_confirmation %>
+      <%= f.password_field :password_confirmation, required: true, autocomplete: "new-password" %>
+    </p>
+
+    <p>
+      <%= f.submit "Sign up" %>
+    </p>
+  <% end %>
+
+  Already have an account?
+  <%= render("web/guest/shared/links/sign_in") %> or
+  <%= render("web/guest/shared/links/reset_password") %>
+</main>

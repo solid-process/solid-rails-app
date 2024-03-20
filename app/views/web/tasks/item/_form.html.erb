@@ -1,0 +1,11 @@
+<%= form_for(:todo, as: :todo, url: "/", html: { method: :post }) do |f| %>
+  <p>
+    <%= f.label :description %><br />
+    <%= f.text_area :description, autofocus: true %>
+  </p>
+
+  <p>
+    <%= f.submit "Submit", style: "width: 80px" %>
+    <%= link_to("Cancel", :back, style: "margin-left: 10px") %>
+  </p>
+<% end %>

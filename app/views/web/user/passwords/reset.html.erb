@@ -1,0 +1,29 @@
+<%= render("web/guest/shared/header") %>
+
+<main>
+  <h2>Reset your password</h2>
+
+  <%= form_with(model: user, scope: :user, url: web_users_passwords_reset_path(token: params[:token]), method: :put) do |f| %>
+    <% if f.object.errors.any? %>
+      <ul>
+        <% f.object.errors.full_messages.each do |message| %>
+          <li><code><%= message %></code></li>
+        <% end %>
+      </ul>
+    <% end %>
+
+    <p>
+      <%= f.label :password %>
+      <%= f.password_field :password, required: true, autocomplete: "new-password" %>
+    <p>
+
+    <p>
+      <%= f.label :password_confirmation %>
+      <%= f.password_field :password_confirmation, required: true, autocomplete: "new-password" %>
+    <p>
+
+    <p>
+      <%= f.submit "Submit" %>
+    </p>
+  <% end %>
+</main>

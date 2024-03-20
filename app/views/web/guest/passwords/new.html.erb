@@ -1,0 +1,20 @@
+<%= render("web/guest/shared/header") %>
+
+<main>
+  <h2>Forgot your password?</h2>
+
+  <%= form_with(model: user, scope: :user, url: web_guests_reset_password_path) do |f| %>
+    <p>
+      <%= f.label :email %>
+      <%= f.email_field :email, required: true, autofocus: true, autocomplete: "email" %>
+    </p>
+
+    <p>
+      <%= f.submit "Send me reset password instructions" %>
+    </p>
+  <% end %>
+
+  Back to
+  <%= render("web/guest/shared/links/sign_in") %> or
+  <%= render("web/guest/shared/links/sign_up") %>
+</main>
