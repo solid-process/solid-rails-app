@@ -11,8 +11,8 @@
   </head>
 
   <body class="web-application">
-    <% flash.each do |_type, message| %>
-      <p class="notice"><strong><%= message %></strong></p>
+    <% flash.each do |type, message| %>
+      <p class="<%= type %>"><strong><%= message %></strong></p>
     <% end %>
 
     <%= yield %>

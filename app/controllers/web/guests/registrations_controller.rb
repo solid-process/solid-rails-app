@@ -14,6 +14,8 @@ module Web::Guests
 
         account.memberships.create!(user: user, role: :owner)
 
+        account.task_lists.inbox.create!
+
         UserMailer.with(
           user: user,
           token: user.generate_token_for(:email_confirmation)
@@ -21,7 +23,7 @@ module Web::Guests
 
         sign_in(user)
 
-        redirect_to web_tasks_incomplete_path, notice: "You have successfully registered!"
+        redirect_to web_tasks_all_path, notice: "You have successfully registered!"
       else
         render("web/guest/registrations/new", locals: {user:}, status: :unprocessable_entity)
       end

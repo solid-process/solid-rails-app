@@ -1,11 +1,30 @@
-<%= form_for(:todo, as: :todo, url: "/", html: { method: :post }) do |f| %>
-  <p>
-    <%= f.label :description %><br />
-    <%= f.text_area :description, autofocus: true %>
-  </p>
+<%= form_with(model: task, scope: :task, url:, method:) do |f| %>
+  <% if f.object.errors.any? %>
+    <ul>
+      <% f.object.errors.full_messages.each do |message| %>
+        <li><code><%= message %></code></li>
+      <% end %>
+    </ul>
+  <% end %>
 
   <p>
-    <%= f.submit "Submit", style: "width: 80px" %>
-    <%= link_to("Cancel", :back, style: "margin-left: 10px") %>
+    <%= f.label :name %>
+    <%= f.text_area :name, autofocus: true %>
+  </p>
+
+  <% if method == :put %>
+    <p>
+      <%= f.label :completed, "Completed" %>
+      <%= f.check_box :completed %>
+    </p>
+  <% end %>
+
+  <p>
+    <%= f.submit "Submit" %>
+    <%= link_to(
+      "Cancel",
+      task.completed? ? web_tasks_completed_path : web_tasks_incomplete_path,
+      style: "margin-left: 10px"
+    ) %>
   </p>
 <% end %>

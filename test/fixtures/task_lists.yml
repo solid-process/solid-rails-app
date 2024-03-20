@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one_inbox:
+  name: Inbox
+  inbox: true
+  account: one
+
+two_inbox:
+  name: Inbox
+  inbox: true
+  account: two

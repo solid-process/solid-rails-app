@@ -1,1 +1,4 @@
-<%= link_to("<button>Edit</button>".html_safe, web_tasks_edit_path(id: 1)) %>
+<%= link_to(
+  "<button title=\"Edit\" style=\"background-color: var(--accent-bg)\">📝</button>".html_safe,
+  web_tasks_edit_path(task, back_to: controller_name))
+%>

@@ -5,7 +5,7 @@ module Web::Guests
     layout "web/guest"
 
     before_action do
-      redirect_to web_tasks_incomplete_path if user_signed_in?
+      redirect_to web_tasks_all_path if user_signed_in?
     end
   end
 end

@@ -5,11 +5,12 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
+
     <%= stylesheet_link_tag "simpledotcss", "application" %>
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="web-guest">
+  <body class="web-errors">
     <% flash.each do |type, message| %>
       <p class="<%= type %>"><strong><%= message %></strong></p>
     <% end %>

@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: Learn how to use Solid::Process
+  task_list: one_inbox
+  completed_at:
+
+two:
+  name: Learn how to apply B/CDD to a project
+  task_list: two_inbox
+  completed_at:

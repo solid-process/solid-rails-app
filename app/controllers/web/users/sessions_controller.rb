@@ -4,7 +4,7 @@ module Web::Users
   class SessionsController < BaseController
     layout "web/guest"
 
-    before_action :authenticate_user!, except: %i[create]
+    before_action :authenticate_user!, except: [:create]
 
     def create
       user = User.authenticate_by(email: user_params[:email], password: user_params[:password])
@@ -12,7 +12,7 @@ module Web::Users
       if user
         sign_in(user)
 
-        redirect_to web_tasks_incomplete_path, notice: "You have successfully signed in!"
+        redirect_to web_tasks_all_path, notice: "You have successfully signed in!"
       else
         flash.now[:alert] = "Invalid email or password"
 

@@ -6,11 +6,13 @@
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <td>Buy Milk</td>
-      <td><%= render("web/tasks/filtered/actions/edit") %></td>
-      <td><%= render("web/tasks/filtered/actions/delete") %></td>
-      <td><%= render("web/tasks/filtered/actions/#{action_to_toggle_state}") %></td>
-    </tr>
+    <% tasks.each do |task| %>
+      <tr>
+        <td><%= task.name %></td>
+        <td><%= render("web/tasks/filtered/actions/toggle", task:) %></td>
+        <td><%= render("web/tasks/filtered/actions/edit", task:) %></td>
+        <td><%= render("web/tasks/filtered/actions/delete", task:) %></td>
+      </tr>
+    <% end %>
   </tbody>
 </table>

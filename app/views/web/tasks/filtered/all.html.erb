@@ -5,16 +5,16 @@
     <center>
       <p>
         <strong>Filter:</strong>
-        <%= link_to("All", web_tasks_all_path, style: "color: var(--text) !important;")%> |
-        <%= link_to("Incomplete", web_tasks_incomplete_path, style: "color: var(--text) !important;")%> |
-        <%= link_to("Completed (#{tasks.size})", web_tasks_completed_path)%>
+        <%= link_to("All (#{tasks.size})", web_tasks_all_path)%> |
+        <%= link_to("Incomplete", web_tasks_incomplete_path, style: "color: var(--text) !important;") %> |
+        <%= link_to("Completed", web_tasks_completed_path, style: "color: var(--text) !important;") %>
       </p>
     </center>
 
     <% if tasks.present? %>
       <%= render("web/tasks/filtered/items", tasks:) %>
     <% else %>
-      <%= render("web/tasks/filtered/blank", scope: "completed") %>
+      <%= render("web/tasks/filtered/blank", scope: "all") %>
     <% end %>
   <% else %>
     <%= render("web/tasks/filtered/blank", scope: "all") %>

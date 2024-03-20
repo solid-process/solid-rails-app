@@ -1,7 +1,7 @@
-<%= render("web/tasks/shared/header", current: "new", title: "List: Inbox") %>
+<%= render("web/tasks/shared/header", current: "new", title: current_task_list_name) %>
 
 <main>
   <h2>New task</h2>
 
-  <%= render("form") %>
+  <%= render("form", task:, url: web_tasks_path(back_to: params[:back_to]), method: :post) %>
 </main>

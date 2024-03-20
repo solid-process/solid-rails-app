@@ -23,18 +23,32 @@ Rails.application.routes.draw do
 
       get "/passwords/reset", to: "passwords/reset#edit"
       put "/passwords/reset", to: "passwords/reset#update"
+
+      delete "/", to: "registrations#destroy"
     end
 
     namespace :tasks do
-      get "/new", to: "item#new"
-      get "/edit/:id", to: "item#edit", as: :edit
+      get "/lists", to: "lists#index"
+      get "/lists/new", to: "lists#new"
+      post "/lists", to: "lists#create"
+      get "/lists/:id", to: "lists#edit", as: :list_edit
+      put "/lists/:id", to: "lists#update", as: :list_update
+      put "/lists/:id/select", to: "lists/select#update", as: :list_select
+      delete "/lists/:id", to: "lists#destroy", as: :list_delete
 
       scope module: :filtered do
-        get "/completed", to: "completed#index"
         get "/incomplete", to: "incomplete#index"
+        get "/completed", to: "completed#index"
+        get "/all", to: "all#index"
       end
 
-      get "/lists", to: "lists#index"
+      post "/", to: "item#create"
+      get "/new", to: "item#new"
+      get "/:id", to: "item#edit", as: :edit
+      put "/:id", to: "item#update"
+      put "/:id/complete", to: "item/complete#update", as: :mark_as_completed
+      put "/:id/incomplete", to: "item/incomplete#update", as: :mark_as_incomplete
+      delete "/:id", to: "item#destroy"
     end
 
     namespace :settings do

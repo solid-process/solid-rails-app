@@ -3,7 +3,9 @@
 module Web::Tasks
   class Filtered::IncompleteController < BaseController
     def index
-      render("web/tasks/filtered/incomplete")
+      tasks = current_task_list.tasks.incomplete.order(created_at: :desc)
+
+      render("web/tasks/filtered/incomplete", locals: {tasks:})
     end
   end
 end

@@ -1,13 +1,22 @@
-<%= render("web/tasks/shared/header", current: "tasks", title: "List: Inbox") %>
+<%= render("web/tasks/shared/header", current: "tasks", title: current_task_list_name, back_to: "incomplete") %>
 
 <main>
-  <center>
-    <p>
-      <strong>Filter:</strong>
-      <%= link_to("Incomplete (1)", web_tasks_incomplete_path)%> |
-      <%= link_to("Completed", web_tasks_completed_path, style: "color: var(--text) !important;") %>
-    </p>
-  </center>
+  <% if current_task_list.tasks.exists? %>
+    <center>
+      <p>
+        <strong>Filter:</strong>
+        <%= link_to("All", web_tasks_all_path, style: "color: var(--text) !important;")%> |
+        <%= link_to("Incomplete (#{tasks.size})", web_tasks_incomplete_path)%> |
+        <%= link_to("Completed", web_tasks_completed_path, style: "color: var(--text) !important;") %>
+      </p>
+    </center>
 
-  <%= render("web/tasks/filtered/items", action_to_toggle_state: "complete") %>
+    <% if tasks.present? %>
+      <%= render("web/tasks/filtered/items", tasks:) %>
+    <% else %>
+      <%= render("web/tasks/filtered/blank", scope: "incomplete") %>
+    <% end %>
+  <% else %>
+    <%= render("web/tasks/filtered/blank", scope: "all") %>
+  <% end %>
 </main>

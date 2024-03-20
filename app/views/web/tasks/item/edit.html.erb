@@ -1,7 +1,11 @@
-<%= render("web/tasks/shared/header", current: "edit", title: "List: Inbox") %>
+<%= render("web/tasks/shared/header", current: "tasks", title: current_task_list_name) %>
 
 <main>
-  <h2>Edit task #1</h2>
+  <h2>Edit task #<%= task.id %></h2>
 
-  <%= render("form") %>
+  <%= render("form",
+    task:,
+    url: web_tasks_edit_path(task, back_to: params[:back_to]),
+    method: :put
+  ) %>
 </main>

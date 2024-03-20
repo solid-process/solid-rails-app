@@ -9,12 +9,40 @@
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td>Inbox <mark>selected</mark></td>
-        <td><button disabled>Select</button></td>
-        <td><button>Edit</button></td>
-        <td><button>Delete</button></td>
-      </tr>
+      <% task_lists.each do |task_list| %>
+        <tr>
+          <td>
+            <%= task_list.name %> <%= "<mark>selected</mark>".html_safe if current_task_list?(task_list) %>
+          </td>
+          <td>
+            <%= button_to(
+              "Select",
+              web_tasks_list_select_path(task_list),
+              disabled: current_task_list?(task_list),
+              method: :put,
+            ) %>
+          </td>
+          <% if task_list.inbox? %>
+            <td><button disabled style="background-color: var(--accent-bg)">📝</button></td>
+            <td><button disabled style="background-color: var(--accent-bg)">🗑️</button></td>
+          <% else %>
+            <td>
+              <%= link_to(
+                "<button title=\"Edit\" style=\"background-color: var(--accent-bg)\">📝</button>".html_safe,
+                web_tasks_list_edit_path(task_list))
+              %>
+            </td>
+            <td>
+              <%= link_to(
+                "<button title=\"Delete\" style=\"background-color: var(--accent-bg)\">🗑️</button>".html_safe,
+                web_tasks_list_edit_path(task_list),
+                method: :delete,
+                data: {confirm: "Are you sure you want to delete this task list?"}
+              ) %>
+            </td>
+          <% end %>
+        </tr>
+      <% end %>
     </tbody>
   </table>
 </main>
