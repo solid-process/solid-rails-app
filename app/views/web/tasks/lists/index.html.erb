@@ -17,7 +17,7 @@
           <td>
             <%= button_to(
               "Select",
-              web_tasks_list_select_path(task_list),
+              select_web_tasks_list_path(task_list),
               disabled: current_task_list?(task_list),
               method: :put,
             ) %>
@@ -29,13 +29,13 @@
             <td>
               <%= link_to(
                 "<button title=\"Edit\" style=\"background-color: var(--accent-bg)\">📝</button>".html_safe,
-                web_tasks_list_edit_path(task_list))
+                edit_web_tasks_list_path(task_list))
               %>
             </td>
             <td>
               <%= link_to(
                 "<button title=\"Delete\" style=\"background-color: var(--accent-bg)\">🗑️</button>".html_safe,
-                web_tasks_list_edit_path(task_list),
+                web_tasks_list_path(task_list),
                 method: :delete,
                 data: {confirm: "Are you sure you want to delete this task list?"}
               ) %>

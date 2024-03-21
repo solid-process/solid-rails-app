@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 module Web::Tasks
-  class Item::IncompleteController < BaseController
+  class Items::IncompleteController < BaseController
     before_action :set_task, only: [:update]
 
     def update
       @task.incomplete!
 
-      next_path = (params[:back_to] == "all") ? web_tasks_all_path : web_tasks_completed_path
+      next_path = (params[:back_to] == "items") ? web_tasks_path : completed_web_tasks_path
 
       redirect_to next_path, notice: "Task marked as incomplete"
     end

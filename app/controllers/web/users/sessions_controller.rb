@@ -12,7 +12,7 @@ module Web::Users
       if user
         sign_in(user)
 
-        redirect_to web_tasks_all_path, notice: "You have successfully signed in!"
+        redirect_to web_tasks_path, notice: "You have successfully signed in!"
       else
         flash.now[:alert] = "Invalid email or password"
 
@@ -25,7 +25,7 @@ module Web::Users
     def destroy
       sign_out(current_user)
 
-      redirect_to web_guests_sign_in_path, notice: "You have successfully signed out!"
+      redirect_to new_web_guests_session_path, notice: "You have successfully signed out!"
     end
 
     private

@@ -5,7 +5,7 @@
 
   <%= render("form",
     task:,
-    url: web_tasks_edit_path(task, back_to: params[:back_to]),
+    url: web_task_path(task, back_to: params[:back_to]),
     method: :put
   ) %>
 </main>

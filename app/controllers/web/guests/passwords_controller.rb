@@ -16,7 +16,7 @@ module Web::Guests
         ).reset_password.deliver_later
       end
 
-      redirect_to web_guests_sign_in_path, notice: "Check your email to reset your password."
+      redirect_to new_web_guests_session_path, notice: "Check your email to reset your password."
     end
   end
 end

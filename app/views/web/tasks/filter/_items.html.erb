@@ -9,9 +9,9 @@
     <% tasks.each do |task| %>
       <tr>
         <td><%= task.name %></td>
-        <td><%= render("web/tasks/filtered/actions/toggle", task:) %></td>
-        <td><%= render("web/tasks/filtered/actions/edit", task:) %></td>
-        <td><%= render("web/tasks/filtered/actions/delete", task:) %></td>
+        <td><%= render("web/tasks/filter/actions/toggle", task:) %></td>
+        <td><%= render("web/tasks/filter/actions/edit", task:) %></td>
+        <td><%= render("web/tasks/filter/actions/delete", task:) %></td>
       </tr>
     <% end %>
   </tbody>

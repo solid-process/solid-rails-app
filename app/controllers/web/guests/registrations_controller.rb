@@ -23,7 +23,7 @@ module Web::Guests
 
         sign_in(user)
 
-        redirect_to web_tasks_all_path, notice: "You have successfully registered!"
+        redirect_to web_tasks_path, notice: "You have successfully registered!"
       else
         render("web/guest/registrations/new", locals: {user:}, status: :unprocessable_entity)
       end

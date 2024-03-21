@@ -21,10 +21,6 @@
 
   <p>
     <%= f.submit "Submit" %>
-    <%= link_to(
-      "Cancel",
-      task.completed? ? web_tasks_completed_path : web_tasks_incomplete_path,
-      style: "margin-left: 10px"
-    ) %>
+    <%= link_to("Cancel", next_path, style: "margin-left: 10px") %>
   </p>
 <% end %>

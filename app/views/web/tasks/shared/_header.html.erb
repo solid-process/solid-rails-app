@@ -5,13 +5,13 @@
 
   <nav>
     <% if controller_name == "lists" %>
-      <%= link_to("+ New".html_safe, web_tasks_lists_new_path, class: current_page["new"] ) %>
+      <%= link_to("+ New".html_safe, new_web_tasks_list_path, class: current_page["new"] ) %>
     <% else %>
-      <%= link_to("+ New".html_safe, web_tasks_new_path(back_to: local_assigns[:back_to]), class: current_page["new"] ) %>
+      <%= link_to("+ New".html_safe, new_web_task_path(back_to: local_assigns[:back_to]), class: current_page["new"] ) %>
     <% end %>
-    <%= link_to("Tasks", web_tasks_all_path, class: current_page["tasks"]) %>
+    <%= link_to("Tasks", web_tasks_path, class: current_page["tasks"]) %>
     <%= link_to("Lists", web_tasks_lists_path, class: current_page["lists"]) %>
     <%= link_to("Settings", web_settings_profile_path) %>
-    <%= link_to("Log out", web_users_sign_out_path, method: :delete) %>
+    <%= link_to("Log out", web_users_sessions_path, method: :delete) %>
   </nav>
 </header>

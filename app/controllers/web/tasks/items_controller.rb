@@ -1,11 +1,17 @@
 # frozen_string_literal: true
 
 module Web::Tasks
-  class ItemController < BaseController
+  class ItemsController < BaseController
     before_action :set_task, only: [:edit, :update, :destroy]
 
+    def index
+      tasks = current_task_list.tasks.order(created_at: :desc)
+
+      render("web/tasks/filter/all", locals: {tasks:})
+    end
+
     def new
-      render("web/tasks/item/new", locals: {task: Task.new})
+      render("web/tasks/items/new", locals: {task: Task.new})
     end
 
     def create
@@ -14,12 +20,12 @@ module Web::Tasks
       if task.save
         redirect_to next_path, notice: "Task created"
       else
-        render("web/tasks/item/new", locals: {task: task})
+        render("web/tasks/items/new", locals: {task: task})
       end
     end
 
     def edit
-      render("web/tasks/item/edit", locals: {task: @task})
+      render("web/tasks/items/edit", locals: {task: @task})
     end
 
     def update
@@ -27,7 +33,7 @@ module Web::Tasks
 
         redirect_to next_path, notice: "Task updated"
       else
-        render("web/tasks/item/edit", locals: {task: @task})
+        render("web/tasks/items/edit", locals: {task: @task})
       end
     end
 
@@ -39,11 +45,11 @@ module Web::Tasks
 
     private
 
-    def next_path
+    helper_method def next_path
       case params[:back_to]
-      when "completed" then web_tasks_completed_path
-      when "incomplete" then web_tasks_incomplete_path
-      else web_tasks_all_path
+      when "completed" then completed_web_tasks_path
+      when "incomplete" then incomplete_web_tasks_path
+      else web_tasks_path
       end
     end
 

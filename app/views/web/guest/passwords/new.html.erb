@@ -3,7 +3,7 @@
 <main>
   <h2>Forgot your password?</h2>
 
-  <%= form_with(model: user, scope: :user, url: web_guests_reset_password_path) do |f| %>
+  <%= form_with(model: user, scope: :user, url: web_guests_passwords_path) do |f| %>
     <p>
       <%= f.label :email %>
       <%= f.email_field :email, required: true, autofocus: true, autocomplete: "email" %>

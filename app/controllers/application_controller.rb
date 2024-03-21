@@ -51,7 +51,7 @@ class ApplicationController < ActionController::Base
   def authenticate_user!
     return if current_user
 
-    redirect_to web_guests_sign_in_path, alert: "You need to sign in or sign up before continuing."
+    redirect_to new_web_guests_session_path, alert: "You need to sign in or sign up before continuing."
   end
 
   def current_user_id=(id)

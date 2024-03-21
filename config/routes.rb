@@ -7,52 +7,42 @@ Rails.application.routes.draw do
 
   namespace :web, path: "" do
     namespace :guests do
-      get "/sign_in", to: "sessions#new"
-      get "/sign_up", to: "registrations#new"
-      get "/reset_password", to: "passwords#new"
-
-      post "/sign_up", to: "registrations#create"
-      post "/reset_password", to: "passwords#create"
+      resources :sessions, only: [:new]
+      resources :passwords, only: [:new, :create]
+      resources :registrations, only: [:new, :create]
     end
 
     namespace :users do
-      post "/sign_in", to: "sessions#create"
-      delete "/sign_out", to: "sessions#destroy"
-
-      put "/password", to: "passwords#update"
-
-      get "/passwords/reset", to: "passwords/reset#edit"
-      put "/passwords/reset", to: "passwords/reset#update"
-
-      delete "/", to: "registrations#destroy"
-    end
-
-    namespace :tasks do
-      get "/lists", to: "lists#index"
-      get "/lists/new", to: "lists#new"
-      post "/lists", to: "lists#create"
-      get "/lists/:id", to: "lists#edit", as: :list_edit
-      put "/lists/:id", to: "lists#update", as: :list_update
-      put "/lists/:id/select", to: "lists/select#update", as: :list_select
-      delete "/lists/:id", to: "lists#destroy", as: :list_delete
-
-      scope module: :filtered do
-        get "/incomplete", to: "incomplete#index"
-        get "/completed", to: "completed#index"
-        get "/all", to: "all#index"
+      resource :sessions, only: [:destroy, :create]
+      resource :passwords, only: [:update]
+      namespace :passwords do
+        resources :reset, only: [:edit, :update], param: :token
       end
-
-      post "/", to: "item#create"
-      get "/new", to: "item#new"
-      get "/:id", to: "item#edit", as: :edit
-      put "/:id", to: "item#update"
-      put "/:id/complete", to: "item/complete#update", as: :mark_as_completed
-      put "/:id/incomplete", to: "item/incomplete#update", as: :mark_as_incomplete
-      delete "/:id", to: "item#destroy"
+      resource :registrations, only: [:destroy]
     end
 
     namespace :settings do
-      get "/profile", to: "profile#show"
+      resource :profile, only: [:show]
+    end
+
+    resources :tasks, except: [:show], controller: "tasks/items" do
+      member do
+        put :complete, to: "tasks/items/complete#update"
+        put :incomplete, to: "tasks/items/incomplete#update"
+      end
+
+      collection do
+        get :completed, to: "tasks/filter/completed#index"
+        get :incomplete, to: "tasks/filter/incomplete#index"
+      end
+    end
+
+    namespace :tasks do
+      resources :lists, except: [:show] do
+        member do
+          put :select, to: "lists/select#update"
+        end
+      end
     end
   end
 
