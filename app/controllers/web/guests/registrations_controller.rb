@@ -10,17 +10,6 @@ module Web::Guests
       user = User.new(registrations_params)
 
       if user.save
-        account = Account.create!(uuid: SecureRandom.uuid)
-
-        account.memberships.create!(user: user, role: :owner)
-
-        account.task_lists.inbox.create!
-
-        UserMailer.with(
-          user: user,
-          token: user.generate_token_for(:email_confirmation)
-        ).email_confirmation.deliver_later
-
         sign_in(user)
 
         redirect_to web_tasks_path, notice: "You have successfully registered!"

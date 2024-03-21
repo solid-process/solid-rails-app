@@ -13,6 +13,8 @@ class User < ApplicationRecord
   has_one :account, through: :ownership
   has_one :inbox, through: :account
 
+  has_one :token, class_name: "UserToken", dependent: :destroy
+
   validates :password, presence: true, confirmation: true, length: {minimum: 8}, if: -> { new_record? || password.present? }
 
   validates :email, presence: true, format: {with: URI::MailTo::EMAIL_REGEXP}, uniqueness: true
@@ -25,5 +27,22 @@ class User < ApplicationRecord
 
   generates_token_for :email_confirmation, expires_in: 24.hours do
     email
+  end
+
+  after_create do
+    account = Account.create!(uuid: SecureRandom.uuid)
+
+    account.memberships.create!(user: self, role: :owner)
+
+    account.task_lists.inbox.create!
+
+    create_token!
+  end
+
+  after_create_commit do
+    UserMailer.with(
+      user: self,
+      token: generate_token_for(:email_confirmation)
+    ).email_confirmation.deliver_later
   end
 end

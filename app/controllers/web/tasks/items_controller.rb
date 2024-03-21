@@ -45,12 +45,8 @@ module Web::Tasks
 
     private
 
-    helper_method def next_path
-      case params[:back_to]
-      when "completed" then completed_web_tasks_path
-      when "incomplete" then incomplete_web_tasks_path
-      else web_tasks_path
-      end
+    def set_task
+      @task = current_task_list.tasks.find(params[:id])
     end
 
     def task_params
@@ -61,8 +57,12 @@ module Web::Tasks
       end
     end
 
-    def set_task
-      @task = current_task_list.tasks.find(params[:id])
+    helper_method def next_path
+      case params[:back_to]
+      when "completed" then completed_web_tasks_path
+      when "incomplete" then incomplete_web_tasks_path
+      else web_tasks_path
+      end
     end
   end
 end

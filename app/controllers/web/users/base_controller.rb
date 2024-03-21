@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
 module Web::Users
-  class BaseController < ApplicationController
+  class BaseController < Web::BaseController
   end
 end

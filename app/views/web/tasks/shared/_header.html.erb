@@ -11,7 +11,7 @@
     <% end %>
     <%= link_to("Tasks", web_tasks_path, class: current_page["tasks"]) %>
     <%= link_to("Lists", web_tasks_lists_path, class: current_page["lists"]) %>
-    <%= link_to("Settings", web_settings_profile_path) %>
+    <%= link_to("Settings", web_users_settings_profile_path) %>
     <%= link_to("Log out", web_users_sessions_path, method: :delete) %>
   </nav>
 </header>

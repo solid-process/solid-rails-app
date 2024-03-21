@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Web::Guests
-  class BaseController < ApplicationController
+  class BaseController < Web::BaseController
     layout "web/guest"
 
     before_action do

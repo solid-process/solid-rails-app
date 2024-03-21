@@ -1,4 +1,4 @@
-<%= render("web/settings/shared/header", current: "profile") %>
+<%= render("web/user/settings/shared/header", current: "profile") %>
 
 <main>
   <%= form_with(model: current_user, scope: :user, url: web_users_passwords_path, method: :put) do |f| %>

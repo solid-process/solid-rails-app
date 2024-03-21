@@ -51,12 +51,12 @@ module Web::Tasks
 
     private
 
-    def task_list_params
-      params.require(:task_list).permit(:name)
-    end
-
     def set_task_list
       @task_list = current_user.task_lists.find(params[:id])
+    end
+
+    def task_list_params
+      params.require(:task_list).permit(:name)
     end
   end
 end

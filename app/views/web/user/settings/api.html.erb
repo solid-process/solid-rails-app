@@ -1,0 +1,12 @@
+<%= render("web/user/settings/shared/header", current: "api") %>
+
+<main>
+  <h2>My access token</h2>
+
+  <pre><%= current_user.token.access_token %></pre>
+
+  <%= button_to("Refresh", web_users_tokens_path, {
+    method: :put,
+    data: {confirm: 'Are you sure to generate a new API token?'}
+  }) %>
+</main>

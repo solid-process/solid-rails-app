@@ -20,14 +20,14 @@ module Web::Users
 
     private
 
-    def password_params
-      params.require(:user).permit(:password, :password_confirmation)
-    end
-
     def set_user_by_token
       @user = User.find_by_token_for(:reset_password, params[:token])
 
       redirect_to new_web_guests_password_path, alert: "Invalid or expired token." unless @user
+    end
+
+    def password_params
+      params.require(:user).permit(:password, :password_confirmation)
     end
   end
 end

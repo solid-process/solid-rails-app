@@ -14,26 +14,30 @@ Rails.application.routes.draw do
 
     namespace :users do
       resource :sessions, only: [:destroy, :create]
+
       resource :passwords, only: [:update]
       namespace :passwords do
         resources :reset, only: [:edit, :update], param: :token
       end
+
+      resource :tokens, only: [:update]
       resource :registrations, only: [:destroy]
+
+      namespace :settings do
+        resource :api, only: [:show], controller: "api"
+        resource :profile, only: [:show]
+      end
     end
 
-    namespace :settings do
-      resource :profile, only: [:show]
-    end
-
-    resources :tasks, except: [:show], controller: "tasks/items" do
+    resources :tasks, except: [:show], module: "tasks", controller: "items" do
       member do
-        put :complete, to: "tasks/items/complete#update"
-        put :incomplete, to: "tasks/items/incomplete#update"
+        put :complete, to: "items/complete#update"
+        put :incomplete, to: "items/incomplete#update"
       end
 
       collection do
-        get :completed, to: "tasks/filter/completed#index"
-        get :incomplete, to: "tasks/filter/incomplete#index"
+        get :completed, to: "filter/completed#index"
+        get :incomplete, to: "filter/incomplete#index"
       end
     end
 
