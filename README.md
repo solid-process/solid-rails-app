@@ -1,24 +1,26 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
-
-Things you may want to cover:
-
-* Ruby version
-
 * System dependencies
+  * Ruby `3.2.3`
+    * bundler `>= 2.5.6`
+  * Sqlite3
 
 * Configuration
+  1. Install the system dependencies
+  2. Create the `master.key`
+    ```sh
+    echo 'a061933f96843c82342fb8ab9e9db503' > config/master.key
+
+    chmod 600 config/master.key
+    ```
+  3. Run `bin/setup`
 
 * Database creation
-
-* Database initialization
+  * Run `bin/rails db:setup`
 
 * How to run the test suite
+  * `bin/rails test`
 
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+* How to run the application locally
+  1. `bin/rails s`
+  2. Open in your browser: `http://localhost:3000`
