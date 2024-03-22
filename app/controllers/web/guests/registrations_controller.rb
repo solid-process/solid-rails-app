@@ -3,7 +3,7 @@
 module Web::Guests
   class RegistrationsController < BaseController
     def new
-      render_new(user: User.new, status: :ok)
+      render("web/guest/registrations/new", locals: {user: User.new})
     end
 
     def create
@@ -22,10 +22,6 @@ module Web::Guests
 
     def registrations_params
       params.require(:guest).permit(:email, :password, :password_confirmation)
-    end
-
-    def render_new(user:, status: :ok)
-      render("web/guest/registrations/new", status:, locals: {user: user})
     end
   end
 end

@@ -5,7 +5,7 @@ module Web::Users
     def update
       current_user.token.refresh_access_token!
 
-      redirect_to(web_users_settings_api_path, notice: "API token regenerated")
+      redirect_to(web_users_settings_api_path, notice: "Access token updated")
     end
   end
 end

@@ -9,17 +9,14 @@ class Task < ApplicationRecord
   validates :name, presence: true
   validates :completed_at, presence: true, if: :completed?
 
-  attr_accessor :completed
+  attribute :completed, :boolean
 
   before_validation do
-    case completed
-    when "1" then self.completed_at = Time.current
-    when "0" then self.completed_at = nil
-    end
+    self.completed_at = completed ? Time.current : nil
   end
 
   after_initialize do
-    self.completed = completed? ? "1" : "0"
+    self.completed = completed?
   end
 
   def completed?
@@ -31,13 +28,13 @@ class Task < ApplicationRecord
   end
 
   def complete!
-    self.completed = "1"
+    self.completed = true
 
     save!
   end
 
   def incomplete!
-    self.completed = "0"
+    self.completed = false
 
     save!
   end

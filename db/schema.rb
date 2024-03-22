@@ -50,11 +50,11 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_21_115028) do
   end
 
   create_table "user_tokens", force: :cascade do |t|
-    t.string "access_token"
+    t.string "access_token", null: false
     t.integer "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["access_token"], name: "index_user_tokens_on_access_token"
+    t.index ["access_token"], name: "index_user_tokens_on_access_token", unique: true
     t.index ["user_id"], name: "index_user_tokens_on_user_id"
   end
 

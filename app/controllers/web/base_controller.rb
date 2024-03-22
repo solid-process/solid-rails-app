@@ -86,7 +86,7 @@ class Web::BaseController < ApplicationController
     self.current_user_id = user.id
   end
 
-  def sign_out(user)
+  def sign_out
     Current.reset
 
     reset_session

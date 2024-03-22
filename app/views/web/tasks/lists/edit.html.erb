@@ -3,7 +3,7 @@
 <main>
   <h2>Edit task list #<%= task_list.id %></h2>
 
-  <%= console; render("form",
+  <%= render("form",
     task_list:,
     url: web_tasks_list_path(task_list),
     method: :put

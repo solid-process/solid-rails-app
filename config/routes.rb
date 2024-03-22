@@ -5,6 +5,8 @@ Rails.application.routes.draw do
   # Can be used by load balancers and uptime monitors to verify that the app is live.
   get "up" => "rails/health#show", :as => :rails_health_check
 
+  root "web/guests/sessions#new"
+
   namespace :web, path: "" do
     namespace :guests do
       resources :sessions, only: [:new]
@@ -50,5 +52,27 @@ Rails.application.routes.draw do
     end
   end
 
-  root "web/guests/sessions#new"
+  namespace :api, constraints: {format: "json"} do
+    namespace :v1 do
+      namespace :users do
+        resource :tokens, only: [:update]
+        resource :sessions, only: [:create]
+        resource :registrations, only: [:create, :destroy]
+
+        resource :passwords, only: [:update]
+        namespace :passwords do
+          resource :reset, only: [:create, :update], param: :token
+        end
+      end
+
+      resources :task_lists, only: [:index, :create, :update, :destroy] do
+        resources :tasks, only: [:index, :create, :update, :destroy] do
+          member do
+            put :complete, to: "tasks/complete#update"
+            put :incomplete, to: "tasks/incomplete#update"
+          end
+        end
+      end
+    end
+  end
 end

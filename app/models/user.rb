@@ -15,9 +15,11 @@ class User < ApplicationRecord
 
   has_one :token, class_name: "UserToken", dependent: :destroy
 
-  validates :password, presence: true, confirmation: true, length: {minimum: 8}, if: -> { new_record? || password.present? }
+  with_options presence: true do
+    validates :password, confirmation: true, length: {minimum: 8}, if: -> { new_record? || password.present? }
 
-  validates :email, presence: true, format: {with: URI::MailTo::EMAIL_REGEXP}, uniqueness: true
+    validates :email, format: {with: URI::MailTo::EMAIL_REGEXP}, uniqueness: true
+  end
 
   normalizes :email, with: -> { _1.strip.downcase }
 
