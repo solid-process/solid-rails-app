@@ -1,8 +1,18 @@
-# Solid Tasks App <!-- omit in toc -->
+# ✨ Solid Rails App <!-- omit in toc -->
+
+Web and REST API application made with [Ruby on Rails](https://guides.rubyonrails.org/).
+
+## 🙌 Repository branches <!-- omit in toc -->
+
+This repository has three branches:
+1. [main](https://github.com/B-CDD/solid-rails-app/blob/main/README.md): `95%` Rails way + `5%` solid-process.
+2. [vanilla-rails](https://github.com/B-CDD/solid-rails-app/blob/vanilla-rails/README.md): `100%` Rails way + `0%` solid-process. (**📍 you are here**)
+3. [solid-process](https://github.com/B-CDD/solid-rails-app/blob/solid-process/README.md): `20%` Rails way + `80%` solid-process.
+
+## 📚 Table of contents <!-- omit in toc -->
 
 - [System dependencies](#system-dependencies)
-- [Configuration](#configuration)
-- [Database creation](#database-creation)
+- [Setup](#setup)
 - [How to run the test suite](#how-to-run-the-test-suite)
 - [How to run the application locally](#how-to-run-the-application-locally)
 - [API Documentation (cURL examples)](#api-documentation-curl-examples)
@@ -32,7 +42,7 @@
 * Ruby `3.2.3`
   * bundler `>= 2.5.6`
 
-## Configuration
+## Setup
 
 1. Install system dependencies
 2. Create a `config/master.key` file with the following content:
@@ -42,10 +52,6 @@
   chmod 600 config/master.key
   ```
 3. Run `bin/setup`
-
-## Database creation
-
-* Run `bin/rails db:setup`
 
 ## How to run the test suite
 
