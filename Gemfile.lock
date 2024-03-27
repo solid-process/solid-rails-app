@@ -320,6 +320,10 @@ GEM
       simplecov_json_formatter (~> 0.1)
     simplecov-html (0.12.3)
     simplecov_json_formatter (0.1.4)
+    solid-process (0.3.0)
+      activemodel (>= 6.0, < 8.0)
+      solid-result (~> 2.0)
+    solid-result (2.0.0)
     sqlite3 (1.7.3-aarch64-linux)
     sqlite3 (1.7.3-arm-linux)
     sqlite3 (1.7.3-arm64-darwin)
@@ -388,6 +392,7 @@ DEPENDENCIES
   rubycritic (~> 4.9)
   selenium-webdriver
   simplecov
+  solid-process (~> 0.3.0)
   sqlite3 (~> 1.4)
   standard (~> 1.35)
   standard-rails (~> 1.0)

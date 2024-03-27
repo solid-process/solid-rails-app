@@ -1,12 +1,12 @@
 # ✨ Solid Rails App <!-- omit in toc -->
 
-Web and REST API application made with [Ruby on Rails](https://guides.rubyonrails.org/).
+Web and REST API application made with [Ruby on Rails](https://guides.rubyonrails.org/) + [solid-process](https://github.com/solid-process/solid-process).
 
 ## 🙌 Repository branches <!-- omit in toc -->
 
 This repository has three branches:
-1. [vanilla-rails](https://github.com/solid-process/solid-rails-app/blob/vanilla-rails/README.md): `100%` Rails way + `0%` solid-process. (**📍 you are here**)
-2. [main](https://github.com/solid-process/solid-rails-app/blob/main/README.md): `95%` Rails way + `5%` solid-process.
+1. [vanilla-rails](https://github.com/solid-process/solid-rails-app/blob/vanilla-rails/README.md): `100%` Rails way + `0%` solid-process.
+2. [main](https://github.com/solid-process/solid-rails-app/blob/main/README.md): `95%` Rails way + `5%` solid-process. (**📍 you are here**)
 3. [solid-process](https://github.com/solid-process/solid-rails-app/blob/solid-process/README.md): `20%` Rails way + `80%` solid-process.
 
 ### 📊 Rails stats and code quality <!-- omit in toc -->
@@ -21,6 +21,59 @@ Use:
 - `bin/rails test` to generate the tests coverage report.
 - `bin/rails stats` to generate the LOC report.
 - `bin/rails rubycritic` to generate the rubycritic (code quality) report.
+
+## 📢 Disclaimer <!-- omit in toc -->
+
+The goal of this branch is to show how the `solid-process` can be progressively introduced into a Rails application (check out the [`User::Registration`](https://github.com/solid-process/solid-rails-app/blob/main/app/models/user/registration.rb)).
+
+You can use it only where you see fit, and you don't need to choose between one approach (Rails Way) or another (solid-process), as both can coexist in a complementary and friendly way.
+
+## 🌟 Highlights of what solid-process can bring to you <!-- omit in toc -->
+
+1. The [`solid-process`](https://github.com/solid-process/solid-process) uses Rails's known components, such as ActiveModel attributes, validations, callbacks, and more. This way, you can use the same tools you are already familiar with.
+
+2. A way for representing/writing critical system operations. It feels like having code that documents itself. You can see the operation's steps, inputs, outputs, side effects, and more in one place.
+
+3. A less coupled codebase, given that this structure encourages the creation of cohesive operations (with a specific purpose), thus reducing the concentration of logic in ActiveRecord models.
+    > e.g., several callbacks from the `User` model were replaced by the [`User::Registration`](https://github.com/solid-process/solid-rails-app/blob/main/app/models/user/registration.rb) process.
+
+4. Standardization of instrumentation and observability of what occurs within each process (Implement a listener to do this automatically and transparently for the developer [[1]](https://github.com/solid-process/solid-rails-app/blob/main/config/initializers/solid_process.rb) [[2]](https://github.com/solid-process/solid-rails-app/blob/main/lib/rails_event_logs_logger_listener.rb)). This will help you better understand what is happening within the system.
+    <details>
+    <summary><strong><a href="https://github.com/solid-process/solid-rails-app/blob/main/app/models/user/registration.rb" target="_blank">User::Registration</a> event logs sample:</strong></summary>
+    <pre>
+    #0 User::Registration
+    * Given(email:, password:, password_confirmation:)
+    * Continue(user:) from method: create_user
+    * Continue(account:) from method: create_user_account
+    * Continue() from method: create_user_inbox
+    * Continue() from method: create_user_token
+    * Continue() from method: send_email_confirmation
+    * Success(:user_registered, user:)
+    </pre>
+    </details>
+
+5. The file structure reveals the system's critical processes, making it easier to understand its behavior and find where to make changes. Check out the [app/models](https://github.com/solid-process/solid-rails-app/blob/main/app/models) directory.
+    <details>
+    <summary><code>app/models</code> file structure (checkout the <a href="https://github.com/solid-process/solid-rails-app/blob/solid-process/app/models" target="_blank">solid-process</a> branch to see a more complete example):</summary>
+    <pre>
+    app/models/user
+    └── registration.rb
+    </pre>
+    </details>
+
+### 🤔 How do we be aware of the system's critical processes? <!-- omit in toc -->
+
+Use the following command to generate a list of all processes in the system:
+
+<details>
+<summary><code>bin/rails solid:processes</code></summary>
+<pre>
+Lines:
+      62 ./app/models/user/registration.rb
+
+Files: 1
+</pre>
+</details>
 
 ## 📚 Table of contents <!-- omit in toc -->
 

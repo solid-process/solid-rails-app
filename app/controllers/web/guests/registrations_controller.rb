@@ -3,7 +3,7 @@
 module Web::Guests
   class RegistrationsController < BaseController
     def new
-      render("web/guest/registrations/new", locals: {user: User.new})
+      render("web/guest/registrations/new", locals: {user: User::Registration::Input.new})
     end
   end
 end

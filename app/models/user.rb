@@ -31,23 +31,6 @@ class User < ApplicationRecord
     email
   end
 
-  after_create do
-    account = Account.create!(uuid: SecureRandom.uuid)
-
-    account.memberships.create!(user: self, role: :owner)
-
-    account.task_lists.inbox.create!
-
-    create_token!
-  end
-
-  after_create_commit do
-    UserMailer.with(
-      user: self,
-      token: generate_token_for(:email_confirmation)
-    ).email_confirmation.deliver_later
-  end
-
   before_destroy prepend: true do
     account.destroy!
   end

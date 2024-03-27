@@ -7,14 +7,13 @@ module Web::Users
     skip_before_action :authenticate_user!, only: [:create]
 
     def create
-      user = User.new(registrations_params)
-
-      if user.save
+      case User::Registration.call(registrations_params)
+      in Solid::Success(user:)
         sign_in(user)
 
         redirect_to web_tasks_path, notice: "You have successfully registered!"
-      else
-        render("web/guest/registrations/new", locals: {user:}, status: :unprocessable_entity)
+      in Solid::Failure(input:)
+        render("web/guest/registrations/new", locals: {user: input}, status: :unprocessable_entity)
       end
     end
 
