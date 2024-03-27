@@ -4,7 +4,7 @@ module Web::Users
   class SessionsController < BaseController
     layout "web/guest"
 
-    before_action :authenticate_user!, except: [:create]
+    skip_before_action :authenticate_user!, only: [:create]
 
     def create
       user = User.authenticate_by(email: user_params[:email], password: user_params[:password])

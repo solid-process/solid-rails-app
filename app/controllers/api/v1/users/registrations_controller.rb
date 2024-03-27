@@ -15,10 +15,7 @@ module API::V1
     end
 
     def destroy
-      current_user.transaction do
-        current_user.account.destroy!
-        current_user.destroy!
-      end
+      current_user.destroy!
 
       render_json_with_success(status: :ok)
     end

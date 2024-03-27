@@ -4,6 +4,8 @@ module Web::Users
   class Passwords::ResetController < BaseController
     layout "web/guest"
 
+    skip_before_action :authenticate_user!
+
     before_action :set_user_by_token
 
     def edit

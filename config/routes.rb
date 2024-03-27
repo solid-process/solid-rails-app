@@ -11,7 +11,7 @@ Rails.application.routes.draw do
     namespace :guests do
       resources :sessions, only: [:new]
       resources :passwords, only: [:new, :create]
-      resources :registrations, only: [:new, :create]
+      resources :registrations, only: [:new]
     end
 
     namespace :users do
@@ -23,7 +23,7 @@ Rails.application.routes.draw do
       end
 
       resource :tokens, only: [:update]
-      resource :registrations, only: [:destroy]
+      resource :registrations, only: [:create, :destroy]
 
       namespace :settings do
         resource :api, only: [:show], controller: "api"

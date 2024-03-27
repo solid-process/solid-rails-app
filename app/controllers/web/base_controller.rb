@@ -36,9 +36,9 @@ class Web::BaseController < ApplicationController
 
     membership = memberships.includes(:user, account: :task_lists).first
 
-    account = membership&.account
+    user, account = membership&.values_at(:user, :account)
 
-    Current.user = membership&.user
+    Current.user = user
     Current.account = account
     Current.task_list = account&.task_lists&.first
     Current.membership = membership

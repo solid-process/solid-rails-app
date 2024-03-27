@@ -47,4 +47,8 @@ class User < ApplicationRecord
       token: generate_token_for(:email_confirmation)
     ).email_confirmation.deliver_later
   end
+
+  before_destroy prepend: true do
+    account.destroy!
+  end
 end

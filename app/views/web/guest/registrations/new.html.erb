@@ -5,7 +5,7 @@
 
   <p>Please fill in this form to create an account!</p>
 
-  <%= form_with(model: user, scope: :guest, url: web_guests_registrations_path) do |f| %>
+  <%= form_with(model: user, scope: :guest, url: web_users_registrations_path) do |f| %>
     <% if f.object.errors.any? %>
       <ul>
         <% f.object.errors.full_messages.each do |message| %>
