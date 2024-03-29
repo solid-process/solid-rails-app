@@ -32,7 +32,7 @@ class User < ApplicationRecord
   end
 
   after_create do
-    account = Account.create!(uuid: SecureRandom.uuid)
+    account = Account.create!
 
     account.memberships.create!(user: self, role: :owner)
 

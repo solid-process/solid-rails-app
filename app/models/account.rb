@@ -11,5 +11,5 @@ class Account < ApplicationRecord
   has_one :inbox, -> { inbox }, class_name: "TaskList", inverse_of: :account, dependent: nil
   has_one :owner, through: :ownership, source: :user
 
-  validates :uuid, presence: true, uniqueness: true
+  has_secure_token :uuid
 end
