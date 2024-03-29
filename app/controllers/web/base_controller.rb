@@ -1,14 +1,6 @@
 # frozen_string_literal: true
 
 class Web::BaseController < ApplicationController
-  rescue_from ActionController::InvalidAuthenticityToken do
-    render "web/errors/bad_request", status: :bad_request, layout: "web/errors"
-  end
-
-  rescue_from ActiveRecord::RecordNotFound do
-    render "web/errors/not_found", status: :not_found, layout: "web/errors"
-  end
-
   private
 
   helper_method def user_signed_in?
