@@ -3,7 +3,7 @@
 module Web::Users
   class TokensController < BaseController
     def update
-      current_user.token.refresh_access_token!
+      current_user.token.regenerate_access_token
 
       redirect_to(web_users_settings_api_path, notice: "Access token updated")
     end

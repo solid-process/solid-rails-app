@@ -2,7 +2,7 @@
 
 module API::V1
   module Tasks::Concerns::Rendering
-    TASK_ATTRIBUTES = [:id, :name, :completed_at, :created_at, :updated_at, :task_list_id].freeze
+    TASK_ATTRIBUTES = [:id, :name, :completed, :created_at, :updated_at, :task_list_id].freeze
 
     private
 
@@ -18,8 +18,8 @@ module API::V1
       render_json_with_success(status:, data:)
     end
 
-    def map_json_attributes((id, name, completed_at, created_at, updated_at, task_list_id))
-      {id:, name:, completed_at:, created_at:, updated_at:, task_list_id:}
+    def map_json_attributes((id, name, completed, created_at, updated_at, task_list_id))
+      {id:, name:, completed:, created_at:, updated_at:, task_list_id:}
     end
   end
 end

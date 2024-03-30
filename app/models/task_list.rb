@@ -1,20 +1,8 @@
 # frozen_string_literal: true
 
 class TaskList < ApplicationRecord
-  belongs_to :account
+  include Inbox
 
   has_many :tasks, dependent: :destroy
-
-  scope :inbox, -> { where(inbox: true) }
-
-  validates :name, presence: true
-  validates :inbox, uniqueness: {scope: :account_id}, if: :inbox?
-
-  before_validation :set_inbox_name, if: :inbox?
-
-  private
-
-  def set_inbox_name
-    self.name = "Inbox"
-  end
+  belongs_to :account
 end
