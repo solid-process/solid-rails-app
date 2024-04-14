@@ -10,7 +10,7 @@ module API::V1
       if user.save
         render_json_with_success(status: :created, data: {access_token: user.token.access_token})
       else
-        render_json_with_record_errors(user)
+        render_json_with_model_errors(user)
       end
     end
 

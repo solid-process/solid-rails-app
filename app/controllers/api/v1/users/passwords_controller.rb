@@ -11,7 +11,7 @@ module API::V1
         message = current_user.errors.full_messages.join(", ")
         message.gsub!("Password challenge", "Current password")
 
-        details = current_user.errors.messages
+        details = current_user.errors.to_hash
         details[:current_password] = details.delete(:password_challenge) if details[:password_challenge]
 
         render_json_with_error(status: :unprocessable_entity, message:, details:)

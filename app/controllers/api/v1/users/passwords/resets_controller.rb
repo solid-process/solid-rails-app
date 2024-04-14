@@ -29,7 +29,7 @@ module API::V1
       if user.update(password_params)
         render_json_with_success(status: :ok)
       else
-        render_json_with_record_errors(user)
+        render_json_with_model_errors(user)
       end
     end
 

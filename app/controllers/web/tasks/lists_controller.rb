@@ -24,7 +24,7 @@ module Web::Tasks
       if task_list.save
         redirect_to web_tasks_lists_path, notice: "Task list created"
       else
-        render("web/tasks/lists/new", locals: {task: task})
+        render("web/tasks/lists/new", locals: {task_list:}, status: :unprocessable_entity)
       end
     end
 
@@ -37,7 +37,7 @@ module Web::Tasks
 
         redirect_to web_tasks_lists_path, notice: "Task list updated"
       else
-        render("web/tasks/lists/edit", locals: {task_list: @task_list})
+        render("web/tasks/lists/edit", locals: {task_list: @task_list}, status: :unprocessable_entity)
       end
     end
 

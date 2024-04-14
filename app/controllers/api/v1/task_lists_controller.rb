@@ -27,7 +27,7 @@ module API::V1
       if task_list.save
         render_json_with_attributes(task_list, :created)
       else
-        render_json_with_record_errors(task_list)
+        render_json_with_model_errors(task_list)
       end
     end
 
@@ -35,7 +35,7 @@ module API::V1
       if @task_list.update(task_list_params)
         render_json_with_attributes(@task_list, :ok)
       else
-        render_json_with_record_errors(@task_list)
+        render_json_with_model_errors(@task_list)
       end
     end
 
@@ -51,7 +51,7 @@ module API::V1
       @task_list = current_user.task_lists.find(params[:id])
 
       if @task_list.inbox?
-        render_json_with_error(status: :unprocessable_entity, message: "Inbox cannot be updated or deleted")
+        render_json_with_error(status: :forbidden, message: "Inbox cannot be updated or deleted")
       end
     end
 

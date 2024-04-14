@@ -26,7 +26,7 @@ module API::V1
       if task.save
         render_json_with_attributes(task, :created)
       else
-        render_json_with_attributes(task)
+        render_json_with_model_errors(task)
       end
     end
 
@@ -34,7 +34,7 @@ module API::V1
       if @task.update(task_params)
         render_json_with_attributes(@task, :ok)
       else
-        render_json_with_attributes(@task)
+        render_json_with_model_errors(@task)
       end
     end
 
