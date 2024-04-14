@@ -7,14 +7,9 @@ module Web::Guests
     end
 
     def create
-      user = User.find_by(email: params.require(:user).require(:email))
+      user_params = params.require(:user).permit(:email)
 
-      if user
-        UserMailer.with(
-          user: user,
-          token: user.generate_token_for(:reset_password)
-        ).reset_password.deliver_later
-      end
+      User::Password::SendingResetInstructions.call(user_params)
 
       redirect_to new_web_guests_session_path, notice: "Check your email to reset your password."
     end

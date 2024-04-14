@@ -2,26 +2,20 @@
 
 module Web::Tasks
   class Items::IncompleteController < BaseController
-    before_action :set_task, only: [:update]
-
     def index
-      tasks = current_task_list.tasks.incomplete.order(created_at: :desc)
-
-      render("web/tasks/filter/incomplete", locals: {tasks:})
+      case Account::Tasks::Item::Listing.call(filter: "incomplete", member: current_member)
+      in Solid::Success(tasks:)
+        render("web/tasks/filter/incomplete", locals: {tasks:})
+      end
     end
 
     def update
-      @task.incomplete!
+      case Account::Tasks::Item::Incomplete.call(id: params[:id], member: current_member)
+      in Solid::Success(task:)
+        next_path = (params[:back_to] == "items") ? web_tasks_path : completed_web_tasks_path
 
-      next_path = (params[:back_to] == "items") ? web_tasks_path : completed_web_tasks_path
-
-      redirect_to next_path, notice: "Task marked as incomplete."
-    end
-
-    private
-
-    def set_task
-      @task = current_task_list.tasks.find(params[:id])
+        redirect_to next_path, notice: "Task marked as incomplete."
+      end
     end
   end
 end

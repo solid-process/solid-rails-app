@@ -2,15 +2,15 @@
 
 module API::V1
   class Tasks::CompleteController < BaseController
-    include Tasks::Concerns::Finding
     include Tasks::Concerns::Rendering
 
-    before_action :set_task, only: [:update]
-
     def update
-      @task.complete!
-
-      render_json_with_attributes(@task, :ok)
+      case Account::Tasks::Item::Completion.call(member: current_member, id: params[:id])
+      in Solid::Failure(:task_list_not_found | :task_not_found, _)
+        render_task_or_list_not_found
+      in Solid::Success(task:)
+        render_json_with_attributes(task, :ok)
+      end
     end
   end
 end

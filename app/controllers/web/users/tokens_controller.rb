@@ -3,9 +3,11 @@
 module Web::Users
   class TokensController < BaseController
     def update
-      current_user.token.refresh_access_token!
+      result = User::AccessToken::Refreshing.call(user: current_user)
 
-      redirect_to(web_users_settings_api_path, notice: "Access token updated.")
+      message = result.success? ? {notice: "Access token updated."} : {alert: "Access token cannot be updated."}
+
+      redirect_to(web_users_settings_api_path, message)
     end
   end
 end

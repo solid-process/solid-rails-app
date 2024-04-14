@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
 class Account::Member
-  include ActiveModel::API
-  include ActiveModel::Attributes
-  include ActiveModel::Validations
+  include Solid::Model
 
   attribute :user_token, :string
   attribute :user_id, :integer

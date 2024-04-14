@@ -1,7 +1,7 @@
 <%= render("web/user/settings/shared/header", current_page: "profile") %>
 
 <main>
-  <%= form_with(model: current_user, scope: :user, url: web_users_passwords_path, method: :put) do |f| %>
+  <%= form_with(model: input, scope: :user, url: web_users_passwords_path, method: :put) do |f| %>
     <% if f.object.errors.any? %>
       <ul>
         <% f.object.errors.full_messages.each do |message| %>
@@ -12,12 +12,12 @@
 
     <p>
       <%= f.label :email %>
-      <%= f.email_field :email, disabled: true %>
+      <%= f.email_field :email, disabled: true, value: current_user.email %>
     </p>
 
     <p>
-      <%= f.label :password_challenge, "Current password" %>
-      <%= f.password_field :password_challenge, required: true %>
+      <%= f.label :current_password %>
+      <%= f.password_field :current_password, required: true %>
     <p>
 
     <p>

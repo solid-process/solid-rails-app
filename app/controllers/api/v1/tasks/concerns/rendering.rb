@@ -6,6 +6,10 @@ module API::V1
 
     private
 
+    def render_task_or_list_not_found
+      render_json_with_error(status: :not_found, message: "Task or list not found")
+    end
+
     def task_attribute_names
       TASK_ATTRIBUTES
     end

@@ -2,58 +2,63 @@
 
 module Web::Tasks
   class ListsController < BaseController
-    before_action :set_task_list, only: [:edit, :update, :destroy]
-
-    before_action only: [:edit, :update, :destroy] do
-      if @task_list.inbox?
-        render("web/errors/unprocessable_entity", status: :unprocessable_entity, layout: "web/errors")
-      end
-    end
-
     def index
-      render("web/tasks/lists", locals: {task_lists: current_user.task_lists})
+      result = Account::Tasks::List::Listing.call(account: current_member)
+
+      result.value => {relation: task_lists}
+
+      render("web/tasks/lists", locals: {task_lists:})
     end
 
     def new
-      render("web/tasks/lists/new", locals: {task_list: TaskList.new})
+      input = Account::Tasks::List::Creation::Input.new
+
+      render("web/tasks/lists/new", locals: {task_list: input})
     end
 
     def create
-      task_list = current_account.task_lists.build(task_list_params)
-
-      if task_list.save
+      case Account::Tasks::List::Creation.call(account: current_member, **task_list_params)
+      in Solid::Success
         redirect_to web_tasks_lists_path, notice: "Task list created."
-      else
-        render("web/tasks/lists/new", locals: {task_list:}, status: :unprocessable_entity)
+      in Solid::Failure(input:)
+        render("web/tasks/lists/new", locals: {task_list: input}, status: :unprocessable_entity)
       end
     end
 
     def edit
-      render("web/tasks/lists/edit", locals: {task_list: @task_list})
+      case Account::Tasks::List::Finding.call(account: current_member, id: params[:id])
+      in Solid::Failure(:task_list_not_found | :invalid_input, _) then render_not_found_error
+      in Solid::Failure(:inbox_cannot_be_edited, _) then render_unprocessable_entity_error
+      in Solid::Success(task_list:)
+        input = Account::Tasks::List::Updating::Input.new(task_list.slice(:account, :id, :name))
+
+        render("web/tasks/lists/edit", locals: {task_list: input})
+      end
     end
 
     def update
-      if @task_list.update(task_list_params)
-
+      case Account::Tasks::List::Updating.call(account: current_member, id: params[:id], **task_list_params)
+      in Solid::Failure(:task_list_not_found, _) then render_not_found_error
+      in Solid::Failure(:inbox_cannot_be_edited, _) then render_unprocessable_entity_error
+      in Solid::Failure(input:)
+        render("web/tasks/lists/edit", locals: {task_list: input}, status: :unprocessable_entity)
+      in Solid::Success(task_list:)
         redirect_to web_tasks_lists_path, notice: "Task list updated."
-      else
-        render("web/tasks/lists/edit", locals: {task_list: @task_list}, status: :unprocessable_entity)
       end
     end
 
     def destroy
-      @task_list.destroy!
+      case Account::Tasks::List::Deletion.call(account: current_member, id: params[:id])
+      in Solid::Failure(:task_list_not_found, _) then render_not_found_error
+      in Solid::Failure(:inbox_cannot_be_edited, _) then render_unprocessable_entity_error
+      in Solid::Success
+        self.current_task_list_id = nil
 
-      self.current_task_list_id = nil
-
-      redirect_to web_tasks_lists_path, notice: "Task list deleted."
+        redirect_to web_tasks_lists_path, notice: "Task list deleted."
+      end
     end
 
     private
-
-    def set_task_list
-      @task_list = current_user.task_lists.find(params[:id])
-    end
 
     def task_list_params
       params.require(:task_list).permit(:name)

@@ -7,18 +7,15 @@ module Web::Users
     skip_before_action :authenticate_user!, only: [:create]
 
     def create
-      user = User.authenticate_by(email: user_params[:email], password: user_params[:password])
-
-      if user
+      case User::Authentication.call(user_params)
+      in Solid::Success(user:)
         sign_in(user)
 
         redirect_to web_tasks_path, notice: "You have successfully signed in!"
-      else
+      in Solid::Failure(input:)
         flash.now[:alert] = "Invalid email or password. Please try again."
 
-        user = User.new(email: user_params[:email])
-
-        render("web/guest/sessions/new", status: :unprocessable_entity, locals: {user:})
+        render("web/guest/sessions/new", status: :unprocessable_entity, locals: {user: input})
       end
     end
 

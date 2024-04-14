@@ -6,8 +6,8 @@ Web and REST API application made with [Ruby on Rails](https://guides.rubyonrail
 
 This repository has three branches:
 1. [vanilla-rails](https://github.com/solid-process/solid-rails-app/blob/vanilla-rails/README.md): `100%` Rails way + `0%` solid-process.
-2. [main](https://github.com/solid-process/solid-rails-app/blob/main/README.md): `95%` Rails way + `5%` solid-process. (**📍 you are here**)
-3. [solid-process](https://github.com/solid-process/solid-rails-app/blob/solid-process/README.md): `20%` Rails way + `80%` solid-process.
+2. [main](https://github.com/solid-process/solid-rails-app/blob/main/README.md): `95%` Rails way + `5%` solid-process.
+3. [solid-process](https://github.com/solid-process/solid-rails-app/blob/solid-process/README.md): `20%` Rails way + `80%` solid-process. (**📍 you are here**)
 
 ### 📊 Rails stats and code quality <!-- omit in toc -->
 
@@ -24,9 +24,11 @@ Use:
 
 ## 📢 Disclaimer <!-- omit in toc -->
 
-The goal of this branch is to show how the `solid-process` can be progressively introduced into a Rails application (check out the [`User::Registration`](https://github.com/solid-process/solid-rails-app/blob/main/app/models/user/registration.rb)).
+I just wanted to let you know that this is not an invitation, guide, or recommendation to implement any/every application in this way.
 
-You can use it only where you see fit, and you don't need to choose between one approach (Rails Way) or another (solid-process), as both can coexist in a complementary and friendly way.
+I (Rodrigo Serradura) believe in a pragmatic approach where we use the best tool for the job. The **[vanilla-rails version](https://github.com/solid-process/solid-rails-app/tree/vanilla-rails)** is excellent and capable of handling all the complexity within this system's scope.
+
+That said, consider this project a demonstration of what the `solid-process` gem can do. You may find one or many valuable things to add to your toolbox.
 
 ## 🌟 Highlights of what solid-process can bring to you <!-- omit in toc -->
 
@@ -35,28 +37,69 @@ You can use it only where you see fit, and you don't need to choose between one 
 2. A way for representing/writing critical system operations. It feels like having code that documents itself. You can see the operation's steps, inputs, outputs, side effects, and more in one place.
 
 3. A less coupled codebase, given that this structure encourages the creation of cohesive operations (with a specific purpose), thus reducing the concentration of logic in ActiveRecord models.
-    > e.g., several callbacks from the `User` model were replaced by the [`User::Registration`](https://github.com/solid-process/solid-rails-app/blob/main/app/models/user/registration.rb) process.
 
-4. Standardization of instrumentation and observability of what occurs within each process (Implement a listener to do this automatically and transparently for the developer [[1]](https://github.com/solid-process/solid-rails-app/blob/main/config/initializers/solid_process.rb) [[2]](https://github.com/solid-process/solid-rails-app/blob/main/lib/rails_event_logs_logger_listener.rb)). This will help you better understand what is happening within the system.
+4. Standardization of instrumentation and observability of what occurs within each process (Implement a listener to do this automatically and transparently for the developer [[1]](https://github.com/solid-process/solid-rails-app/blob/solid-process/config/initializers/solid_process.rb) [[2]](https://github.com/solid-process/solid-rails-app/blob/solid-process/lib/rails_event_logs_logger_listener.rb)). This will help you better understand what is happening within the system.
+
     <details>
-    <summary><strong><a href="https://github.com/solid-process/solid-rails-app/blob/main/app/models/user/registration.rb" target="_blank">User::Registration</a> event logs sample:</strong></summary>
+    <summary><strong><a href="https://github.com/solid-process/solid-rails-app/blob/solid-process/app/models/user/registration.rb" target="_blank">User::Registration</a> event logs sample:</strong></summary>
     <pre>
     #0 User::Registration
     * Given(email:, password:, password_confirmation:)
+    * Continue() from method: check_if_email_is_taken
     * Continue(user:) from method: create_user
     * Continue(account:) from method: create_user_account
+      #1 Account::TaskLists::Creation
+        * Given(name:, inbox:, account:)
+        * Continue(task_lists:) from method: fetch_task_lists_relation
+        * Continue() from method: validate_uniqueness_if_inbox
+        * Continue(task_list:) from method: create_task_list
+        * Success(:task_list_created, task_list:)
     * Continue() from method: create_user_inbox
+      #2 User::AccessToken::Creation
+        * Given(user:, access_token:)
+        * Continue() from method: validate_access_token
+        * Continue() from method: check_user_token_existance
+        * Continue(token:) from method: create_token_if_not_exists
+        * Success(:token_created, token:)
     * Continue() from method: create_user_token
     * Continue() from method: send_email_confirmation
-    * Success(:user_registered, user:)
-    </pre>
+    * Success(:user_registered, user:)</pre>
     </details>
 
-5. The file structure reveals the system's critical processes, making it easier to understand its behavior and find where to make changes. Check out the [app/models](https://github.com/solid-process/solid-rails-app/blob/main/app/models) directory.
+5. The file structure reveals the system's critical processes, making it easier to understand its behavior and find where to make changes. Check out the [app/models](https://github.com/solid-process/solid-rails-app/blob/solid-process/app/models) directory.
     <details>
-    <summary><code>app/models</code> file structure (checkout the <a href="https://github.com/solid-process/solid-rails-app/blob/solid-process/app/models" target="_blank">solid-process</a> branch to see a more complete example):</summary>
+    <summary><code>app/models</code> file structure:</summary>
     <pre>
+    app/models/account
+    ├── member.rb
+    └── tasks
+      ├── item
+      │  ├── completion.rb
+      │  ├── creation.rb
+      │  ├── deletion.rb
+      │  ├── finding.rb
+      │  ├── incomplete.rb
+      │  ├── listing.rb
+      │  └── updating.rb
+      └── list
+          ├── creation.rb
+          ├── deletion.rb
+          ├── finding.rb
+          ├── listing.rb
+          └── updating.rb
     app/models/user
+    ├── access_token
+    │  ├── creation.rb
+    │  └── refreshing.rb
+    ├── access_token.rb
+    ├── account_deletion.rb
+    ├── authentication.rb
+    ├── email.rb
+    ├── password
+    │  ├── resetting.rb
+    │  ├── sending_reset_instructions.rb
+    │  └── updating.rb
+    ├── password.rb
     └── registration.rb
     </pre>
     </details>
@@ -69,9 +112,29 @@ Use the following command to generate a list of all processes in the system:
 <summary><code>bin/rails solid:processes</code></summary>
 <pre>
 Lines:
-      62 ./app/models/user/registration.rb
+      28 ./app/models/user/password/updating.rb
+      26 ./app/models/user/password/sending_reset_instructions.rb
+      35 ./app/models/user/password/resetting.rb
+      21 ./app/models/user/authentication.rb
+      35 ./app/models/user/access_token/refreshing.rb
+      37 ./app/models/user/access_token/creation.rb
+      20 ./app/models/user/account_deletion.rb
+      82 ./app/models/user/registration.rb
+      54 ./app/models/account/tasks/item/updating.rb
+      15 ./app/models/account/tasks/item/deletion.rb
+      27 ./app/models/account/tasks/item/listing.rb
+      15 ./app/models/account/tasks/item/incomplete.rb
+      25 ./app/models/account/tasks/item/creation.rb
+      15 ./app/models/account/tasks/item/completion.rb
+      23 ./app/models/account/tasks/item/finding.rb
+      29 ./app/models/account/tasks/list/updating.rb
+      15 ./app/models/account/tasks/list/deletion.rb
+      17 ./app/models/account/tasks/list/listing.rb
+      40 ./app/models/account/tasks/list/creation.rb
+      23 ./app/models/account/tasks/list/finding.rb
+     582 total
 
-Files: 1
+Files: 20
 </pre>
 </details>
 

@@ -5,31 +5,19 @@ module API::V1
     skip_before_action :authenticate_user!
 
     def create
-      user = User.find_by(email: user_params[:email])
-
-      if user
-        UserMailer.with(
-          user: user,
-          token: user.generate_token_for(:reset_password)
-        ).reset_password.deliver_later
-      end
+      User::Password::SendingResetInstructions.call(user_params)
 
       render_json_with_success(status: :ok)
     end
 
     def update
-      token = password_params.delete(:token)
-
-      return render_invalid_token if token.blank?
-
-      user = User.find_by_token_for(:reset_password, token)
-
-      return render_invalid_token if user.nil?
-
-      if user.update(password_params)
+      case User::Password::Resetting.call(password_params)
+      in Solid::Success
         render_json_with_success(status: :ok)
-      else
-        render_json_with_model_errors(user)
+      in Solid::Failure(:user_not_found, _)
+        render_invalid_token
+      in Solid::Failure(input:)
+        render_json_with_model_errors(input)
       end
     end
 
@@ -40,7 +28,7 @@ module API::V1
     end
 
     def password_params
-      @password_params ||= params.require(:user).permit(:token, :password, :password_confirmation)
+      params.require(:user).permit(:token, :password, :password_confirmation)
     end
 
     def render_invalid_token

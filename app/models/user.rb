@@ -12,16 +12,7 @@ class User < ApplicationRecord
   has_one :ownership, -> { owner }, class_name: "Membership", inverse_of: :user, dependent: nil
   has_one :account, through: :ownership
   has_one :inbox, through: :account
-
   has_one :token, class_name: "UserToken", dependent: :destroy
-
-  with_options presence: true do
-    validates :password, confirmation: true, length: {minimum: 8}, if: -> { new_record? || password.present? }
-
-    validates :email, format: {with: URI::MailTo::EMAIL_REGEXP}, uniqueness: true
-  end
-
-  normalizes :email, with: -> { _1.strip.downcase }
 
   generates_token_for :reset_password, expires_in: 15.minutes do
     password_salt&.last(10)
@@ -33,5 +24,9 @@ class User < ApplicationRecord
 
   before_destroy prepend: true do
     account.destroy!
+  end
+
+  def self.find_by_reset_password(token:)
+    find_by_token_for(:reset_password, token)
   end
 end

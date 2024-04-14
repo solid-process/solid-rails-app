@@ -3,5 +3,5 @@
 <main>
   <h2>Edit task list #<%= task_list.id %></h2>
 
-  <%= render("form", task_list:, url: web_tasks_list_path(task_list), method: :put) %>
+  <%= render("form", task_list:, url: web_tasks_list_path(id: task_list.id), method: :put) %>
 </main>

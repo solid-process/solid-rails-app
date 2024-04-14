@@ -56,7 +56,7 @@ class WebUserSettingsPasswordUpdatingTest < ActionDispatch::IntegrationTest
 
     params = {
       user: {
-        password_challenge: "123123123",
+        current_password: "123123123",
         password: "newpass",
         password_confirmation: "new_pass"
       }
@@ -71,7 +71,7 @@ class WebUserSettingsPasswordUpdatingTest < ActionDispatch::IntegrationTest
 
     params = {
       user: {
-        password_challenge: "password",
+        current_password: "password",
         password: "newpassword",
         password_confirmation: "newpassword"
       }
@@ -81,7 +81,7 @@ class WebUserSettingsPasswordUpdatingTest < ActionDispatch::IntegrationTest
 
     assert_response :unprocessable_entity
 
-    assert_select("li", "Password challenge is invalid")
+    assert_select("li", "Current password is invalid")
   end
 
   test "user tries to update the password with valid data" do
@@ -91,7 +91,7 @@ class WebUserSettingsPasswordUpdatingTest < ActionDispatch::IntegrationTest
 
     params = {
       user: {
-        password_challenge: "123123123",
+        current_password: "123123123",
         password: "new_password",
         password_confirmation: "new_password"
       }
