@@ -5,9 +5,22 @@ Web and REST API application made with [Ruby on Rails](https://guides.rubyonrail
 ## 🙌 Repository branches <!-- omit in toc -->
 
 This repository has three branches:
-1. [main](https://github.com/B-CDD/solid-rails-app/blob/main/README.md): `95%` Rails way + `5%` solid-process.
-2. [vanilla-rails](https://github.com/B-CDD/solid-rails-app/blob/vanilla-rails/README.md): `100%` Rails way + `0%` solid-process. (**📍 you are here**)
-3. [solid-process](https://github.com/B-CDD/solid-rails-app/blob/solid-process/README.md): `20%` Rails way + `80%` solid-process.
+1. [vanilla-rails](https://github.com/solid-process/solid-rails-app/blob/vanilla-rails/README.md): `100%` Rails way + `0%` solid-process. (**📍 you are here**)
+2. [main](https://github.com/solid-process/solid-rails-app/blob/main/README.md): `95%` Rails way + `5%` solid-process.
+3. [solid-process](https://github.com/solid-process/solid-rails-app/blob/solid-process/README.md): `20%` Rails way + `80%` solid-process.
+
+### 📊 Rails stats and code quality <!-- omit in toc -->
+
+| Branch  | LOC   | Rubycritic   | Tests coverage   |
+| ------- | :---: | :----------: | :--------------: |
+| [vanilla-rails](https://github.com/solid-process/solid-rails-app/blob/vanilla-rails) | 1435 | 94.39 | 98.53% |
+| [main](https://github.com/solid-process/solid-rails-app/blob/main) | 1517 | 94.30 | 98.57% |
+| [solid-process](https://github.com/solid-process/solid-rails-app/blob/solid-process) | 1883 | 93.93 | 97.13% |
+
+Use:
+- `bin/rails test` to generate the tests coverage report.
+- `bin/rails stats` to generate the LOC report.
+- `bin/rails rubycritic` to generate the rubycritic (code quality) report.
 
 ## 📚 Table of contents <!-- omit in toc -->
 

@@ -36,6 +36,8 @@ end
 group :development do
   gem "letter_opener", "~> 1.9"
 
+  gem "rubycritic", "~> 4.9", require: false
+
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
 
