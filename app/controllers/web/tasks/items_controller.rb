@@ -5,7 +5,7 @@ module Web::Tasks
     before_action :set_task, only: [:edit, :update, :destroy]
 
     def index
-      tasks = current_task_list.tasks.order(created_at: :desc)
+      tasks = current_task_list.tasks.order(Arel.sql("tasks.completed_at DESC NULLS FIRST, tasks.created_at DESC"))
 
       render("web/tasks/filter/all", locals: {tasks:})
     end
@@ -18,7 +18,7 @@ module Web::Tasks
       task = current_task_list.tasks.build(task_params)
 
       if task.save
-        redirect_to next_path, notice: "Task created"
+        redirect_to next_path, notice: "Task created."
       else
         render("web/tasks/items/new", locals: {task: task})
       end
@@ -31,7 +31,7 @@ module Web::Tasks
     def update
       if @task.update(task_params)
 
-        redirect_to next_path, notice: "Task updated"
+        redirect_to next_path, notice: "Task updated."
       else
         render("web/tasks/items/edit", locals: {task: @task})
       end
@@ -40,7 +40,7 @@ module Web::Tasks
     def destroy
       @task.destroy!
 
-      redirect_to next_path, notice: "Task deleted"
+      redirect_to next_path, notice: "Task deleted."
     end
 
     private
@@ -50,10 +50,9 @@ module Web::Tasks
     end
 
     def task_params
-      if action_name.in?("create")
-        params.require(:task).permit(:name)
-      else
-        params.require(:task).permit(:name, :completed)
+      case action_name
+      when "create" then params.require(:task).permit(:name)
+      when "update" then params.require(:task).permit(:name, :completed)
       end
     end
 

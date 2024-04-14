@@ -16,8 +16,8 @@ class WebUserSettingsAccountDeletionTest < ActionDispatch::IntegrationTest
 
     get(web_users_settings_profile_url)
 
-    assert_select("h2", "Account Deletion")
-    assert_select("button", "Delete Account")
+    assert_select("h2", "Account deletion")
+    assert_select("button", "Delete account")
 
     assert_difference(
       -> { User.count } => -1,
@@ -35,7 +35,7 @@ class WebUserSettingsAccountDeletionTest < ActionDispatch::IntegrationTest
 
     assert_response :ok
 
-    assert_select(".notice", "Your account has been deleted")
+    assert_select(".notice", "Your account has been deleted.")
 
     assert_nil User.find_by(id: user.id)
   end

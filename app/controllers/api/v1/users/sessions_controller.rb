@@ -10,7 +10,7 @@ module API::V1
       if user
         render_json_with_success(status: :ok, data: {access_token: user.token.access_token})
       else
-        render_json_with_error(status: :unauthorized, message: "Invalid email or password")
+        render_json_with_error(status: :unauthorized, message: "Invalid email or password. Please try again.")
       end
     end
 

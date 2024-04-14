@@ -21,7 +21,7 @@ module Web::Users
     def destroy
       current_user.destroy!
 
-      redirect_to root_path, notice: "Your account has been deleted"
+      redirect_to root_path, notice: "Your account has been deleted."
     end
 
     private

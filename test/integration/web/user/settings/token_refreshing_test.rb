@@ -22,7 +22,7 @@ class WebUserSettingsTokenRefreshingTest < ActionDispatch::IntegrationTest
 
     get(web_users_settings_api_url)
 
-    assert_select("h2", "My access token")
+    assert_select("h2", "My API access token")
 
     assert_select("pre", user.token.access_token)
 
@@ -33,6 +33,8 @@ class WebUserSettingsTokenRefreshingTest < ActionDispatch::IntegrationTest
     assert_redirected_to web_users_settings_api_url
 
     follow_redirect!
+
+    assert_select(".notice", "Access token updated.")
 
     assert_select("pre", user.token.access_token)
   end

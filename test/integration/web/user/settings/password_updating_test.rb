@@ -31,7 +31,7 @@ class WebUserSettingsPasswordUpdatingTest < ActionDispatch::IntegrationTest
     get(web_users_settings_profile_url)
 
     assert_select("label", "Email")
-    assert_select("label", "New Password")
+    assert_select("label", "New password")
     assert_select("label", "Password confirmation")
 
     email_inputs = assert_select("input[type='email']")
@@ -105,6 +105,6 @@ class WebUserSettingsPasswordUpdatingTest < ActionDispatch::IntegrationTest
 
     assert_response :ok
 
-    assert_select(".notice", "Your password has been updated!")
+    assert_select(".notice", "Your password has been updated.")
   end
 end

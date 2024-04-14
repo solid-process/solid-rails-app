@@ -38,8 +38,8 @@ Rails.application.routes.draw do
       end
 
       collection do
-        get :completed, to: "filter/completed#index"
-        get :incomplete, to: "filter/incomplete#index"
+        get :completed, to: "items/completed#index"
+        get :incomplete, to: "items/incomplete#index"
       end
     end
 

@@ -86,7 +86,7 @@ class WebTaskItemsTest < ActionDispatch::IntegrationTest
 
     assert_response :ok
 
-    assert_select(".notice", "Task marked as incomplete")
+    assert_select(".notice", "Task marked as incomplete.")
 
     assert_equal 0, css_select("[data-method=\"put\"]").size
 
@@ -106,7 +106,7 @@ class WebTaskItemsTest < ActionDispatch::IntegrationTest
 
     assert_response :ok
 
-    assert_select(".notice", "Task deleted")
+    assert_select(".notice", "Task deleted.")
 
     assert_equal 0, css_select("[data-method=\"put\"]").size
 
@@ -141,7 +141,7 @@ class WebTaskItemsTest < ActionDispatch::IntegrationTest
 
     assert_response :ok
 
-    assert_select(".notice", "Task marked as completed")
+    assert_select(".notice", "Task marked as completed.")
 
     assert_equal 0, css_select("[data-method=\"put\"]").size
 
@@ -161,7 +161,7 @@ class WebTaskItemsTest < ActionDispatch::IntegrationTest
 
     assert_response :ok
 
-    assert_select(".notice", "Task deleted")
+    assert_select(".notice", "Task deleted.")
 
     assert_equal 0, css_select("[data-method=\"put\"]").size
 

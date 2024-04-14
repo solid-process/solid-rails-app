@@ -7,7 +7,6 @@ class Task < ApplicationRecord
   scope :incomplete, -> { where(completed_at: nil) }
 
   validates :name, presence: true
-  validates :completed_at, presence: true, if: :completed?
 
   attribute :completed, :boolean
 

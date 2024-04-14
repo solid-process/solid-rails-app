@@ -1,0 +1,16 @@
+<%
+  style = "background-color: var(--accent-bg)"
+  disabled = current_task_list?(task_list) ? "disabled" : ""
+  button_tag = "<button #{disabled} title=\"Delete\" style=\"#{style}\">🗑️</button>".html_safe
+%>
+
+<% if task_list.inbox? %>
+  <%= button_tag %>
+<% else %>
+  <%= link_to(
+    button_tag,
+    web_tasks_list_path(task_list),
+    method: :delete,
+    data: {confirm: "Are you sure you want to delete this task list?"}
+  ) %>
+<% end %>

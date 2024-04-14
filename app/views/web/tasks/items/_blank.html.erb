@@ -1,11 +1,11 @@
 <center>
   <p class="notice" style="color: var(--text); border: 2px solid var(--text);">
-    <% if scope == "items" %>
-      You don't have any tasks. Create one by touching the <strong>"+ New"</strong> button.
+    <% if scope == "incomplete" %>
+      You don't have any incomplete tasks. Great job!
     <% elsif scope == "completed" %>
       You don't have any completed tasks. Keep up the good work!
     <% else %>
-      You don't have any incomplete tasks. Great job!
+      You don't have any tasks. Create one by touching the <strong>"+ New"</strong> button.
     <% end %>
   </p>
 </center>

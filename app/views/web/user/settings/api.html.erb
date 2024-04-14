@@ -1,7 +1,7 @@
-<%= render("web/user/settings/shared/header", current: "api") %>
+<%= render("web/user/settings/shared/header", current_page: "api") %>
 
 <main>
-  <h2>My access token</h2>
+  <h2>My API access token</h2>
 
   <pre><%= current_user.token.access_token %></pre>
 

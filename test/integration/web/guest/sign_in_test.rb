@@ -18,7 +18,7 @@ class WebGuestSignInTest < ActionDispatch::IntegrationTest
 
     assert_select("h2", "Please sign in")
 
-    assert_select(".alert", "Invalid email or password")
+    assert_select(".alert", "Invalid email or password. Please try again.")
   end
 
   test "guest signs in with valid data" do

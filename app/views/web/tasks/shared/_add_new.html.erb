@@ -1,0 +1,5 @@
+<%=
+  path = controller_name == "lists" ? new_web_tasks_list_path : new_web_task_path(back_to:)
+
+  link_to("+ New", path, class: is_current_page["new"] )
+%>

@@ -7,7 +7,7 @@ module Web::Tasks
     def update
       self.current_task_list_id = @task_list.id
 
-      redirect_to web_tasks_lists_path, notice: "Task list selected"
+      redirect_to web_tasks_lists_path, notice: "Task list selected."
     end
 
     private

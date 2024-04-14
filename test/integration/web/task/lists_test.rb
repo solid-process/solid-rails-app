@@ -20,7 +20,7 @@ class WebTaskListsTest < ActionDispatch::IntegrationTest
 
     assert_response :ok
 
-    assert_select("td", "Inbox selected")
+    assert_select("td", "Inbox 📌")
     assert_select("td", "Foo")
   end
 
@@ -47,7 +47,7 @@ class WebTaskListsTest < ActionDispatch::IntegrationTest
 
     assert_response :ok
 
-    assert_select(".notice", "Task list deleted")
+    assert_select(".notice", "Task list deleted.")
   end
 
   test "user tries to destroy the inbox task list" do

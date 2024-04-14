@@ -1,4 +1,4 @@
-<%= render("web/user/settings/shared/header", current: "profile") %>
+<%= render("web/user/settings/shared/header", current_page: "profile") %>
 
 <main>
   <%= form_with(model: current_user, scope: :user, url: web_users_passwords_path, method: :put) do |f| %>
@@ -16,12 +16,12 @@
     </p>
 
     <p>
-      <%= f.label :password_challenge, "Current Password" %>
+      <%= f.label :password_challenge, "Current password" %>
       <%= f.password_field :password_challenge, required: true %>
     <p>
 
     <p>
-      <%= f.label :password, "New Password" %>
+      <%= f.label :password, "New password" %>
       <%= f.password_field :password, required: true %>
     <p>
 
@@ -31,21 +31,21 @@
     <p>
 
     <p>
-      <%= f.submit "Update Password" %>
+      <%= f.submit "Update password" %>
       <%= link_to("Cancel", web_tasks_path, style: "margin-left: 10px") %>
     <p>
   <% end %>
 
   <hr />
 
-  <h2>Account Deletion</h2>
+  <h2>Account deletion</h2>
 
   <p>
     Deleting your account will permanently remove all of your tasks and lists. This action cannot be undone.
   </p>
 
   <%= button_to(
-    "Delete Account",
+    "Delete account",
     web_users_registrations_path,
     method: :delete,
     data: {confirm: "Are you sure you want to delete your account?"},

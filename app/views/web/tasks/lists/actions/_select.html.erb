@@ -1,0 +1,6 @@
+<%= button_to(
+  "Pick",
+  select_web_tasks_list_path(task_list),
+  disabled: current_task_list?(task_list),
+  method: :put,
+) %>

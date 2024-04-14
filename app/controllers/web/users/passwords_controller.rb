@@ -4,7 +4,7 @@ module Web::Users
   class PasswordsController < BaseController
     def update
       if current_user.update(password_params)
-        redirect_to web_users_settings_profile_path, notice: "Your password has been updated!"
+        redirect_to web_users_settings_profile_path, notice: "Your password has been updated."
       else
         render("web/user/settings/profile", status: :unprocessable_entity)
       end

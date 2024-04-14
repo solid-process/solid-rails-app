@@ -1,22 +1,3 @@
-<%= render("web/tasks/shared/header", current: "tasks", title: current_task_list_name, back_to: "items") %>
+<%= render("web/tasks/shared/header", current_page: "tasks", back_to: "all") %>
 
-<main>
-  <% if current_task_list.tasks.exists? %>
-    <center>
-      <p>
-        <strong>Filter:</strong>
-        <%= link_to("All (#{tasks.size})", web_tasks_path)%> |
-        <%= link_to("Incomplete", incomplete_web_tasks_path, style: "color: var(--text) !important;") %> |
-        <%= link_to("Completed", completed_web_tasks_path, style: "color: var(--text) !important;") %>
-      </p>
-    </center>
-
-    <% if tasks.present? %>
-      <%= render("web/tasks/filter/items", tasks:) %>
-    <% else %>
-      <%= render("web/tasks/filter/blank", scope: "items") %>
-    <% end %>
-  <% else %>
-    <%= render("web/tasks/filter/blank", scope: "items") %>
-  <% end %>
-</main>
+<%= render("web/tasks/items", tasks:, scope: "all") %>

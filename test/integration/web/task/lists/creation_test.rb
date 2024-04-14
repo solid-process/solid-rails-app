@@ -50,7 +50,7 @@ class WebTaskListsCreationTest < ActionDispatch::IntegrationTest
 
     assert_response :ok
 
-    assert_select(".notice", "Task list created")
+    assert_select(".notice", "Task list created.")
 
     assert_select("td", "Foo")
   end

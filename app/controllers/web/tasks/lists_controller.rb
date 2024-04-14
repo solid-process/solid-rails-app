@@ -11,7 +11,7 @@ module Web::Tasks
     end
 
     def index
-      render("web/tasks/lists/index", locals: {task_lists: current_user.task_lists})
+      render("web/tasks/lists", locals: {task_lists: current_user.task_lists})
     end
 
     def new
@@ -22,7 +22,7 @@ module Web::Tasks
       task_list = Current.account.task_lists.build(task_list_params)
 
       if task_list.save
-        redirect_to web_tasks_lists_path, notice: "Task list created"
+        redirect_to web_tasks_lists_path, notice: "Task list created."
       else
         render("web/tasks/lists/new", locals: {task_list:}, status: :unprocessable_entity)
       end
@@ -35,7 +35,7 @@ module Web::Tasks
     def update
       if @task_list.update(task_list_params)
 
-        redirect_to web_tasks_lists_path, notice: "Task list updated"
+        redirect_to web_tasks_lists_path, notice: "Task list updated."
       else
         render("web/tasks/lists/edit", locals: {task_list: @task_list}, status: :unprocessable_entity)
       end
@@ -46,7 +46,7 @@ module Web::Tasks
 
       self.current_task_list_id = nil
 
-      redirect_to web_tasks_lists_path, notice: "Task list deleted"
+      redirect_to web_tasks_lists_path, notice: "Task list deleted."
     end
 
     private

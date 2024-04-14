@@ -8,12 +8,14 @@ module API::V1
     before_action :set_task, only: [:update, :destroy]
 
     def index
-      relation = @task_list.tasks.order(created_at: :desc)
+      relation = @task_list.tasks
 
-      case params[:filter]
-      when "completed" then relation = relation.completed
-      when "incomplete" then relation = relation.incomplete
-      end
+      relation =
+        case params[:filter]
+        when "completed" then relation.completed.order(completed_at: :desc)
+        when "incomplete" then relation.incomplete.order(created_at: :desc)
+        else relation.order(Arel.sql("tasks.completed_at DESC NULLS FIRST, tasks.created_at DESC"))
+        end
 
       data = relation.pluck(task_attribute_names).collect! { map_json_attributes(_1) }
 

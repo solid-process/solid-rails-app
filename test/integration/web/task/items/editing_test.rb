@@ -50,7 +50,7 @@ class WebTaskItemsEditingTest < ActionDispatch::IntegrationTest
 
     assert_response :ok
 
-    assert_select(".notice", "Task updated")
+    assert_select(".notice", "Task updated.")
 
     assert_select("td", "Bar")
 

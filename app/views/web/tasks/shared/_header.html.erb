@@ -1,16 +1,16 @@
-<% current_page = ->(page) { current == page ? "current" : "" } %>
+<%
+  title = local_assigns[:title] || current_task_list_name
+  back_to = local_assigns[:back_to]
+  is_current_page = ->(page) { current_page == page ? "current" : "" }
+%>
 
 <header>
   <h1><%= title %></h1>
 
   <nav>
-    <% if controller_name == "lists" %>
-      <%= link_to("+ New".html_safe, new_web_tasks_list_path, class: current_page["new"] ) %>
-    <% else %>
-      <%= link_to("+ New".html_safe, new_web_task_path(back_to: local_assigns[:back_to]), class: current_page["new"] ) %>
-    <% end %>
-    <%= link_to("Tasks", web_tasks_path, class: current_page["tasks"]) %>
-    <%= link_to("Lists", web_tasks_lists_path, class: current_page["lists"]) %>
+    <%= render("web/tasks/shared/add_new", is_current_page:, back_to:) %>
+    <%= link_to("Tasks", web_tasks_path, class: is_current_page["tasks"]) %>
+    <%= link_to("Lists", web_tasks_lists_path, class: is_current_page["lists"]) %>
     <%= link_to("Settings", web_users_settings_profile_path) %>
     <%= link_to("Log out", web_users_sessions_path, method: :delete) %>
   </nav>

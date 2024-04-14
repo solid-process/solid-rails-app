@@ -36,7 +36,7 @@ class WebTaskItemsCreationTest < ActionDispatch::IntegrationTest
 
     assert_response :ok
 
-    assert_select(".notice", "Task created")
+    assert_select(".notice", "Task created.")
 
     assert_select("p", /All \(2\)/)
 

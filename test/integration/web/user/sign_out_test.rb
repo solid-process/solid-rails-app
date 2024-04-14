@@ -22,6 +22,6 @@ class WebUserSignOutTest < ActionDispatch::IntegrationTest
 
     assert_response :ok
 
-    assert_select(".notice", "You have successfully signed out!")
+    assert_select(".notice", "You have successfully signed out.")
   end
 end
