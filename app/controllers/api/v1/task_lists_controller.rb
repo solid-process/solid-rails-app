@@ -22,7 +22,7 @@ module API::V1
     end
 
     def create
-      task_list = current_user.account.task_lists.new(task_list_params)
+      task_list = current_account.task_lists.new(task_list_params)
 
       if task_list.save
         render_json_with_attributes(task_list, :created)
@@ -48,7 +48,7 @@ module API::V1
     private
 
     def set_task_list
-      @task_list = current_user.task_lists.find(params[:id])
+      @task_list = current_task_list!
 
       if @task_list.inbox?
         render_json_with_error(status: :forbidden, message: "Inbox cannot be updated or deleted")

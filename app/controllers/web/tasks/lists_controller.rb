@@ -19,7 +19,7 @@ module Web::Tasks
     end
 
     def create
-      task_list = Current.account.task_lists.build(task_list_params)
+      task_list = current_account.task_lists.build(task_list_params)
 
       if task_list.save
         redirect_to web_tasks_lists_path, notice: "Task list created"
