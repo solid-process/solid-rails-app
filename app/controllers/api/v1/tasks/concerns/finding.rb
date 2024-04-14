@@ -15,7 +15,7 @@ module API::V1
     private
 
     def set_task_list
-      @task_list = current_user.task_lists.find(params[:task_list_id])
+      @task_list = current_task_list!
     end
 
     def set_task

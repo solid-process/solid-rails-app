@@ -21,15 +21,31 @@ module API::V1
     protected
 
     def authenticate_user!
-      return if current_user
+      return if current_member&.user?
 
       render_json_with_error(status: :unauthorized, message: "Invalid access token")
     end
 
-    def current_user
-      @current_user ||= authenticate_with_http_token do |access_token|
-        User.joins(:token).find_by(user_tokens: {access_token:})
+    def current_member
+      @current_member ||= authenticate_with_http_token do |access_token|
+        task_list_id =
+          case controller_name
+          when "task_lists" then params[:id]
+          when "tasks", "incomplete", "complete" then params[:task_list_id]
+          end
+
+        Account::Member.fetch_by(user_token: access_token, task_list_id:)
       end
+    end
+
+    def current_user = current_member.user
+
+    def current_account = current_member.account
+
+    def current_task_list = current_member.task_list
+
+    def current_task_list!
+      current_task_list or raise ActiveRecord::RecordNotFound
     end
 
     def render_json_with_success(status:, data: nil)
