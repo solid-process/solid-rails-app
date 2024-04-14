@@ -36,6 +36,7 @@ This repository has three branches:
     - [Deletion](#deletion-1)
     - [Marking as completed](#marking-as-completed)
     - [Marking as incomplete](#marking-as-incomplete)
+- [Web app screenshots](#web-app-screenshots)
 
 ## System dependencies
 * SQLite3
@@ -248,3 +249,45 @@ curl -X PUT "$API_HOST/api/v1/task_lists/1/tasks/1/incomplete" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $API_TOKEN"
 ```
+
+## Web app screenshots
+
+### Sign in <!-- omit in toc -->
+
+<img src="/docs/screenshots/010_sign_in.jpg" width="400"/>
+<img src="/docs/screenshots/011_sign_in_error.jpg" width="400"/>
+
+### Forgot password <!-- omit in toc -->
+
+<img src="/docs/screenshots/020_forgot_password.jpg" width="400"/>
+
+### Sign up <!-- omit in toc -->
+
+<img src="/docs/screenshots/030_sign_up.jpg" width="400"/>
+<img src="/docs/screenshots/031_sign_up_errors.jpg" width="400"/>
+<img src="/docs/screenshots/032_sign_up_success.jpg" width="400"/>
+
+### Tasks <!-- omit in toc -->
+
+<img src="/docs/screenshots/040_new_task.jpg" width="400"/>
+<img src="/docs/screenshots/041_task_created.jpg" width="400"/>
+<img src="/docs/screenshots/042_task_completed.jpg" width="400"/>
+<img src="/docs/screenshots/043_tasks_completed.jpg" width="400"/>
+<img src="/docs/screenshots/044_tasks_incomplete.jpg" width="400"/>
+<img src="/docs/screenshots/045_edit_task.jpg" width="400"/>
+
+### Task Lists <!-- omit in toc -->
+
+<img src="/docs/screenshots/050_task_lists.jpg" width="400"/>
+<img src="/docs/screenshots/051_new_task_list.jpg" width="400"/>
+<img src="/docs/screenshots/052_select_task_list.jpg" width="400"/>
+
+### Settings <!-- omit in toc -->
+
+<img src="/docs/screenshots/060_settings_profile.jpg" width="400"/>
+<img src="/docs/screenshots/061_settings_account_deletion.jpg" width="400"/>
+<img src="/docs/screenshots/062_settings_api_access_token.jpg" width="400"/>
+
+### Sign out <!-- omit in toc -->
+
+<img src="/docs/screenshots/070_sign_out.jpg" width="400"/>
