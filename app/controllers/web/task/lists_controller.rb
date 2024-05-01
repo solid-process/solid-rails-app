@@ -6,7 +6,7 @@ module Web::Task
 
     before_action only: [:edit, :update, :destroy] do
       if @task_list.inbox?
-        render("web/errors/unprocessable_entity", status: :unprocessable_entity, layout: "web/errors")
+        head :unprocessable_entity
       end
     end
 
