@@ -55,7 +55,7 @@ class WebGuestSignUpTest < ActionDispatch::IntegrationTest
       -> { Account.count } => 1,
       -> { Membership.count } => 1,
       -> { TaskList.count } => 1,
-      -> { UserToken.count } => 1
+      -> { User::Token.count } => 1
     ) do
       post(web_guest_registrations_url, params:)
     end

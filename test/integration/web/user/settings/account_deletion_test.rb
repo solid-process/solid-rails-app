@@ -24,7 +24,7 @@ class WebUserSettingsAccountDeletionTest < ActionDispatch::IntegrationTest
       -> { Account.count } => -1,
       -> { Membership.count } => -1,
       -> { TaskList.count } => -1,
-      -> { UserToken.count } => -1
+      -> { User::Token.count } => -1
     ) do
       delete(web_user_registrations_url)
     end

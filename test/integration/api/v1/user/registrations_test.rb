@@ -63,7 +63,7 @@ class API::V1::User::RegistrationsTest < ActionDispatch::IntegrationTest
       -> { Account.count } => 1,
       -> { Membership.count } => 1,
       -> { TaskList.count } => 1,
-      -> { UserToken.count } => 1
+      -> { User::Token.count } => 1
     ) do
       post(api_v1_user_registrations_url, params:)
     end
@@ -92,7 +92,7 @@ class API::V1::User::RegistrationsTest < ActionDispatch::IntegrationTest
       -> { Account.count } => -1,
       -> { Membership.count } => -1,
       -> { TaskList.count } => -1,
-      -> { UserToken.count } => -1
+      -> { User::Token.count } => -1
     ) do
       delete(api_v1_user_registrations_url, headers: api_v1_authorization_header(user))
     end

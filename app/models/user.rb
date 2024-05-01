@@ -13,7 +13,7 @@ class User < ApplicationRecord
   has_one :account, through: :ownership
   has_one :inbox, through: :account
 
-  has_one :token, class_name: "UserToken", dependent: :destroy
+  has_one :token, dependent: :destroy
 
   with_options presence: true do
     validates :password, confirmation: true, length: {minimum: 8}, if: -> { new_record? || password.present? }
