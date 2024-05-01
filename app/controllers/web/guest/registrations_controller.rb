@@ -3,7 +3,7 @@
 module Web::Guest
   class RegistrationsController < BaseController
     def new
-      render("web/guest/registrations/new", locals: {user: ::User.new})
+      render("web/guest/registrations/new", locals: {user: ::User::Registration::Input.new})
     end
 
     def create
@@ -12,8 +12,8 @@ module Web::Guest
         sign_in(user)
 
         redirect_to web_task_items_path, notice: "You have successfully registered!"
-      in Solid::Failure(user:)
-        render("web/guest/registrations/new", locals: {user:}, status: :unprocessable_entity)
+      in Solid::Failure(input:)
+        render("web/guest/registrations/new", locals: {user: input}, status: :unprocessable_entity)
       end
     end
 

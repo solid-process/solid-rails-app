@@ -15,9 +15,9 @@ Web and REST API application made with [Ruby on Rails](https://guides.rubyonrail
 
 ## 💡 Branch summary
 
-Introduces the solid-process gem and implements the application's first process ([User::Registration](https://github.com/solid-process/solid-rails-app/blob/solid-process-0/app/models/user/registration.rb)).
+Defines types for input attributes and uses steps to perform all operations within a transaction block that will perform a rollback if any step returns a failure. After the commit, the confirmation email is sent, and the created user is exposed in the [User::Registration](https://github.com/solid-process/solid-rails-app/blob/solid-process-1/app/models/user/registration.rb) result.
 
-It shows the low learning curve required to use gem features. Although basic, this implementation removes callbacks from the [User](https://github.com/solid-process/solid-rails-app/blob/solid-process-0/app/models/user.rb) model, as the process will orchestrate all account creation within a transaction and send a confirmation email after its commit.
+Note: In this version, the process input ([User::Registration::Input](https://github.com/solid-process/solid-rails-app/blob/solid-process-1/app/controllers/web/guest/registrations_controller.rb#L6)) is used in the view forms, causing the view to be coupled to it and no longer to the User model (ActiveRecord).
 
 ## 📣 Important info
 

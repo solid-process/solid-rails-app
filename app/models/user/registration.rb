@@ -2,33 +2,61 @@
 
 class User::Registration < Solid::Process
   input do
-    attribute :email
-    attribute :password
-    attribute :password_confirmation
+    attribute :email, :string
+    attribute :password, :string
+    attribute :password_confirmation, :string
   end
 
   def call(attributes)
-    user = User.new(attributes)
+    rollback_on_failure {
+      Given(attributes)
+        .and_then(:create_user)
+        .and_then(:create_user_account)
+        .and_then(:create_user_inbox)
+        .and_then(:create_user_token)
+    }
+      .and_then(:send_email_confirmation)
+      .and_expose(:user_registered, [:user])
+  end
 
-    return Failure(:invalid_user, user:) if user.invalid?
+  private
 
-    ActiveRecord::Base.transaction do
-      user.save!
+  def create_user(email:, password:, password_confirmation:, **)
+    user = User.create(email:, password:, password_confirmation:)
 
-      account = Account.create!(uuid: SecureRandom.uuid)
+    return Continue(user:) if user.persisted?
 
-      account.memberships.create!(user: user, role: :owner)
+    input.errors.merge!(user.errors)
 
-      account.task_lists.inbox.create!
+    Failure(:invalid_input, input:)
+  end
 
-      user.create_token!
-    end
+  def create_user_account(user:, **)
+    account = Account.create!(uuid: SecureRandom.uuid)
 
+    account.memberships.create!(user:, role: :owner)
+
+    Continue(account:)
+  end
+
+  def create_user_inbox(account:, **)
+    account.task_lists.inbox.create!
+
+    Continue()
+  end
+
+  def create_user_token(user:, **)
+    user.create_token!
+
+    Continue()
+  end
+
+  def send_email_confirmation(user:, **)
     UserMailer.with(
-      user: user,
+      user:,
       token: user.generate_token_for(:email_confirmation)
     ).email_confirmation.deliver_later
 
-    Success(:user_registered, user: user)
+    Continue()
   end
 end
