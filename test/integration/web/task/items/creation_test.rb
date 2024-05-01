@@ -42,18 +42,4 @@ class WebTaskItemsCreationTest < ActionDispatch::IntegrationTest
 
     assert_select("td", "Bar")
   end
-
-  test "user creates a task with invalid data" do
-    user = users(:one)
-
-    web_sign_in(user)
-
-    assert_no_difference(-> { user.inbox.task_items.count }) do
-      post(web_task_items_url, params: {task: {name: ""}})
-    end
-
-    assert_response :ok
-
-    assert_select("li", "Name can't be blank")
-  end
 end

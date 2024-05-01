@@ -6,35 +6,19 @@ class TaskItem < ApplicationRecord
   scope :completed, -> { where.not(completed_at: nil) }
   scope :incomplete, -> { where(completed_at: nil) }
 
-  validates :name, presence: true
-
-  attribute :completed, :boolean
-
-  before_validation do
-    self.completed_at = completed ? Time.current : nil
-  end
-
-  after_initialize do
-    self.completed = completed?
-  end
-
-  def completed?
-    completed_at.present?
-  end
-
-  def incomplete?
-    !completed?
-  end
+  before_validation :set_completed_at, if: :completed_changed?
 
   def complete!
-    self.completed = true
-
-    save!
+    update! completed: true
   end
 
   def incomplete!
-    self.completed = false
+    update! completed: false
+  end
 
-    save!
+  private
+
+  def set_completed_at
+    self.completed_at = completed? ? Time.current : nil
   end
 end

@@ -1,15 +1,7 @@
 <%= form_with(model: task, scope: :task, url:, method:) do |f| %>
-  <% if f.object.errors.any? %>
-    <ul>
-      <% f.object.errors.full_messages.each do |message| %>
-        <li><code><%= message %></code></li>
-      <% end %>
-    </ul>
-  <% end %>
-
   <p>
     <%= f.label :name %>
-    <%= f.text_area :name, autofocus: true %>
+    <%= f.text_area :name, autofocus: true, required: true %>
   </p>
 
   <% if method == :put %>

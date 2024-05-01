@@ -57,16 +57,6 @@ class API::V1::Task::ItemsUpdateTest < ActionDispatch::IntegrationTest
     assert_api_v1_response_with_error(:not_found)
   end
 
-  test "#update responds with 422 when name is invalid" do
-    user = users(:one)
-    task = task_items(:one)
-    params = {task: {name: [nil, ""].sample}}
-
-    put(api_v1_task_list_item_url(user.inbox, task), params:, headers: api_v1_authorization_header(user))
-
-    assert_api_v1_response_with_error(:unprocessable_entity)
-  end
-
   test "#update responds with 200 when task is updated" do
     user = users(:one)
     task = task_items(:one)

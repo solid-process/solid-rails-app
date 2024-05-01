@@ -36,11 +36,11 @@ module ActiveSupport
     end
 
     def complete_task(task)
-      task.tap { _1.update_column(:completed_at, Time.current) }
+      task.tap { _1.update_columns({completed: true, completed_at: Time.current}) }
     end
 
     def incomplete_task(task)
-      task.tap { _1.update_column(:completed_at, nil) }
+      task.tap { _1.update_columns({completed: false, completed_at: nil}) }
     end
   end
 end

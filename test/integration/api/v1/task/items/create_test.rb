@@ -41,15 +41,6 @@ class API::V1::Task::ItemsCreateTest < ActionDispatch::IntegrationTest
     assert_api_v1_response_with_error(:not_found)
   end
 
-  test "#create responds with 422 when name is invalid" do
-    user = users(:one)
-    params = {task: {name: [nil, ""].sample}}
-
-    post(api_v1_task_list_items_url(user.inbox), params:, headers: api_v1_authorization_header(user))
-
-    assert_api_v1_response_with_error(:unprocessable_entity)
-  end
-
   test "#create responds with 201 when task is created" do
     user = users(:one)
     params = {task: {name: "Foo"}}

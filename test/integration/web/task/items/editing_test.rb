@@ -58,17 +58,4 @@ class WebTaskItemsEditingTest < ActionDispatch::IntegrationTest
 
     assert_select("input[type=\"checkbox\"][checked]")
   end
-
-  test "user updates a task with invalid data" do
-    user = users(:one)
-    task = task_items(:one)
-
-    web_sign_in(user)
-
-    put(web_task_item_url(task), params: {task: {name: ""}})
-
-    assert_response :ok
-
-    assert_select("li", "Name can't be blank")
-  end
 end
