@@ -1,3 +1,11 @@
+GIT
+  remote: https://github.com/solid-process/solid-process.git
+  revision: 82f57aec9223719415f963d56de481fad68d9604
+  specs:
+    solid-process (0.4.0)
+      activemodel (>= 6.0)
+      solid-result (~> 2.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -101,7 +109,7 @@ GEM
     childprocess (5.0.0)
     coercible (1.0.0)
       descendants_tracker (~> 0.0.1)
-    concurrent-ruby (1.2.3)
+    concurrent-ruby (1.3.3)
     connection_pool (2.4.1)
     crass (1.0.6)
     date (3.3.4)
@@ -181,7 +189,7 @@ GEM
     marcel (1.0.4)
     matrix (0.4.2)
     mini_mime (1.1.5)
-    minitest (5.23.0)
+    minitest (5.24.0)
     msgpack (1.7.2)
     mutex_m (0.2.0)
     net-imap (0.4.11)
@@ -323,6 +331,7 @@ GEM
       simplecov_json_formatter (~> 0.1)
     simplecov-html (0.12.3)
     simplecov_json_formatter (0.1.4)
+    solid-result (2.0.0)
     sqlite3 (1.7.3-aarch64-linux)
     sqlite3 (1.7.3-arm-linux)
     sqlite3 (1.7.3-arm64-darwin)
@@ -392,6 +401,7 @@ DEPENDENCIES
   rubycritic (~> 4.9)
   selenium-webdriver
   simplecov
+  solid-process!
   sqlite3 (~> 1.7, >= 1.7.3)
   standard (~> 1.36)
   standard-rails (~> 1.0)

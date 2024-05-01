@@ -5,11 +5,10 @@ module API::V1
     skip_before_action :authenticate_user!, only: [:create]
 
     def create
-      user = ::User.new(user_params)
-
-      if user.save
+      case ::User::Registration.call(user_params)
+      in Solid::Success(user:)
         render_json_with_success(status: :created, data: {user_token: user.token.value})
-      else
+      in Solid::Failure(user:)
         render_json_with_model_errors(user)
       end
     end

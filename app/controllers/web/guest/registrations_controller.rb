@@ -7,13 +7,12 @@ module Web::Guest
     end
 
     def create
-      user = ::User.new(registrations_params)
-
-      if user.save
+      case ::User::Registration.call(registrations_params)
+      in Solid::Success(user:)
         sign_in(user)
 
         redirect_to web_task_items_path, notice: "You have successfully registered!"
-      else
+      in Solid::Failure(user:)
         render("web/guest/registrations/new", locals: {user:}, status: :unprocessable_entity)
       end
     end
