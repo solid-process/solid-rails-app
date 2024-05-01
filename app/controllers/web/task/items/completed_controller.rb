@@ -3,9 +3,10 @@
 module Web::Task
   class Items::CompletedController < BaseController
     def index
-      tasks = current_task_list.task_items.completed.order(completed_at: :desc)
-
-      render("web/task/items/index", locals: {tasks:, scope: "completed"})
+      case Account::Task::Item::Listing.call(filter: "completed", member: current_member)
+      in Solid::Success(tasks:)
+        render("web/task/items/index", locals: {tasks:, scope: "completed"})
+      end
     end
   end
 end

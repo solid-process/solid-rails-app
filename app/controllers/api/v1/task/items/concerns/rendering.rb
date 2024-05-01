@@ -10,6 +10,10 @@ module API::V1
       TASK_ATTRIBUTES
     end
 
+    def render_task_or_list_not_found
+      render_json_with_error(status: :not_found, message: "Task or list not found")
+    end
+
     def render_json_with_attributes(task, status)
       attributes = task.values_at(*task_attribute_names)
 

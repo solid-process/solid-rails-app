@@ -3,11 +3,18 @@
 module Web::User
   class TokensController < BaseController
     def update
-      current_user.token.refresh!
+      result = User::Token::Refreshing.call(user: current_user)
 
-      cookies.encrypted[:user_token] = {value: current_user.token.value, expires: 30.seconds.from_now}
+      message =
+        if result.success?
+          cookies.encrypted[:user_token] = {value: result[:token].value, expires: 30.seconds.from_now}
 
-      redirect_to(web_user_settings_api_path, notice: "API token updated.")
+          {notice: "API token updated."}
+        else
+          {alert: "API token cannot be updated."}
+        end
+
+      redirect_to(web_user_settings_api_path, message)
     end
   end
 end

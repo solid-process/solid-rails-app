@@ -1,5 +1,10 @@
 # frozen_string_literal: true
 
+require "solid/value"
+
+require "solid/validators/is_validator"
+require "solid/validators/instance_of_validator"
+
 require "solid/process/event_logs/basic_logger_listener"
 
 Solid::Process::EventLogs::BasicLoggerListener.logger = Rails.logger

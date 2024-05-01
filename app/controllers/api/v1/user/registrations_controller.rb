@@ -14,9 +14,9 @@ module API::V1
     end
 
     def destroy
-      current_user.destroy!
+      result = ::User::AccountDeletion.call(user: current_user)
 
-      render_json_with_success(status: :ok)
+      result.account_deleted? and return render_json_with_success(status: :ok)
     end
 
     private

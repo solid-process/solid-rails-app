@@ -5,10 +5,6 @@ class Web::BaseController < ApplicationController
     render "web/errors/bad_request", status: :bad_request, layout: "web/errors"
   end
 
-  rescue_from ActiveRecord::RecordNotFound do
-    render "web/errors/not_found", status: :not_found, layout: "web/errors"
-  end
-
   private
 
   helper_method def user_signed_in?
@@ -65,5 +61,13 @@ class Web::BaseController < ApplicationController
 
   def sign_out
     reset_session
+  end
+
+  def render_not_found_error
+    render "web/errors/not_found", status: :not_found, layout: "web/errors"
+  end
+
+  def render_unprocessable_entity_error
+    render("web/errors/unprocessable_entity", status: :unprocessable_entity, layout: "web/errors")
   end
 end

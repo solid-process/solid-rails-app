@@ -2,59 +2,72 @@
 
 module Web::Task
   class ItemsController < BaseController
-    before_action :set_task, only: [:edit, :update, :destroy]
-
     def index
-      tasks = current_task_list.task_items.order(Arel.sql("task_items.completed_at DESC NULLS FIRST, task_items.created_at DESC"))
-
-      render("web/task/items/index", locals: {tasks:, scope: "all"})
+      case Account::Task::Item::Listing.call(filter: "all", member: current_member)
+      in Solid::Success(tasks:)
+        render("web/task/items/index", locals: {tasks:, scope: "all"})
+      end
     end
 
     def new
-      render("web/task/items/new", locals: {task: TaskItem.new})
+      render("web/task/items/new", locals: {task: Account::Task::Item::Creation::Input.new})
     end
 
     def create
-      task = current_task_list.task_items.build(task_params)
+      create_params = params.require(:task).permit(:name)
 
-      if task.save
+      create_input = {member: current_member, **create_params}
+
+      case Account::Task::Item::Creation.call(create_input)
+      in Solid::Failure(:task_not_found, _)
+        render_not_found_error
+      in Solid::Failure(input:)
+        render("web/task/items/new", locals: {task: input})
+      in Solid::Success
         redirect_to next_path, notice: "Task created."
-      else
-        render("web/task/items/new", locals: {task: task})
       end
     end
 
     def edit
-      render("web/task/items/edit", locals: {task: @task})
+      case Account::Task::Item::Finding.call(member: current_member, id: params[:id])
+      in Solid::Failure(:task_not_found, _)
+        render_not_found_error
+      in Solid::Success(task:)
+        input = Account::Task::Item::Updating::Input.new(
+          id: task.id,
+          name: task.name,
+          completed: task.completed?
+        )
+
+        render("web/task/items/edit", locals: {task: input})
+      end
     end
 
     def update
-      if @task.update(task_params)
+      update_params = params.require(:task).permit(:name, :completed)
 
+      update_input = {member: current_member, id: params[:id], **update_params}
+
+      case Account::Task::Item::Updating.call(update_input)
+      in Solid::Failure(:task_not_found, _)
+        render_not_found_error
+      in Solid::Failure(input:)
+        render("web/task/items/edit", locals: {task: input})
+      in Solid::Success
         redirect_to next_path, notice: "Task updated."
-      else
-        render("web/task/items/edit", locals: {task: @task})
       end
     end
 
     def destroy
-      @task.destroy!
-
-      redirect_to next_path, notice: "Task deleted."
+      case Account::Task::Item::Deletion.call(member: current_member, id: params[:id])
+      in Solid::Failure(:task_not_found, _)
+        render_not_found_error
+      in Solid::Success
+        redirect_to next_path, notice: "Task deleted."
+      end
     end
 
     private
-
-    def set_task
-      @task = current_task_list.task_items.find(params[:id])
-    end
-
-    def task_params
-      case action_name
-      when "create" then params.require(:task).permit(:name)
-      when "update" then params.require(:task).permit(:name, :completed)
-      end
-    end
 
     helper_method def next_path
       case params[:back_to]

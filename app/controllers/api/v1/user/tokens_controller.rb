@@ -3,9 +3,12 @@
 module API::V1
   class User::TokensController < BaseController
     def update
-      current_user.token.refresh!
-
-      render_json_with_success(status: :ok, data: {user_token: current_user.token.value})
+      case ::User::Token::Refreshing.call(user: current_user)
+      in Solid::Success(token:)
+        render_json_with_success(status: :ok, data: {user_token: token.value})
+      else
+        render_json_with_error(status: :unprocessable_entity, message: "Access token cannot be updated")
+      end
     end
   end
 end

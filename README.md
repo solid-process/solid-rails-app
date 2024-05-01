@@ -15,9 +15,13 @@ Web and REST API application made with [Ruby on Rails](https://guides.rubyonrail
 
 ## 💡 Branch summary
 
-Defines types for input attributes and uses steps to perform all operations within a transaction block that will perform a rollback if any step returns a failure. After the commit, the confirmation email is sent, and the created user is exposed in the [User::Registration](https://github.com/solid-process/solid-rails-app/blob/solid-process-1/app/models/user/registration.rb) result.
+From version 2 onwards, all contexts (Account and User) implement their operations through processes. Because of this, it becomes possible to create a composition of processes where they are defined as dependencies that will be orchestrated through their steps.
 
-Note: In this version, the process input ([User::Registration::Input](https://github.com/solid-process/solid-rails-app/blob/solid-process-1/app/controllers/web/guest/registrations_controller.rb#L6)) is used in the view forms, causing the view to be coupled to it and no longer to the User model (ActiveRecord).
+Notes:
+
+1. [UserToken](https://github.com/solid-process/solid-rails-app/blob/solid-process-2.00/app/models/user_token.rb) becomes hugely lean because the model's behavior has been diluted into different components within the [User::Token namespace](https://github.com/solid-process/solid-rails-app/tree/solid-process-2.00/app/models/user/token). I am highlighting [User::Token::Entity](https://github.com/solid-process/solid-rails-app/blob/solid-process-2.00/app/models/user/token/entity.rb), a PORO capable of representing a token without the need to interact with the database (ActiveRecord model).
+
+2. New features are added to input blocks, such as data normalization and validation.
 
 ## 📣 Important info
 

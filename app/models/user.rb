@@ -15,14 +15,6 @@ class User < ApplicationRecord
 
   has_one :token, class_name: "UserToken", dependent: :destroy
 
-  with_options presence: true do
-    validates :password, confirmation: true, length: {minimum: 8}, if: -> { new_record? || password.present? }
-
-    validates :email, format: {with: URI::MailTo::EMAIL_REGEXP}, uniqueness: true
-  end
-
-  normalizes :email, with: -> { _1.strip.downcase }
-
   generates_token_for :reset_password, expires_in: 15.minutes do
     password_salt&.last(10)
   end
@@ -31,7 +23,7 @@ class User < ApplicationRecord
     email
   end
 
-  before_destroy prepend: true do
-    account.destroy!
+  def self.find_by_reset_password(token:)
+    find_by_token_for(:reset_password, token)
   end
 end

@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
 class Account::Member
-  include ActiveModel::API
-  include ActiveModel::Attributes
-  include ActiveModel::Validations
+  include Solid::Model
 
   attribute :user_token, :string
   attribute :user_id, :integer
@@ -89,11 +87,9 @@ class Account::Member
   def users_relation
     return users_left_joins.where(users: {id: user_id}) if user_id?
 
-    short, long = UserToken.parse_value(user_token)
+    short, checksum = User::Token::Entity.parse(user_token).values_at(:short, :checksum)
 
-    checksum = UserToken.checksum(short:, long:)
-
-    users_left_joins.joins(:token).where(user_tokens: {short:, checksum:})
+    users_left_joins.joins(:token).where(user_tokens: {short: short.value, checksum:})
   end
 
   def users_left_joins

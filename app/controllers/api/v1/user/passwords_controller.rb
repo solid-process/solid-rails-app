@@ -3,25 +3,18 @@
 module API::V1
   class User::PasswordsController < BaseController
     def update
-      password_params[:password_challenge] = password_params.delete(:current_password)
-
-      if current_user.update(password_params)
+      case ::User::Password::Updating.call(user: current_user, **password_params)
+      in Solid::Success
         render_json_with_success(status: :ok)
-      else
-        message = current_user.errors.full_messages.join(", ")
-        message.gsub!("Password challenge", "Current password")
-
-        details = current_user.errors.to_hash
-        details[:current_password] = details.delete(:password_challenge) if details[:password_challenge]
-
-        render_json_with_error(status: :unprocessable_entity, message:, details:)
+      in Solid::Failure(input:)
+        render_json_with_model_errors(input)
       end
     end
 
     private
 
     def password_params
-      @password_params ||= params.require(:user).permit(
+      params.require(:user).permit(
         :current_password,
         :password,
         :password_confirmation

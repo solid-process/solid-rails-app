@@ -2,58 +2,59 @@
 
 module API::V1
   class Task::ItemsController < BaseController
-    include Task::Items::Concerns::Finding
     include Task::Items::Concerns::Rendering
 
-    before_action :set_task, only: [:update, :destroy]
-
     def index
-      relation = @task_list.task_items
+      case Account::Task::Item::Listing.call(
+        member: current_member,
+        filter: params[:filter]
+      )
+      in Solid::Failure(:task_list_not_found, _)
+        render_task_or_list_not_found
+      in Solid::Success(tasks:)
+        data = tasks.pluck(task_attribute_names).collect! { map_json_attributes(_1) }
 
-      relation =
-        case params[:filter]
-        when "completed" then relation.completed.order(completed_at: :desc)
-        when "incomplete" then relation.incomplete.order(created_at: :desc)
-        else relation.order(Arel.sql("task_items.completed_at DESC NULLS FIRST, task_items.created_at DESC"))
-        end
-
-      data = relation.pluck(task_attribute_names).collect! { map_json_attributes(_1) }
-
-      render_json_with_success(status: :ok, data:)
+        render_json_with_success(status: :ok, data:)
+      end
     end
 
     def create
-      task = @task_list.task_items.new(task_params)
+      create_params = params.require(:task).permit(:name)
 
-      if task.save
+      create_input = {member: current_member, **create_params}
+
+      case Account::Task::Item::Creation.call(create_input)
+      in Solid::Failure(:task_list_not_found | :task_not_found, _)
+        render_task_or_list_not_found
+      in Solid::Failure(input:)
+        render_json_with_model_errors(input)
+      in Solid::Success(task:)
         render_json_with_attributes(task, :created)
-      else
-        render_json_with_model_errors(task)
       end
     end
 
     def update
-      if @task.update(task_params)
-        render_json_with_attributes(@task, :ok)
-      else
-        render_json_with_model_errors(@task)
+      update_params = params.require(:task).permit(:name, :completed)
+
+      update_input = {member: current_member, id: params[:id], **update_params}
+
+      case Account::Task::Item::Updating.call(update_input)
+      in Solid::Failure(:task_list_not_found | :task_not_found, _)
+        render_task_or_list_not_found
+      in Solid::Failure(input:)
+        render_json_with_model_errors(input)
+      in Solid::Success(task:)
+        render_json_with_attributes(task, :ok)
       end
     end
 
     def destroy
-      @task.destroy!
-
-      render_json_with_success(status: :ok)
-    end
-
-    private
-
-    def task_params
-      @task_params ||=
-        case action_name
-        when "create" then params.require(:task).permit(:name)
-        when "update" then params.require(:task).permit(:name, :completed)
-        end
+      case Account::Task::Item::Deletion.call(member: current_member, id: params[:id])
+      in Solid::Failure(:task_list_not_found | :task_not_found, _)
+        render_task_or_list_not_found
+      in Solid::Success
+        render_json_with_success(status: :ok)
+      end
     end
   end
 end

@@ -42,12 +42,6 @@ module API::V1
 
     def current_account = current_member.account
 
-    def current_task_list = current_member.task_list
-
-    def current_task_list!
-      current_task_list or raise ActiveRecord::RecordNotFound
-    end
-
     def render_json_with_success(status:, data: nil)
       json = {status: :success}
 
