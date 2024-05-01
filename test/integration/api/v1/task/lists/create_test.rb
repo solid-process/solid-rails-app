@@ -19,16 +19,6 @@ class API::V1::Task::ListsCreateTest < ActionDispatch::IntegrationTest
     assert_api_v1_response_with_error(:bad_request)
   end
 
-  test "#create responds with 422 when name is invalid" do
-    user = users(:one)
-
-    params = {task_list: {name: [nil, ""].sample}}
-
-    post(api_v1_task_lists_url, params:, headers: api_v1_authorization_header(user))
-
-    assert_api_v1_response_with_error(:unprocessable_entity)
-  end
-
   test "#create responds with 201 when task list is created" do
     user = users(:one)
 

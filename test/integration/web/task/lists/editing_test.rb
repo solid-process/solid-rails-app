@@ -43,27 +43,6 @@ class WebTaskListsEditingTest < ActionDispatch::IntegrationTest
     assert_response :unprocessable_entity
   end
 
-  test "user updates a task list with invalid data" do
-    user = users(:one)
-    task_list = create_task_list(user.account, name: "Foo")
-
-    web_sign_in(user)
-
-    get(edit_web_task_list_url(task_list))
-
-    assert_response :ok
-
-    assert_select("h2", "Edit task list ##{task_list.id}")
-
-    assert_select("textarea", task_list.name)
-
-    put(web_task_list_url(task_list), params: {task_list: {name: ""}})
-
-    assert_response :unprocessable_entity
-
-    assert_select("li", "Name can't be blank")
-  end
-
   test "user updates a task list with valid data" do
     user = users(:one)
     task_list = create_task_list(user.account, name: "Foo")

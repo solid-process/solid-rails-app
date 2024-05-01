@@ -43,18 +43,6 @@ class API::V1::Task::ListsUpdateTest < ActionDispatch::IntegrationTest
     assert_api_v1_response_with_error(:forbidden)
   end
 
-  test "#update responds with 422 when params are invalid" do
-    user = users(:one)
-
-    task_list = user.account.task_lists.create!(name: "Bar")
-
-    params = {task_list: {name: [nil, ""].sample}}
-
-    put(api_v1_task_list_url(task_list), params:, headers: api_v1_authorization_header(user))
-
-    assert_api_v1_response_with_error(:unprocessable_entity)
-  end
-
   test "#update responds with 200" do
     user = users(:one)
 

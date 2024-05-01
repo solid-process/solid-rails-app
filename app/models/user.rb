@@ -36,7 +36,7 @@ class User < ApplicationRecord
 
     account.memberships.create!(user: self, role: :owner)
 
-    account.task_lists.inbox.create!
+    account.task_lists.create!(name: "Inbox", inbox: true)
 
     create_token!
   end

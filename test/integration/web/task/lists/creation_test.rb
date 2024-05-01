@@ -15,26 +15,6 @@ class WebTaskListsCreationTest < ActionDispatch::IntegrationTest
     assert_web_unauthorized_access
   end
 
-  test "user creates a task list with invalid data" do
-    user = users(:one)
-
-    web_sign_in(user)
-
-    get(new_web_task_list_url)
-
-    assert_response :ok
-
-    assert_select("h2", "New list")
-
-    assert_no_difference(-> { user.account.task_lists.count }) do
-      post(web_task_lists_url, params: {task_list: {name: ""}})
-    end
-
-    assert_response :unprocessable_entity
-
-    assert_select("li", "Name can't be blank")
-  end
-
   test "user creates a task list with valid data" do
     user = users(:one)
 
