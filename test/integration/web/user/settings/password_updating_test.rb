@@ -4,7 +4,7 @@ require "test_helper"
 
 class WebUserSettingsPasswordUpdatingTest < ActionDispatch::IntegrationTest
   test "guest tries to access the user profile" do
-    get(web_users_settings_profile_url)
+    get(web_user_settings_profile_url)
 
     assert_web_unauthorized_access
   end
@@ -18,7 +18,7 @@ class WebUserSettingsPasswordUpdatingTest < ActionDispatch::IntegrationTest
       }
     }
 
-    put(web_users_passwords_url, params:)
+    put(web_user_passwords_url, params:)
 
     assert_web_unauthorized_access
   end
@@ -28,10 +28,10 @@ class WebUserSettingsPasswordUpdatingTest < ActionDispatch::IntegrationTest
 
     web_sign_in(user)
 
-    get(web_users_settings_profile_url)
+    get(web_user_settings_profile_url)
 
     assert_select("label", "Email")
-    assert_select("label", "New Password")
+    assert_select("label", "New password")
     assert_select("label", "Password confirmation")
 
     email_inputs = assert_select("input[type='email']")
@@ -62,7 +62,7 @@ class WebUserSettingsPasswordUpdatingTest < ActionDispatch::IntegrationTest
       }
     }
 
-    put(web_users_passwords_url, params:)
+    put(web_user_passwords_url, params:)
 
     assert_response :unprocessable_entity
 
@@ -77,7 +77,7 @@ class WebUserSettingsPasswordUpdatingTest < ActionDispatch::IntegrationTest
       }
     }
 
-    put(web_users_passwords_url, params:)
+    put(web_user_passwords_url, params:)
 
     assert_response :unprocessable_entity
 
@@ -97,14 +97,14 @@ class WebUserSettingsPasswordUpdatingTest < ActionDispatch::IntegrationTest
       }
     }
 
-    put(web_users_passwords_url, params:)
+    put(web_user_passwords_url, params:)
 
-    assert_redirected_to web_users_settings_profile_url
+    assert_redirected_to web_user_settings_profile_url
 
     follow_redirect!
 
     assert_response :ok
 
-    assert_select(".notice", "Your password has been updated!")
+    assert_select(".notice", "Your password has been updated.")
   end
 end

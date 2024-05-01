@@ -1,0 +1,7 @@
+<%= render("web/task/shared/header", current_page: "new") %>
+
+<main>
+  <h2>New item</h2>
+
+  <%= render("form", task:, url: web_task_items_path(back_to: params[:back_to]), method: :post) %>
+</main>

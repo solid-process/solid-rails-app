@@ -5,9 +5,22 @@ Web and REST API application made with [Ruby on Rails](https://guides.rubyonrail
 ## 🙌 Repository branches <!-- omit in toc -->
 
 This repository has three branches:
-1. [main](https://github.com/B-CDD/solid-rails-app/blob/main/README.md): `95%` Rails way + `5%` solid-process.
-2. [vanilla-rails](https://github.com/B-CDD/solid-rails-app/blob/vanilla-rails/README.md): `100%` Rails way + `0%` solid-process. (**📍 you are here**)
-3. [solid-process](https://github.com/B-CDD/solid-rails-app/blob/solid-process/README.md): `20%` Rails way + `80%` solid-process.
+1. [vanilla-rails](https://github.com/solid-process/solid-rails-app/blob/vanilla-rails/README.md): `100%` Rails way + `0%` solid-process. (**📍 you are here**)
+2. [main](https://github.com/solid-process/solid-rails-app/blob/main/README.md): `95%` Rails way + `5%` solid-process.
+3. [solid-process](https://github.com/solid-process/solid-rails-app/blob/solid-process/README.md): `20%` Rails way + `80%` solid-process.
+
+### 📊 Rails stats and code quality <!-- omit in toc -->
+
+| Branch  | LOC   | Rubycritic   | Tests coverage   |
+| ------- | :---: | :----------: | :--------------: |
+| [vanilla-rails](https://github.com/solid-process/solid-rails-app/blob/vanilla-rails) | 1407 | 94.26 | 98.5% |
+| [main](https://github.com/solid-process/solid-rails-app/blob/main) | 1517 | 94.30 | 98.57% |
+| [solid-process](https://github.com/solid-process/solid-rails-app/blob/solid-process) | 1883 | 93.93 | 97.13% |
+
+Use:
+- `bin/rails test` to generate the tests coverage report.
+- `bin/rails stats` to generate the LOC report.
+- `bin/rails rubycritic` to generate the rubycritic (code quality) report.
 
 ## 📚 Table of contents <!-- omit in toc -->
 
@@ -36,6 +49,7 @@ This repository has three branches:
     - [Deletion](#deletion-1)
     - [Marking as completed](#marking-as-completed)
     - [Marking as incomplete](#marking-as-incomplete)
+- [Web app screenshots](#web-app-screenshots)
 
 ## System dependencies
 * SQLite3
@@ -80,7 +94,7 @@ You can get the `API_TOKEN` by:
 #### Registration
 
 ```bash
-curl -X POST "$API_HOST/api/v1/users/registrations" \
+curl -X POST "$API_HOST/api/v1/user/registrations" \
   -H "Content-Type: application/json" \
   -d '{
     "user": {
@@ -94,7 +108,7 @@ curl -X POST "$API_HOST/api/v1/users/registrations" \
 #### Authentication
 
 ```bash
-curl -X POST "$API_HOST/api/v1/users/sessions" \
+curl -X POST "$API_HOST/api/v1/user/sessions" \
   -H "Content-Type: application/json" \
   -d '{
     "user": {
@@ -107,7 +121,7 @@ curl -X POST "$API_HOST/api/v1/users/sessions" \
 #### Account deletion
 
 ```bash
-curl -X DELETE "$API_HOST/api/v1/users/registrations" \
+curl -X DELETE "$API_HOST/api/v1/user/registrations" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $API_TOKEN"
 ```
@@ -115,7 +129,7 @@ curl -X DELETE "$API_HOST/api/v1/users/registrations" \
 #### Access token updating
 
 ```bash
-curl -X PUT "$API_HOST/api/v1/users/tokens" \
+curl -X PUT "$API_HOST/api/v1/user/tokens" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $API_TOKEN"
 ```
@@ -123,7 +137,7 @@ curl -X PUT "$API_HOST/api/v1/users/tokens" \
 #### Password updating
 
 ```bash
-curl -X PUT "$API_HOST/api/v1/users/passwords" \
+curl -X PUT "$API_HOST/api/v1/user/passwords" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $API_TOKEN" \
   -d '{
@@ -138,7 +152,7 @@ curl -X PUT "$API_HOST/api/v1/users/passwords" \
 #### Password resetting - Link to change the password
 
 ```bash
-curl -X POST "$API_HOST/api/v1/users/passwords/reset" \
+curl -X POST "$API_HOST/api/v1/user/passwords/reset" \
   -H "Content-Type: application/json" \
   -d '{"user": {"email": "email@example.com"}}'
 ```
@@ -146,7 +160,7 @@ curl -X POST "$API_HOST/api/v1/users/passwords/reset" \
 #### Password resetting - Change the password
 
 ```bash
-curl -X PUT "$API_HOST/api/v1/users/passwords/reset" \
+curl -X PUT "$API_HOST/api/v1/user/passwords/reset" \
   -H "Content-Type: application/json" \
   -d '{
     "user": {
@@ -162,7 +176,7 @@ curl -X PUT "$API_HOST/api/v1/users/passwords/reset" \
 #### Listing
 
 ```bash
-curl -X GET "$API_HOST/api/v1/task_lists" \
+curl -X GET "$API_HOST/api/v1/task/lists" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $API_TOKEN"
 ```
@@ -170,7 +184,7 @@ curl -X GET "$API_HOST/api/v1/task_lists" \
 #### Creation
 
 ```bash
-curl -X POST "$API_HOST/api/v1/task_lists" \
+curl -X POST "$API_HOST/api/v1/task/lists" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $API_TOKEN" \
   -d '{"task_list": {"name": "My Task List"}}'
@@ -179,7 +193,7 @@ curl -X POST "$API_HOST/api/v1/task_lists" \
 #### Updating
 
 ```bash
-curl -X PUT "$API_HOST/api/v1/task_lists/2" \
+curl -X PUT "$API_HOST/api/v1/task/lists/2" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $API_TOKEN" \
   -d '{"task_list": {"name": "My List"}}'
@@ -188,7 +202,7 @@ curl -X PUT "$API_HOST/api/v1/task_lists/2" \
 #### Deletion
 
 ```bash
-curl -X DELETE "$API_HOST/api/v1/task_lists/2" \
+curl -X DELETE "$API_HOST/api/v1/task/lists/2" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $API_TOKEN"
 ```
@@ -200,7 +214,7 @@ curl -X DELETE "$API_HOST/api/v1/task_lists/2" \
 ```bash
 # ?filter=completed | incomplete
 
-curl -X GET "$API_HOST/api/v1/task_lists/1/tasks" \
+curl -X GET "$API_HOST/api/v1/task/lists/1/items" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $API_TOKEN"
 ```
@@ -208,7 +222,7 @@ curl -X GET "$API_HOST/api/v1/task_lists/1/tasks" \
 #### Creation
 
 ```bash
-curl -X POST "$API_HOST/api/v1/task_lists/1/tasks" \
+curl -X POST "$API_HOST/api/v1/task/lists/1/items" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $API_TOKEN" \
   -d '{"task": {"name": "My Task"}}'
@@ -219,7 +233,7 @@ curl -X POST "$API_HOST/api/v1/task_lists/1/tasks" \
 ```bash
 # "completed": true | 1 | false | 0
 
-curl -X PUT "$API_HOST/api/v1/task_lists/1/tasks/1" \
+curl -X PUT "$API_HOST/api/v1/task/lists/1/items/1" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $API_TOKEN" \
   -d '{"task": {"name": "My Task", "completed": true}}'
@@ -228,7 +242,7 @@ curl -X PUT "$API_HOST/api/v1/task_lists/1/tasks/1" \
 #### Deletion
 
 ```bash
-curl -X DELETE "$API_HOST/api/v1/task_lists/1/tasks/1" \
+curl -X DELETE "$API_HOST/api/v1/task/lists/1/items/1" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $API_TOKEN"
 ```
@@ -236,7 +250,7 @@ curl -X DELETE "$API_HOST/api/v1/task_lists/1/tasks/1" \
 #### Marking as completed
 
 ```bash
-curl -X PUT "$API_HOST/api/v1/task_lists/1/tasks/1/complete" \
+curl -X PUT "$API_HOST/api/v1/task/lists/1/items/1/complete" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $API_TOKEN"
 ```
@@ -244,7 +258,49 @@ curl -X PUT "$API_HOST/api/v1/task_lists/1/tasks/1/complete" \
 #### Marking as incomplete
 
 ```bash
-curl -X PUT "$API_HOST/api/v1/task_lists/1/tasks/1/incomplete" \
+curl -X PUT "$API_HOST/api/v1/task/lists/1/items/1/incomplete" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $API_TOKEN"
 ```
+
+## Web app screenshots
+
+### Sign in <!-- omit in toc -->
+
+<img src="/docs/screenshots/010_sign_in.jpg" width="400"/>
+<img src="/docs/screenshots/011_sign_in_error.jpg" width="400"/>
+
+### Forgot password <!-- omit in toc -->
+
+<img src="/docs/screenshots/020_forgot_password.jpg" width="400"/>
+
+### Sign up <!-- omit in toc -->
+
+<img src="/docs/screenshots/030_sign_up.jpg" width="400"/>
+<img src="/docs/screenshots/031_sign_up_errors.jpg" width="400"/>
+<img src="/docs/screenshots/032_sign_up_success.jpg" width="400"/>
+
+### Tasks <!-- omit in toc -->
+
+<img src="/docs/screenshots/040_new_task.jpg" width="400"/>
+<img src="/docs/screenshots/041_task_created.jpg" width="400"/>
+<img src="/docs/screenshots/042_task_completed.jpg" width="400"/>
+<img src="/docs/screenshots/043_tasks_completed.jpg" width="400"/>
+<img src="/docs/screenshots/044_tasks_incomplete.jpg" width="400"/>
+<img src="/docs/screenshots/045_edit_task.jpg" width="400"/>
+
+### Task Lists <!-- omit in toc -->
+
+<img src="/docs/screenshots/050_task_lists.jpg" width="400"/>
+<img src="/docs/screenshots/051_new_task_list.jpg" width="400"/>
+<img src="/docs/screenshots/052_select_task_list.jpg" width="400"/>
+
+### Settings <!-- omit in toc -->
+
+<img src="/docs/screenshots/060_settings_profile.jpg" width="400"/>
+<img src="/docs/screenshots/061_settings_account_deletion.jpg" width="400"/>
+<img src="/docs/screenshots/062_settings_api_access_token.jpg" width="400"/>
+
+### Sign out <!-- omit in toc -->
+
+<img src="/docs/screenshots/070_sign_out.jpg" width="400"/>

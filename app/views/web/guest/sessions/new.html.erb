@@ -3,7 +3,7 @@
 <main>
   <h2>Please sign in</h2>
 
-  <%= form_with(model: user, scope: :user, url: web_users_sessions_path) do |f| %>
+  <%= form_with(model: user, scope: :user, url: web_guest_sessions_path) do |f| %>
     <% if f.object.errors.any? %>
       <ul>
         <% f.object.errors.full_messages.each do |message| %>

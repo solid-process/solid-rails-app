@@ -3,21 +3,21 @@
 require "test_helper"
 
 class WebUserSettingsAccountDeletionTest < ActionDispatch::IntegrationTest
-  test "guest signs out" do
-    delete(web_users_registrations_url)
+  test "guest account deletion" do
+    delete(web_user_registrations_url)
 
     assert_web_unauthorized_access
   end
 
-  test "user signs out" do
+  test "user account deletion" do
     user = users(:one)
 
     web_sign_in(user)
 
-    get(web_users_settings_profile_url)
+    get(web_user_settings_profile_url)
 
-    assert_select("h2", "Account Deletion")
-    assert_select("button", "Delete Account")
+    assert_select("h2", "Account deletion")
+    assert_select("button", "Delete account")
 
     assert_difference(
       -> { User.count } => -1,
@@ -26,7 +26,7 @@ class WebUserSettingsAccountDeletionTest < ActionDispatch::IntegrationTest
       -> { TaskList.count } => -1,
       -> { UserToken.count } => -1
     ) do
-      delete(web_users_registrations_url)
+      delete(web_user_registrations_url)
     end
 
     assert_redirected_to root_url
@@ -35,7 +35,7 @@ class WebUserSettingsAccountDeletionTest < ActionDispatch::IntegrationTest
 
     assert_response :ok
 
-    assert_select(".notice", "Your account has been deleted")
+    assert_select(".notice", "Your account has been deleted.")
 
     assert_nil User.find_by(id: user.id)
   end

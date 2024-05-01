@@ -4,13 +4,13 @@ require "test_helper"
 
 class WebTaskListsCreationTest < ActionDispatch::IntegrationTest
   test "guest tries to access new task list form" do
-    get(new_web_tasks_list_url)
+    get(new_web_task_list_url)
 
     assert_web_unauthorized_access
   end
 
   test "guest tries to create a task list" do
-    post(web_tasks_lists_url, params: {task_list: {name: "Foo"}})
+    post(web_task_lists_url, params: {task_list: {name: "Foo"}})
 
     assert_web_unauthorized_access
   end
@@ -20,14 +20,14 @@ class WebTaskListsCreationTest < ActionDispatch::IntegrationTest
 
     web_sign_in(user)
 
-    get(new_web_tasks_list_url)
+    get(new_web_task_list_url)
 
     assert_response :ok
 
-    assert_select("h2", "New task list")
+    assert_select("h2", "New list")
 
     assert_no_difference(-> { user.account.task_lists.count }) do
-      post(web_tasks_lists_url, params: {task_list: {name: ""}})
+      post(web_task_lists_url, params: {task_list: {name: ""}})
     end
 
     assert_response :unprocessable_entity
@@ -41,16 +41,16 @@ class WebTaskListsCreationTest < ActionDispatch::IntegrationTest
     web_sign_in(user)
 
     assert_difference(-> { user.account.task_lists.count }) do
-      post(web_tasks_lists_url, params: {task_list: {name: "Foo"}})
+      post(web_task_lists_url, params: {task_list: {name: "Foo"}})
     end
 
-    assert_redirected_to web_tasks_lists_url
+    assert_redirected_to web_task_lists_url
 
     follow_redirect!
 
     assert_response :ok
 
-    assert_select(".notice", "Task list created")
+    assert_select(".notice", "Task list created.")
 
     assert_select("td", "Foo")
   end

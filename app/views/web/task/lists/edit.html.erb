@@ -1,0 +1,7 @@
+<%= render("web/task/shared/header", current_page: "lists", title: "Lists") %>
+
+<main>
+  <h2>Edit task list #<%= task_list.id %></h2>
+
+  <%= render("form", task_list:, url: web_task_list_path(task_list), method: :put) %>
+</main>

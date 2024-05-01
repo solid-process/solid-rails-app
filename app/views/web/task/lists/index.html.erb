@@ -1,0 +1,28 @@
+<%= render("web/task/shared/header", current_page: "lists", title: "Lists") %>
+
+<% current_task_list_icon = lambda do
+  "<mark>📌</mark><br/><small style=\"color: var(--accent)\">(This is your current list)</small>".html_safe if current_task_list?(_1)
+end %>
+
+<main>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th colspan="3">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% task_lists.each do |task_list| %>
+        <tr>
+          <td>
+            <%= task_list.name %> <%= current_task_list_icon[task_list] %>
+          </td>
+          <td><%= render("web/task/lists/actions/select", task_list:) %></td>
+          <td><%= render("web/task/lists/actions/edit", task_list:) %></td>
+          <td><%= render("web/task/lists/actions/delete", task_list:) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</main>

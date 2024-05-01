@@ -1,0 +1,13 @@
+<% if task.incomplete? %>
+  <%= link_to(
+    "<button title=\"Mark as complete\" style=\"background-color: var(--accent-bg)\">✅</button>".html_safe,
+    complete_web_task_item_path(task, back_to: controller_name),
+    method: :put
+  ) %>
+<% else %>
+  <%= link_to(
+    "<button title=\"Mark as incomplete\" style=\"background-color: var(--accent-bg)\">❌</button>".html_safe,
+    incomplete_web_task_item_path(task, back_to: controller_name),
+    method: :put
+  ) %>
+<% end %>

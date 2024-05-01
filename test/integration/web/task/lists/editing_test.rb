@@ -8,7 +8,7 @@ class WebTaskListsEditingTest < ActionDispatch::IntegrationTest
 
     task_list = create_task_list(user.account, name: "Foo")
 
-    get(edit_web_tasks_list_url(task_list))
+    get(edit_web_task_list_url(task_list))
 
     assert_web_unauthorized_access
   end
@@ -18,7 +18,7 @@ class WebTaskListsEditingTest < ActionDispatch::IntegrationTest
 
     task_list = create_task_list(user.account, name: "Foo")
 
-    put(web_tasks_list_url(task_list), params: {task_list: {name: "Bar"}})
+    put(web_task_list_url(task_list), params: {task_list: {name: "Bar"}})
 
     assert_web_unauthorized_access
   end
@@ -28,7 +28,7 @@ class WebTaskListsEditingTest < ActionDispatch::IntegrationTest
 
     web_sign_in(user)
 
-    get(edit_web_tasks_list_url(task_lists(:one_inbox)))
+    get(edit_web_task_list_url(task_lists(:one_inbox)))
 
     assert_response :unprocessable_entity
   end
@@ -38,7 +38,7 @@ class WebTaskListsEditingTest < ActionDispatch::IntegrationTest
 
     web_sign_in(user)
 
-    put(web_tasks_list_url(task_lists(:one_inbox)), params: {task_list: {name: "Bar"}})
+    put(web_task_list_url(task_lists(:one_inbox)), params: {task_list: {name: "Bar"}})
 
     assert_response :unprocessable_entity
   end
@@ -49,7 +49,7 @@ class WebTaskListsEditingTest < ActionDispatch::IntegrationTest
 
     web_sign_in(user)
 
-    get(edit_web_tasks_list_url(task_list))
+    get(edit_web_task_list_url(task_list))
 
     assert_response :ok
 
@@ -57,7 +57,7 @@ class WebTaskListsEditingTest < ActionDispatch::IntegrationTest
 
     assert_select("textarea", task_list.name)
 
-    put(web_tasks_list_url(task_list), params: {task_list: {name: ""}})
+    put(web_task_list_url(task_list), params: {task_list: {name: ""}})
 
     assert_response :unprocessable_entity
 
@@ -70,7 +70,7 @@ class WebTaskListsEditingTest < ActionDispatch::IntegrationTest
 
     web_sign_in(user)
 
-    get(edit_web_tasks_list_url(task_list))
+    get(edit_web_task_list_url(task_list))
 
     assert_response :ok
 
@@ -78,15 +78,15 @@ class WebTaskListsEditingTest < ActionDispatch::IntegrationTest
 
     assert_select("textarea", task_list.name)
 
-    put(web_tasks_list_url(task_list), params: {task_list: {name: "Bar"}})
+    put(web_task_list_url(task_list), params: {task_list: {name: "Bar"}})
 
-    assert_redirected_to web_tasks_lists_url
+    assert_redirected_to web_task_lists_url
 
     follow_redirect!
 
     assert_response :ok
 
-    assert_select(".notice", "Task list updated")
+    assert_select(".notice", "Task list updated.")
 
     assert_select("td", "Bar")
   end
@@ -99,7 +99,7 @@ class WebTaskListsEditingTest < ActionDispatch::IntegrationTest
 
     web_sign_in(user1)
 
-    put(web_tasks_list_url(task_list2), params: {task_list: {name: "Bar"}})
+    put(web_task_list_url(task_list2), params: {task_list: {name: "Bar"}})
 
     assert_response :not_found
   end

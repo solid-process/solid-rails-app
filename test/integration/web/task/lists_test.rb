@@ -4,7 +4,7 @@ require "test_helper"
 
 class WebTaskListsTest < ActionDispatch::IntegrationTest
   test "guest tries to access all task lists" do
-    get(web_tasks_lists_url)
+    get(web_task_lists_url)
 
     assert_web_unauthorized_access
   end
@@ -16,11 +16,11 @@ class WebTaskListsTest < ActionDispatch::IntegrationTest
 
     web_sign_in(user)
 
-    get(web_tasks_lists_url)
+    get(web_task_lists_url)
 
     assert_response :ok
 
-    assert_select("td", "Inbox selected")
+    assert_select("td", "Inbox 📌(This is your current list)")
     assert_select("td", "Foo")
   end
 
@@ -31,7 +31,7 @@ class WebTaskListsTest < ActionDispatch::IntegrationTest
 
     web_sign_in(user)
 
-    get(web_tasks_lists_url)
+    get(web_task_lists_url)
 
     assert_response :ok
 
@@ -41,13 +41,13 @@ class WebTaskListsTest < ActionDispatch::IntegrationTest
 
     delete(links.first["href"])
 
-    assert_redirected_to web_tasks_lists_url
+    assert_redirected_to web_task_lists_url
 
     follow_redirect!
 
     assert_response :ok
 
-    assert_select(".notice", "Task list deleted")
+    assert_select(".notice", "Task list deleted.")
   end
 
   test "user tries to destroy the inbox task list" do
@@ -55,7 +55,7 @@ class WebTaskListsTest < ActionDispatch::IntegrationTest
 
     web_sign_in(user)
 
-    delete(web_tasks_list_url(user.inbox))
+    delete(web_task_list_url(user.inbox))
 
     assert_response :unprocessable_entity
   end
@@ -66,7 +66,7 @@ class WebTaskListsTest < ActionDispatch::IntegrationTest
 
     web_sign_in(user)
 
-    delete(web_tasks_list_url(task_list))
+    delete(web_task_list_url(task_list))
 
     assert_response :not_found
   end

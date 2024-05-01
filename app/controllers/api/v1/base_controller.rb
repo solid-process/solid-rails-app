@@ -30,8 +30,8 @@ module API::V1
       @current_member ||= authenticate_with_http_token do |access_token|
         task_list_id =
           case controller_name
-          when "task_lists" then params[:id]
-          when "tasks", "incomplete", "complete" then params[:task_list_id]
+          when "lists" then params[:id]
+          when "items", "incomplete", "complete" then params[:list_id]
           end
 
         Account::Member.fetch_by(user_token: access_token, task_list_id:)

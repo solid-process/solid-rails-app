@@ -1,0 +1,19 @@
+<%= form_with(model: task_list, scope: :task_list, url:, method:) do |f| %>
+  <% if f.object.errors.any? %>
+    <ul>
+      <% f.object.errors.full_messages.each do |message| %>
+        <li><code><%= message %></code></li>
+      <% end %>
+    </ul>
+  <% end %>
+
+  <p>
+    <%= f.label :name %>
+    <%= f.text_area :name, autofocus: true %>
+  </p>
+
+  <p>
+    <%= f.submit "Submit" %>
+    <%= link_to("Cancel", web_task_lists_path, style: "margin-left: 10px") %>
+  </p>
+<% end %>

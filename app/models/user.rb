@@ -7,7 +7,7 @@ class User < ApplicationRecord
   has_many :accounts, through: :memberships
 
   has_many :task_lists, through: :accounts
-  has_many :tasks, through: :task_lists
+  has_many :task_items, through: :task_lists
 
   has_one :ownership, -> { owner }, class_name: "Membership", inverse_of: :user, dependent: nil
   has_one :account, through: :ownership

@@ -30,7 +30,7 @@ class Web::BaseController < ApplicationController
   def authenticate_user!
     return if current_member.user?
 
-    redirect_to new_web_guests_session_path, alert: "You need to sign in or sign up before continuing."
+    redirect_to new_web_guest_session_path, alert: "You need to sign in or sign up before continuing."
   end
 
   def current_member

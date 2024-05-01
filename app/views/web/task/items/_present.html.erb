@@ -1,0 +1,18 @@
+<table>
+  <thead>
+    <tr>
+      <th>Description</th>
+      <th colspan="3">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% tasks.each do |task| %>
+      <tr>
+        <td style="<%= "text-decoration: line-through;" if task.completed? %>"><%= task.name %></td>
+        <td><%= render("web/task/items/actions/toggle", task:) %></td>
+        <td><%= render("web/task/items/actions/edit", task:) %></td>
+        <td><%= render("web/task/items/actions/delete", task:) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

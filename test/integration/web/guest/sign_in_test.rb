@@ -4,7 +4,7 @@ require "test_helper"
 
 class WebGuestSignInTest < ActionDispatch::IntegrationTest
   test "guest signs in with invalid data" do
-    get(new_web_guests_session_url)
+    get(new_web_guest_session_url)
 
     assert_response :ok
 
@@ -12,21 +12,21 @@ class WebGuestSignInTest < ActionDispatch::IntegrationTest
 
     params = {user: {email: "foo@", password: "123"}}
 
-    post(web_users_sessions_url, params:)
+    post(web_guest_sessions_url, params:)
 
     assert_response :unprocessable_entity
 
     assert_select("h2", "Please sign in")
 
-    assert_select(".alert", "Invalid email or password")
+    assert_select(".alert", "Invalid email or password. Please try again.")
   end
 
   test "guest signs in with valid data" do
     params = {user: {email: users(:one).email, password: "123123123"}}
 
-    post(web_users_sessions_url, params:)
+    post(web_guest_sessions_url, params:)
 
-    assert_redirected_to web_tasks_url
+    assert_redirected_to web_task_items_url
 
     follow_redirect!
 

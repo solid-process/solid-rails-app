@@ -4,7 +4,7 @@ require "test_helper"
 
 class WebGuestSignUpTest < ActionDispatch::IntegrationTest
   test "guest signs up with invalid data" do
-    get(new_web_guests_registration_url)
+    get(new_web_guest_registration_url)
 
     assert_response :ok
 
@@ -12,7 +12,7 @@ class WebGuestSignUpTest < ActionDispatch::IntegrationTest
 
     params = {guest: {email: "foo@", password: "123", password_confirmation: "321"}}
 
-    post(web_users_registrations_url, params:)
+    post(web_guest_registrations_url, params:)
 
     assert_response :unprocessable_entity
 
@@ -32,7 +32,7 @@ class WebGuestSignUpTest < ActionDispatch::IntegrationTest
       }
     }
 
-    post(web_users_registrations_url, params:)
+    post(web_guest_registrations_url, params:)
 
     assert_response :unprocessable_entity
 
@@ -57,10 +57,10 @@ class WebGuestSignUpTest < ActionDispatch::IntegrationTest
       -> { TaskList.count } => 1,
       -> { UserToken.count } => 1
     ) do
-      post(web_users_registrations_url, params:)
+      post(web_guest_registrations_url, params:)
     end
 
-    assert_redirected_to web_tasks_url
+    assert_redirected_to web_task_items_url
 
     follow_redirect!
 

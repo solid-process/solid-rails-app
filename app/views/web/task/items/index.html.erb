@@ -1,0 +1,38 @@
+<%
+  style = "color: var(--text) !important;"
+
+  all_tasks = { title: "All", path: web_task_items_path, style: }
+  completed_tasks = { title: "Completed", path: completed_web_task_items_path, style: }
+  incomplete_tasks = { title: "Incomplete", path: incomplete_web_task_items_path, style: }
+
+  set_current = -> { _1.merge!(title: "#{_1[:title]} (#{tasks.size})", style: "") }
+
+  case scope
+  when "incomplete" then set_current[incomplete_tasks]
+  when "completed" then set_current[completed_tasks]
+  when "all" then set_current[all_tasks]
+  end
+%>
+
+<%= render("web/task/shared/header", current_page: "tasks", back_to: scope) %>
+
+<main>
+  <% if current_task_list.task_items.exists? %>
+    <center>
+      <p>
+        <strong>Filter:</strong>
+        <%= link_to(all_tasks[:title], all_tasks[:path], style: all_tasks[:style])%> |
+        <%= link_to(incomplete_tasks[:title], incomplete_tasks[:path], style: incomplete_tasks[:style]) %> |
+        <%= link_to(completed_tasks[:title], completed_tasks[:path], style: completed_tasks[:style]) %>
+      </p>
+    </center>
+
+    <% if tasks.present? %>
+      <%= render("web/task/items/present", tasks:) %>
+    <% else %>
+      <%= render("web/task/items/blank", scope:) %>
+    <% end %>
+  <% else %>
+    <%= render("web/task/items/blank", scope: "all") %>
+  <% end %>
+</main>

@@ -1,12 +1,12 @@
-<% current_page = ->(page) { current == page ? "current" : "" } %>
+<% is_current_page = ->(page) { current_page == page ? "current" : "" } %>
 
 <header>
   <h1>Settings</h1>
 
   <nav>
-    <%= link_to(current_task_list_name, web_tasks_path) %>
-    <%= link_to("Profile", web_users_settings_profile_path, class: current_page["profile"] ) %>
-    <%= link_to("API", web_users_settings_api_path, class: current_page["api"] ) %>
-    <%= link_to("Log out", web_users_sessions_path, method: :delete) %>
+    <%= link_to(current_task_list_name, web_task_items_path) %>
+    <%= link_to("Profile", web_user_settings_profile_path, class: is_current_page["profile"] ) %>
+    <%= link_to("API", web_user_settings_api_path, class: is_current_page["api"] ) %>
+    <%= link_to("Log out", web_user_sessions_path, method: :delete) %>
   </nav>
 </header>

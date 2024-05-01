@@ -4,7 +4,7 @@ require "test_helper"
 
 class WebUserSignOutTest < ActionDispatch::IntegrationTest
   test "guest signs out" do
-    delete(web_users_sessions_url)
+    delete(web_user_sessions_url)
 
     assert_web_unauthorized_access
   end
@@ -14,14 +14,14 @@ class WebUserSignOutTest < ActionDispatch::IntegrationTest
 
     web_sign_in(user)
 
-    delete(web_users_sessions_url)
+    delete(web_user_sessions_url)
 
-    assert_redirected_to new_web_guests_session_path
+    assert_redirected_to new_web_guest_session_path
 
     follow_redirect!
 
     assert_response :ok
 
-    assert_select(".notice", "You have successfully signed out!")
+    assert_select(".notice", "You have successfully signed out.")
   end
 end

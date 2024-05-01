@@ -4,13 +4,13 @@ require "test_helper"
 
 class WebTaskItemsCreationTest < ActionDispatch::IntegrationTest
   test "guest tries to access new task form" do
-    get(new_web_task_url)
+    get(new_web_task_item_url)
 
     assert_web_unauthorized_access
   end
 
   test "guest tries to create a task" do
-    post(web_tasks_url, params: {task: {name: "Foo"}})
+    post(web_task_items_url, params: {task: {name: "Foo"}})
 
     assert_web_unauthorized_access
   end
@@ -20,23 +20,23 @@ class WebTaskItemsCreationTest < ActionDispatch::IntegrationTest
 
     web_sign_in(user)
 
-    get(new_web_task_url)
+    get(new_web_task_item_url)
 
     assert_response :ok
 
-    assert_select("h2", "New task")
+    assert_select("h2", "New item")
 
-    assert_difference(-> { user.inbox.tasks.count }) do
-      post(web_tasks_url, params: {task: {name: "Bar"}})
+    assert_difference(-> { user.inbox.task_items.count }) do
+      post(web_task_items_url, params: {task: {name: "Bar"}})
     end
 
-    assert_redirected_to web_tasks_url
+    assert_redirected_to web_task_items_url
 
     follow_redirect!
 
     assert_response :ok
 
-    assert_select(".notice", "Task created")
+    assert_select(".notice", "Task created.")
 
     assert_select("p", /All \(2\)/)
 
@@ -48,8 +48,8 @@ class WebTaskItemsCreationTest < ActionDispatch::IntegrationTest
 
     web_sign_in(user)
 
-    assert_no_difference(-> { user.inbox.tasks.count }) do
-      post(web_tasks_url, params: {task: {name: ""}})
+    assert_no_difference(-> { user.inbox.task_items.count }) do
+      post(web_task_items_url, params: {task: {name: ""}})
     end
 
     assert_response :ok

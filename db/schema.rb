@@ -29,6 +29,16 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_21_115028) do
     t.index ["user_id"], name: "index_memberships_on_user_id"
   end
 
+  create_table "task_items", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "completed_at"
+    t.integer "task_list_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["completed_at"], name: "index_task_items_on_completed_at"
+    t.index ["task_list_id"], name: "index_task_items_on_task_list_id"
+  end
+
   create_table "task_lists", force: :cascade do |t|
     t.string "name", null: false
     t.boolean "inbox", default: false, null: false
@@ -37,16 +47,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_21_115028) do
     t.datetime "updated_at", null: false
     t.index ["account_id"], name: "index_task_lists_inbox", unique: true, where: "inbox"
     t.index ["account_id"], name: "index_task_lists_on_account_id"
-  end
-
-  create_table "tasks", force: :cascade do |t|
-    t.string "name", null: false
-    t.datetime "completed_at"
-    t.integer "task_list_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["completed_at"], name: "index_tasks_on_completed_at"
-    t.index ["task_list_id"], name: "index_tasks_on_task_list_id"
   end
 
   create_table "user_tokens", force: :cascade do |t|
@@ -68,7 +68,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_21_115028) do
 
   add_foreign_key "memberships", "accounts"
   add_foreign_key "memberships", "users"
+  add_foreign_key "task_items", "task_lists"
   add_foreign_key "task_lists", "accounts"
-  add_foreign_key "tasks", "task_lists"
   add_foreign_key "user_tokens", "users"
 end

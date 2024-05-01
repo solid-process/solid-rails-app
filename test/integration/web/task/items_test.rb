@@ -4,19 +4,19 @@ require "test_helper"
 
 class WebTaskItemsTest < ActionDispatch::IntegrationTest
   test "guest tries to access all tasks" do
-    get(web_tasks_url)
+    get(web_task_items_url)
 
     assert_web_unauthorized_access
   end
 
   test "guest tries to access completed tasks" do
-    get(completed_web_tasks_url)
+    get(completed_web_task_items_url)
 
     assert_web_unauthorized_access
   end
 
   test "guest tries to access incomplete tasks" do
-    get(incomplete_web_tasks_url)
+    get(incomplete_web_task_items_url)
 
     assert_web_unauthorized_access
   end
@@ -28,7 +28,7 @@ class WebTaskItemsTest < ActionDispatch::IntegrationTest
 
     web_sign_in(user)
 
-    get(web_tasks_url)
+    get(web_task_items_url)
 
     assert_response :ok
 
@@ -44,7 +44,7 @@ class WebTaskItemsTest < ActionDispatch::IntegrationTest
     links.each do |link|
       delete(link["href"])
 
-      assert_redirected_to web_tasks_url
+      assert_redirected_to web_task_items_url
 
       follow_redirect!
 
@@ -53,17 +53,17 @@ class WebTaskItemsTest < ActionDispatch::IntegrationTest
 
     assert_equal 0, css_select("[data-method=\"put\"]").size
 
-    assert_select(".notice", "You don't have any tasks. Create one by touching the \"+ New\" button.")
+    assert_select(".notice", "You don't have any tasks. Create one by touching the \"+ New item\" button.")
   end
 
   test "user access completed tasks" do
     user = users(:one)
 
-    tasks(:one).then { complete_task(_1) }
+    task_items(:one).then { complete_task(_1) }
 
     web_sign_in(user)
 
-    get(completed_web_tasks_url)
+    get(completed_web_task_items_url)
 
     assert_response :ok
 
@@ -80,19 +80,19 @@ class WebTaskItemsTest < ActionDispatch::IntegrationTest
 
     put(link["href"])
 
-    assert_redirected_to completed_web_tasks_url
+    assert_redirected_to completed_web_task_items_url
 
     follow_redirect!
 
     assert_response :ok
 
-    assert_select(".notice", "Task marked as incomplete")
+    assert_select(".notice", "Task marked as incomplete.")
 
     assert_equal 0, css_select("[data-method=\"put\"]").size
 
     assert_select(".notice", "You don't have any completed tasks. Keep up the good work!")
 
-    get(incomplete_web_tasks_url)
+    get(incomplete_web_task_items_url)
 
     links = css_select("[data-confirm=\"Are you sure you want to delete this task?\"]")
 
@@ -100,17 +100,17 @@ class WebTaskItemsTest < ActionDispatch::IntegrationTest
 
     delete(links.first["href"])
 
-    assert_redirected_to incomplete_web_tasks_url
+    assert_redirected_to incomplete_web_task_items_url
 
     follow_redirect!
 
     assert_response :ok
 
-    assert_select(".notice", "Task deleted")
+    assert_select(".notice", "Task deleted.")
 
     assert_equal 0, css_select("[data-method=\"put\"]").size
 
-    assert_select(".notice", "You don't have any tasks. Create one by touching the \"+ New\" button.")
+    assert_select(".notice", "You don't have any tasks. Create one by touching the \"+ New item\" button.")
   end
 
   test "user access incomplete tasks" do
@@ -118,7 +118,7 @@ class WebTaskItemsTest < ActionDispatch::IntegrationTest
 
     web_sign_in(user)
 
-    get(incomplete_web_tasks_url)
+    get(incomplete_web_task_items_url)
 
     assert_response :ok
 
@@ -135,19 +135,19 @@ class WebTaskItemsTest < ActionDispatch::IntegrationTest
 
     put(link["href"])
 
-    assert_redirected_to incomplete_web_tasks_url
+    assert_redirected_to incomplete_web_task_items_url
 
     follow_redirect!
 
     assert_response :ok
 
-    assert_select(".notice", "Task marked as completed")
+    assert_select(".notice", "Task marked as completed.")
 
     assert_equal 0, css_select("[data-method=\"put\"]").size
 
     assert_select(".notice", "You don't have any incomplete tasks. Great job!")
 
-    get(completed_web_tasks_url)
+    get(completed_web_task_items_url)
 
     links = css_select("[data-confirm=\"Are you sure you want to delete this task?\"]")
 
@@ -155,16 +155,16 @@ class WebTaskItemsTest < ActionDispatch::IntegrationTest
 
     delete(links.first["href"])
 
-    assert_redirected_to completed_web_tasks_url
+    assert_redirected_to completed_web_task_items_url
 
     follow_redirect!
 
     assert_response :ok
 
-    assert_select(".notice", "Task deleted")
+    assert_select(".notice", "Task deleted.")
 
     assert_equal 0, css_select("[data-method=\"put\"]").size
 
-    assert_select(".notice", "You don't have any tasks. Create one by touching the \"+ New\" button.")
+    assert_select(".notice", "You don't have any tasks. Create one by touching the \"+ New item\" button.")
   end
 end
