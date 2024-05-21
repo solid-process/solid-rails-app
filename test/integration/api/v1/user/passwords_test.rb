@@ -3,7 +3,7 @@
 require "test_helper"
 
 class API::V1::User::PasswordsTest < ActionDispatch::IntegrationTest
-  test "#update responds with 401 when access token is invalid" do
+  test "#update responds with 401 when API token is invalid" do
     headers = [{}, api_v1_authorization_header(SecureRandom.hex(20))].sample
 
     put(api_v1_user_passwords_url, params: {}, headers:)

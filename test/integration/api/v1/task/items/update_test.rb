@@ -3,7 +3,7 @@
 require "test_helper"
 
 class API::V1::Task::ItemsUpdateTest < ActionDispatch::IntegrationTest
-  test "#update responds with 401 when access token is invalid" do
+  test "#update responds with 401 when API token is invalid" do
     user = users(:one)
     task = task_items(:one)
     params = {task: {name: "Foo"}}

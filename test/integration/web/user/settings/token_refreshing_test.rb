@@ -9,24 +9,24 @@ class WebUserSettingsTokenRefreshingTest < ActionDispatch::IntegrationTest
     assert_web_unauthorized_access
   end
 
-  test "guest tries to refresh the access token" do
+  test "guest tries to refresh the API token" do
     put(web_user_tokens_url)
 
     assert_web_unauthorized_access
   end
 
-  test "user tries to refresh the access token" do
+  test "user tries to refresh the API token" do
     user = users(:one)
 
     web_sign_in(user)
 
     get(web_user_settings_api_url)
 
-    assert_select("h2", "My API access token")
+    assert_select("h2", "My API token")
 
-    assert_select("pre", user.token.access_token)
+    assert_select("pre", user.token.value)
 
-    assert_changes -> { user.token.reload.access_token } do
+    assert_changes -> { user.token.reload.value } do
       put(web_user_tokens_url)
     end
 
@@ -34,8 +34,8 @@ class WebUserSettingsTokenRefreshingTest < ActionDispatch::IntegrationTest
 
     follow_redirect!
 
-    assert_select(".notice", "Access token updated.")
+    assert_select(".notice", "API token updated.")
 
-    assert_select("pre", user.token.access_token)
+    assert_select("pre", /#{user.token.short}_.{32}/)
   end
 end

@@ -71,12 +71,12 @@ class API::V1::User::RegistrationsTest < ActionDispatch::IntegrationTest
     json_data = assert_api_v1_response_with_success(:created)
 
     assert_equal(
-      User.find_by(email: params[:user][:email]).token.access_token,
-      json_data["access_token"]
+      User.find_by(email: params[:user][:email]).token.short,
+      json_data["user_token"].split("_").first
     )
   end
 
-  test "#destroy responds with 401 when access token is invalid" do
+  test "#destroy responds with 401 when API token is invalid" do
     headers = [{}, api_v1_authorization_header(SecureRandom.hex(20))].sample
 
     delete(api_v1_user_registrations_url, headers:)

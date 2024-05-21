@@ -3,7 +3,7 @@
 require "test_helper"
 
 class API::V1::Task::ItemsIndexTest < ActionDispatch::IntegrationTest
-  test "#index responds with 401 when access token is invalid" do
+  test "#index responds with 401 when API token is invalid" do
     headers = [{}, api_v1_authorization_header(SecureRandom.hex(20))].sample
 
     get(api_v1_task_list_items_url(TaskList.inbox.first), headers:)

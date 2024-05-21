@@ -8,7 +8,7 @@ module API::V1
       user = ::User.authenticate_by(email: user_params[:email], password: user_params[:password])
 
       if user
-        render_json_with_success(status: :ok, data: {access_token: user.token.access_token})
+        render_json_with_success(status: :ok, data: {user_token: user.token.value})
       else
         render_json_with_error(status: :unauthorized, message: "Invalid email or password. Please try again.")
       end

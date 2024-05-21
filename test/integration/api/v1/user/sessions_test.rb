@@ -45,8 +45,8 @@ class API::V1::User::SessionsTest < ActionDispatch::IntegrationTest
     json_data = assert_api_v1_response_with_success(:ok)
 
     assert_equal(
-      User.find_by(email: params[:user][:email]).token.access_token,
-      json_data["access_token"]
+      User.find_by(email: params[:user][:email]).token.short,
+      json_data["user_token"].split("_").first
     )
   end
 end

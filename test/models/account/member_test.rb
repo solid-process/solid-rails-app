@@ -3,7 +3,7 @@ require "test_helper"
 class Account::MemberTest < ActiveSupport::TestCase
   test "validations" do
     user_id = users(:one).id
-    user_token = user_tokens(:one).access_token
+    user_token = get_user_token(users(:one))
 
     member = Account::Member.new
 
@@ -203,7 +203,7 @@ class Account::MemberTest < ActiveSupport::TestCase
 
   test ".fetch_by with user_token" do
     user = users(:one)
-    user_token = user_tokens(:one).access_token
+    user_token = get_user_token(user)
 
     member = Account::Member.fetch_by(user_token:)
 
@@ -235,7 +235,7 @@ class Account::MemberTest < ActiveSupport::TestCase
   test ".fetch_by with user_token and account_id" do
     user = users(:one)
     account = accounts(:one)
-    user_token = user_tokens(:one).access_token
+    user_token = get_user_token(user)
 
     member = Account::Member.fetch_by(user_token:, account_id: account.id)
 
@@ -274,7 +274,7 @@ class Account::MemberTest < ActiveSupport::TestCase
   test ".fetch_by with user_token and task_list_id" do
     user = users(:one)
     task_list = create_task_list(user.account, name: "Foo")
-    user_token = user_tokens(:one).access_token
+    user_token = get_user_token(user)
 
     member = Account::Member.fetch_by(user_token:, task_list_id: task_list.id)
 
@@ -317,7 +317,7 @@ class Account::MemberTest < ActiveSupport::TestCase
     user = users(:one)
     account = accounts(:one)
     task_list = create_task_list(account, name: "Foo")
-    user_token = user_tokens(:one).access_token
+    user_token = get_user_token(user)
 
     member = Account::Member.fetch_by(user_token:, account_id: account.id, task_list_id: task_list.id)
 

@@ -33,7 +33,7 @@ Use:
     - [Registration](#registration)
     - [Authentication](#authentication)
     - [Account deletion](#account-deletion)
-    - [Access token updating](#access-token-updating)
+    - [API token updating](#api-token-updating)
     - [Password updating](#password-updating)
     - [Password resetting - Link to change the password](#password-resetting---link-to-change-the-password)
     - [Password resetting - Change the password](#password-resetting---change-the-password)
@@ -81,13 +81,13 @@ Set the following environment variables to use the examples below:
 
 ```bash
 export API_HOST="http://localhost:3000"
-export API_TOKEN="MY_ACCESS_TOKEN"
+export API_TOKEN="MY_USER_TOKEN"
 ```
 
 You can get the `API_TOKEN` by:
 1. Using the below `User / Registration` request.
 2. or performing the below `User / Authentication` request.
-3. or copying the `access_token` from `Sign In >> Settings >> API` page.
+3. or copying the `user token` from `Sign In >> Settings >> API` page.
 
 ### User
 
@@ -126,7 +126,7 @@ curl -X DELETE "$API_HOST/api/v1/user/registrations" \
   -H "Authorization: Bearer $API_TOKEN"
 ```
 
-#### Access token updating
+#### API token updating
 
 ```bash
 curl -X PUT "$API_HOST/api/v1/user/tokens" \
@@ -299,7 +299,7 @@ curl -X PUT "$API_HOST/api/v1/task/lists/1/items/1/incomplete" \
 
 <img src="/docs/screenshots/060_settings_profile.jpg" width="400"/>
 <img src="/docs/screenshots/061_settings_account_deletion.jpg" width="400"/>
-<img src="/docs/screenshots/062_settings_api_access_token.jpg" width="400"/>
+<img src="/docs/screenshots/062_settings_api_token.jpg" width="400"/>
 
 ### Sign out <!-- omit in toc -->
 

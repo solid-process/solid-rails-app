@@ -89,7 +89,11 @@ class Account::Member
   def users_relation
     return users_left_joins.where(users: {id: user_id}) if user_id?
 
-    users_left_joins.joins(:token).where(user_tokens: {access_token: user_token})
+    short, long = UserToken.parse_value(user_token)
+
+    checksum = UserToken.checksum(short:, long:)
+
+    users_left_joins.joins(:token).where(user_tokens: {short:, checksum:})
   end
 
   def users_left_joins

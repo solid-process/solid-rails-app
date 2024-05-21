@@ -3,7 +3,7 @@
 require "test_helper"
 
 class API::V1::Task::ListsDestroyTest < ActionDispatch::IntegrationTest
-  test "#destroy responds with 401 when access token is invalid" do
+  test "#destroy responds with 401 when API token is invalid" do
     headers = [{}, api_v1_authorization_header(SecureRandom.hex(20))].sample
 
     delete(api_v1_task_list_url(task_lists(:one_inbox)), headers:)

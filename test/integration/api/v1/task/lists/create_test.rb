@@ -3,7 +3,7 @@
 require "test_helper"
 
 class API::V1::Task::ListsCreateTest < ActionDispatch::IntegrationTest
-  test "#create responds with 401 when access token is invalid" do
+  test "#create responds with 401 when API token is invalid" do
     headers = [{}, api_v1_authorization_header(SecureRandom.hex(20))].sample
 
     post(api_v1_task_lists_url, headers:)

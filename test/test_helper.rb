@@ -42,6 +42,15 @@ module ActiveSupport
     def incomplete_task(task)
       task.tap { _1.update_column(:completed_at, nil) }
     end
+
+    USER_TOKENS = {
+      "one" => "Bh3ok8BL_XTNYFvwaRATjSoS3o5zjeQ4gWpQuUjd3",
+      "two" => "dSNZRXsU_QAB7obbYzBZ9NPwD3suoQNxiSP8N2zPn"
+    }.freeze
+
+    def get_user_token(user)
+      USER_TOKENS.fetch(user.email.split("@").first)
+    end
   end
 end
 
@@ -65,9 +74,9 @@ class ActionDispatch::IntegrationTest
   end
 
   def api_v1_authorization_header(arg)
-    access_token = arg.is_a?(User) ? arg.token.access_token : arg.try(:access_token) || arg
+    user_token = arg.is_a?(User) ? get_user_token(arg) : arg
 
-    {"Authorization" => "Bearer #{access_token}"}
+    {"Authorization" => "Bearer #{user_token}"}
   end
 
   def assert_api_v1_response_with_error(status)

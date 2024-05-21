@@ -8,7 +8,7 @@ module API::V1
       user = ::User.new(user_params)
 
       if user.save
-        render_json_with_success(status: :created, data: {access_token: user.token.access_token})
+        render_json_with_success(status: :created, data: {user_token: user.token.value})
       else
         render_json_with_model_errors(user)
       end

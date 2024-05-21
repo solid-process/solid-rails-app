@@ -1,9 +1,11 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
+one: # "Bh3ok8BL_XTNYFvwaRATjSoS3o5zjeQ4gWpQuUjd3"
   user: one
-  access_token: <%= SecureRandom.hex(20) %>
+  short: "Bh3ok8BL"
+  checksum: "511b5ed789486ffa153216c836ea22202a350c1caf26dc7b1b769d705aff9b43"
 
-two:
+two: # "dSNZRXsU_QAB7obbYzBZ9NPwD3suoQNxiSP8N2zPn"
   user: two
-  access_token: <%= SecureRandom.hex(20) %>
+  short: "dSNZRXsU"
+  checksum: "171a5b4bf71a89faedc19ddfa36b23bd35b84c3a1a7bd7e5a1a60b9107d7787a"
