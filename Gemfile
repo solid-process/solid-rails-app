@@ -1,15 +1,15 @@
 source "https://rubygems.org"
 
-ruby "3.2.3"
+ruby "3.3.1"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem "rails", "~> 7.1.3", ">= 7.1.3.2"
+gem "rails", "~> 7.1", ">= 7.1.3.3"
 
 # Use sqlite3 as the database for Active Record
-gem "sqlite3", "~> 1.4"
+gem "sqlite3", "~> 1.7", ">= 1.7.3"
 
 # Use the Puma web server [https://github.com/puma/puma]
-gem "puma", ">= 5.0"
+gem "puma", "~> 6.4", ">= 6.4.2"
 
 # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
 gem "importmap-rails"
@@ -29,12 +29,12 @@ gem "bootsnap", require: false
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[mri windows]
-  gem "standard", "~> 1.35"
+  gem "standard", "~> 1.36"
   gem "standard-rails", "~> 1.0"
 end
 
 group :development do
-  gem "letter_opener", "~> 1.9"
+  gem "letter_opener", "~> 1.10"
 
   gem "rubycritic", "~> 4.9", require: false
 
@@ -56,4 +56,4 @@ group :test do
   gem "simplecov", require: false
 end
 
-gem "propshaft", "~> 0.8.0"
+gem "propshaft", "~> 0.9.0"

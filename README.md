@@ -53,7 +53,7 @@ Use:
 
 ## System dependencies
 * SQLite3
-* Ruby `3.2.3`
+* Ruby `3.3.1`
   * bundler `>= 2.5.6`
 
 ## Setup
