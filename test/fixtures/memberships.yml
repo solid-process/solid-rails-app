@@ -1,11 +1,13 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+_fixture:
+  model_class: Account::Membership::Record
 
 one:
-  role: <%= Membership.roles.fetch(:owner) %>
+  role: <%= Account::Membership::Record.roles.fetch(:owner) %>
   user: one
   account: one
 
 two:
-  role: <%= Membership.roles.fetch(:owner) %>
+  role: <%= Account::Membership::Record.roles.fetch(:owner) %>
   user: two
   account: two

@@ -5,7 +5,7 @@ module Web::Guest
     def edit
       token = params[:token]
 
-      User.find_by_reset_password(token:) or return invalid_or_expired_token
+      User::Record.find_by_reset_password(token:) or return invalid_or_expired_token
 
       input = User::Password::Resetting::Input.new(token:)
 

@@ -6,7 +6,9 @@ class API::V1::Task::ItemsIndexTest < ActionDispatch::IntegrationTest
   test "#index responds with 401 when API token is invalid" do
     headers = [{}, api_v1_authorization_header(SecureRandom.hex(20))].sample
 
-    get(api_v1_task_list_items_url(TaskList.inbox.first), headers:)
+    task_list = Account::Task::List::Record.inbox.first
+
+    get(api_v1_task_list_items_url(task_list), headers:)
 
     assert_api_v1_response_with_error(:unauthorized)
   end

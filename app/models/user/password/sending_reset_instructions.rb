@@ -16,7 +16,7 @@ class User::Password::SendingResetInstructions < Solid::Process
   end
 
   def call(attributes)
-    user = User.find_by(attributes)
+    user = User::Record.find_by(attributes)
 
     return Failure(:email_not_found) if user.nil?
 

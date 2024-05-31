@@ -4,7 +4,7 @@ class Account::Task::List::Listing < Solid::Process
   input do
     attribute :account
 
-    validates :account, instance_of: [Account, Account::Member], is: :persisted?
+    validates :account, instance_of: [Account::Record, Account::Member], is: :persisted?
   end
 
   def call(attributes)

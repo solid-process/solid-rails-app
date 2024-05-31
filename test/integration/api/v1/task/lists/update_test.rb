@@ -16,7 +16,9 @@ class API::V1::Task::ListsUpdateTest < ActionDispatch::IntegrationTest
     params = {task_list: {name: "Foo"}}
     headers = api_v1_authorization_header(user)
 
-    put(api_v1_task_list_url(TaskList.maximum(:id) + 1), params:, headers:)
+    list_id = Account::Task::List::Record.maximum(:id) + 1
+
+    put(api_v1_task_list_url(list_id), params:, headers:)
 
     assert_api_v1_response_with_error(:not_found)
   end

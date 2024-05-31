@@ -22,7 +22,7 @@ class User::Password::Resetting < Solid::Process
   private
 
   def find_user_by_token(token:, **)
-    user = User.find_by_reset_password(token:)
+    user = User::Record.find_by_reset_password(token:)
 
     user ? Continue(user:) : Failure(:user_not_found)
   end

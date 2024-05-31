@@ -9,7 +9,7 @@ class User::Password::Updating < Solid::Process
     attribute :password_confirmation, :string
     attribute :current_password, :string, default: ""
 
-    validates :user, instance_of: User, is: :persisted?
+    validates :user, instance_of: User::Record, is: :persisted?
 
     with_options presence: true, length: {minimum: User::Password::MINIMUM_LENGTH} do
       validates :password, confirmation: true

@@ -16,7 +16,7 @@ class User::Authentication < Solid::Process
   end
 
   def call(attributes)
-    user = User.authenticate_by(attributes)
+    user = User::Record.authenticate_by(attributes)
 
     user ? Success(:user_authenticated, user:) : Failure(:invalid_input, input:)
   end

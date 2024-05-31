@@ -26,7 +26,9 @@ class API::V1::Task::ItemsCreateTest < ActionDispatch::IntegrationTest
     user = users(:one)
     params = {task: {name: "Foo"}}
 
-    post(api_v1_task_list_items_url(TaskList.maximum(:id) + 1), params:, headers: api_v1_authorization_header(user))
+    list_id = Account::Task::List::Record.maximum(:id) + 1
+
+    post(api_v1_task_list_items_url(list_id), params:, headers: api_v1_authorization_header(user))
 
     assert_api_v1_response_with_error(:not_found)
   end

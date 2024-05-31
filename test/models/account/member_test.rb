@@ -57,7 +57,7 @@ class Account::MemberTest < ActiveSupport::TestCase
 
     # ---
 
-    user_id = User.maximum(:id) + 1
+    user_id = User::Record.maximum(:id) + 1
 
     member = Account::Member.fetch_by(user_id:)
 
@@ -100,7 +100,7 @@ class Account::MemberTest < ActiveSupport::TestCase
 
     # ---
 
-    user_id = User.maximum(:id) + 1
+    user_id = User::Record.maximum(:id) + 1
 
     member = Account::Member.fetch_by(user_id:, account_id: account.id)
 
@@ -143,7 +143,7 @@ class Account::MemberTest < ActiveSupport::TestCase
 
     # ---
 
-    user_id = User.maximum(:id) + 1
+    user_id = User::Record.maximum(:id) + 1
 
     member = Account::Member.fetch_by(user_id:, task_list_id: task_list.id)
 

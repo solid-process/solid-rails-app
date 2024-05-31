@@ -20,11 +20,11 @@ class WebUserSettingsAccountDeletionTest < ActionDispatch::IntegrationTest
     assert_select("button", "Delete account")
 
     assert_difference(
-      -> { User.count } => -1,
-      -> { Account.count } => -1,
-      -> { Membership.count } => -1,
-      -> { TaskList.count } => -1,
-      -> { UserToken.count } => -1
+      -> { User::Record.count } => -1,
+      -> { Account::Record.count } => -1,
+      -> { Account::Membership::Record.count } => -1,
+      -> { Account::Task::List::Record.count } => -1,
+      -> { User::Token::Record.count } => -1
     ) do
       delete(web_user_registrations_url)
     end
@@ -37,6 +37,6 @@ class WebUserSettingsAccountDeletionTest < ActionDispatch::IntegrationTest
 
     assert_select(".notice", "Your account has been deleted.")
 
-    assert_nil User.find_by(id: user.id)
+    assert_nil User::Record.find_by(id: user.id)
   end
 end

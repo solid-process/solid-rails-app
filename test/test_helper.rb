@@ -74,7 +74,7 @@ class ActionDispatch::IntegrationTest
   end
 
   def api_v1_authorization_header(arg)
-    user_token = arg.is_a?(User) ? get_user_token(arg) : arg
+    user_token = arg.is_a?(User::Record) ? get_user_token(arg) : arg
 
     {"Authorization" => "Bearer #{user_token}"}
   end

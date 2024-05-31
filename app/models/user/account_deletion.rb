@@ -4,7 +4,7 @@ class User::AccountDeletion < Solid::Process
   input do
     attribute :user
 
-    validates :user, instance_of: User, is: :persisted?
+    validates :user, instance_of: User::Record, is: :persisted?
   end
 
   def call(_)

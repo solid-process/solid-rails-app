@@ -5,7 +5,7 @@ class User::Token::Creation < Solid::Process
     attribute :user
     attribute :token, default: -> { User::Token::Entity.generate }
 
-    validates :user, instance_of: User, is: :persisted?
+    validates :user, instance_of: User::Record, is: :persisted?
     validates :token, instance_of: User::Token::Entity
   end
 

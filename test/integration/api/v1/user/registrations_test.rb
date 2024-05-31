@@ -59,11 +59,11 @@ class API::V1::User::RegistrationsTest < ActionDispatch::IntegrationTest
     }
 
     assert_difference(
-      -> { User.count } => 1,
-      -> { Account.count } => 1,
-      -> { Membership.count } => 1,
-      -> { TaskList.count } => 1,
-      -> { UserToken.count } => 1
+      -> { User::Record.count } => 1,
+      -> { Account::Record.count } => 1,
+      -> { Account::Membership::Record.count } => 1,
+      -> { Account::Task::List::Record.count } => 1,
+      -> { User::Token::Record.count } => 1
     ) do
       post(api_v1_user_registrations_url, params:)
     end
@@ -71,7 +71,7 @@ class API::V1::User::RegistrationsTest < ActionDispatch::IntegrationTest
     json_data = assert_api_v1_response_with_success(:created)
 
     assert_equal(
-      User.find_by(email: params[:user][:email]).token.short,
+      User::Record.find_by(email: params[:user][:email]).token.short,
       json_data["user_token"].split("_").first
     )
   end
@@ -88,17 +88,17 @@ class API::V1::User::RegistrationsTest < ActionDispatch::IntegrationTest
     user = users(:one)
 
     assert_difference(
-      -> { User.count } => -1,
-      -> { Account.count } => -1,
-      -> { Membership.count } => -1,
-      -> { TaskList.count } => -1,
-      -> { UserToken.count } => -1
+      -> { User::Record.count } => -1,
+      -> { Account::Record.count } => -1,
+      -> { Account::Membership::Record.count } => -1,
+      -> { Account::Task::List::Record.count } => -1,
+      -> { User::Token::Record.count } => -1
     ) do
       delete(api_v1_user_registrations_url, headers: api_v1_authorization_header(user))
     end
 
     assert_api_v1_response_with_success(:ok)
 
-    assert_nil User.find_by(id: user.id)
+    assert_nil User::Record.find_by(id: user.id)
   end
 end

@@ -51,11 +51,11 @@ class WebGuestSignUpTest < ActionDispatch::IntegrationTest
     }
 
     assert_difference(
-      -> { User.count } => 1,
-      -> { Account.count } => 1,
-      -> { Membership.count } => 1,
-      -> { TaskList.count } => 1,
-      -> { UserToken.count } => 1
+      -> { User::Record.count } => 1,
+      -> { Account::Record.count } => 1,
+      -> { Account::Membership::Record.count } => 1,
+      -> { Account::Task::List::Record.count } => 1,
+      -> { User::Token::Record.count } => 1
     ) do
       post(web_guest_registrations_url, params:)
     end
@@ -68,6 +68,6 @@ class WebGuestSignUpTest < ActionDispatch::IntegrationTest
 
     assert_select(".notice", "You have successfully registered!")
 
-    assert User.exists?(email: params.dig(:guest, :email), id: session[:user_id])
+    assert User::Record.exists?(email: params.dig(:guest, :email), id: session[:user_id])
   end
 end

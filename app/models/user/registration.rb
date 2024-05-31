@@ -38,13 +38,13 @@ class User::Registration < Solid::Process
   private
 
   def check_if_email_is_taken(email:, **)
-    input.errors.add(:email, "has already been taken") if User.exists?(email:)
+    input.errors.add(:email, "has already been taken") if User::Record.exists?(email:)
 
     input.errors.any? ? Failure(:invalid_input, input:) : Continue()
   end
 
   def create_user(email:, password:, password_confirmation:, **)
-    user = User.create(email:, password:, password_confirmation:)
+    user = User::Record.create(email:, password:, password_confirmation:)
 
     return Continue(user:) if user.persisted?
 
@@ -54,7 +54,7 @@ class User::Registration < Solid::Process
   end
 
   def create_user_account(user:, **)
-    account = Account.create!(uuid: SecureRandom.uuid)
+    account = Account::Record.create!(uuid: SecureRandom.uuid)
 
     account.memberships.create!(user:, role: :owner)
 

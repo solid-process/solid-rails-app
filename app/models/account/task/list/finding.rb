@@ -6,7 +6,7 @@ class Account::Task::List::Finding < Solid::Process
     attribute :account
 
     validates :id, numericality: {only_integer: true, greater_than: 0}
-    validates :account, instance_of: [Account, Account::Member]
+    validates :account, instance_of: [Account::Record, Account::Member]
   end
 
   def call(attributes)

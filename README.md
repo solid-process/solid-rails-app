@@ -15,13 +15,9 @@ Web and REST API application made with [Ruby on Rails](https://guides.rubyonrail
 
 ## 💡 Branch summary
 
-From version 2 onwards, all contexts (Account and User) implement their operations through processes. Because of this, it becomes possible to create a composition of processes where they are defined as dependencies that will be orchestrated through their steps.
+If we analyze the previous version, we will see that the [ActiveRecord models are not defined within the context of the user or account](https://github.com/solid-process/solid-rails-app/tree/solid-process-2.00/app/models).
 
-Notes:
-
-1. [UserToken](https://github.com/solid-process/solid-rails-app/blob/solid-process-2.00/app/models/user_token.rb) becomes hugely lean because the model's behavior has been diluted into different components within the [User::Token namespace](https://github.com/solid-process/solid-rails-app/tree/solid-process-2.00/app/models/user/token). I am highlighting [User::Token::Entity](https://github.com/solid-process/solid-rails-app/blob/solid-process-2.00/app/models/user/token/entity.rb), a PORO capable of representing a token without the need to interact with the database (ActiveRecord model).
-
-2. New features are added to input blocks, such as data normalization and validation.
+What this version does is rename the ActiveRecord models as [Record](https://github.com/solid-process/solid-rails-app/blob/solid-process-2.20/app/models/user/record.rb) (for this, it is necessary to define the table_name and class_name in the classes) within the [Account](https://github.com/solid-process/solid-rails-app/tree/solid-process-2.20/app/models/account) and [User](https://github.com/solid-process/solid-rails-app/tree/solid-process-2.20/app/models/user) namespaces (they become mere modules since before both were also an ActiveRecord model)
 
 ## 📣 Important info
 
