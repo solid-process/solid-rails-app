@@ -15,9 +15,11 @@ Web and REST API application made with [Ruby on Rails](https://guides.rubyonrail
 
 ## 💡 Branch summary
 
-If we analyze the previous version, we will see that the [ActiveRecord models are not defined within the context of the user or account](https://github.com/solid-process/solid-rails-app/tree/solid-process-2.00/app/models).
+The [vanilla-rails summary](https://github.com/solid-process/solid-rails-app/blob/vanilla-rails?tab=readme-ov-file#-solid-rails-app-) presents the Account::Member as one of the application's most important components. It is responsible for controlling access to the accounts.
 
-What this version does is rename the ActiveRecord models as [Record](https://github.com/solid-process/solid-rails-app/blob/solid-process-2.20/app/models/user/record.rb) (for this, it is necessary to define the table_name and class_name in the classes) within the [Account](https://github.com/solid-process/solid-rails-app/tree/solid-process-2.20/app/models/account) and [User](https://github.com/solid-process/solid-rails-app/tree/solid-process-2.20/app/models/user) namespaces (they become mere modules since before both were also an ActiveRecord model)
+It turns out that although it is a PORO (Solid::Model), its implementation also contains queries (ActiveRecord stuff).
+
+This version introduces [Account::Member::Repository](https://github.com/solid-process/solid-rails-app/blob/solid-process-2.40/app/models/account/member/repository.rb) to enhance the separation of concerns. This new component/pattern will serve as an abstraction layer for the data source, allowing queries to be moved to it and making the [Account::Member implementation more straightforward and concise](https://github.com/solid-process/solid-rails-app/blob/solid-process-2.40/app/models/account/member.rb).
 
 ## 📣 Important info
 
