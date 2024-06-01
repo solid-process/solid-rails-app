@@ -1,27 +1,36 @@
 # frozen_string_literal: true
 
-class User::Token::Refreshing < Solid::Process
-  deps do
-    attribute :token_generator, default: User::Token::Entity
-  end
+module User::Token
+  class Refreshing < Solid::Process
+    MAXIMUM_ATTEMPTS = 3
 
-  input do
-    attribute :user
+    deps do
+      attribute :token_generator, default: User::Token::Entity
 
-    validates :user, instance_of: User::Record, is: :persisted?
-  end
+      attribute :repository, default: Repository
 
-  def call(_)
-    attempts ||= 1
+      validates :repository, respond_to: [:refresh]
+    end
 
-    new_token = deps.token_generator.generate
+    input do
+      attribute :user
 
-    input.user.token.update!(short: new_token.short.value, checksum: new_token.checksum)
+      validates :user, instance_of: User::Record, is: :persisted?
+    end
 
-    Success(:token_refreshed, token: new_token)
-  rescue ActiveRecord::RecordNotUnique => e
-    retry if (attempts += 1) <= 3
+    def call(attributes)
+      MAXIMUM_ATTEMPTS.times do |attempts|
+        new_token = deps.token_generator.generate
 
-    Failure(:cannot_be_refreshed, token:, error: e)
+        case deps.repository.refresh(token: new_token, user: attributes[:user])
+        in Solid::Success(token:)
+          break Success(:token_refreshed, token:)
+        in Solid::Failure(token:) if token.errors.any?
+          break Failure(:invalid_token, token:)
+        in Solid::Failure(token:, error:)
+          break Failure(:cannot_be_refreshed, token:, error:) if attempts < MAXIMUM_ATTEMPTS
+        end
+      end
+    end
   end
 end

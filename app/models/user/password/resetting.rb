@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 class User::Password::Resetting < Solid::Process
+  deps do
+    attribute :repository, default: User::Repository
+
+    validates :repository, respond_to: [:reset_password]
+  end
+
   input do
     attribute :token, :string
     attribute :password, :string
@@ -13,25 +19,17 @@ class User::Password::Resetting < Solid::Process
   end
 
   def call(attributes)
-    Given(attributes)
-      .and_then(:find_user_by_token)
-      .and_then(:update_user_password)
-      .and_expose(:password_updated, [:user])
-  end
+    result = deps.repository.reset_password(**attributes)
 
-  private
+    case result
+    in Solid::Success(user:)
+      Success(:password_updated, user:)
+    in Solid::Failure(:invalid_or_expired_token, _)
+      Failure(:user_not_found)
+    in Solid::Failure(user:)
+      input.errors.merge!(user.errors)
 
-  def find_user_by_token(token:, **)
-    user = User::Record.find_by_reset_password(token:)
-
-    user ? Continue(user:) : Failure(:user_not_found)
-  end
-
-  def update_user_password(user:, password:, password_confirmation:, **)
-    return Continue() if user.update(password:, password_confirmation:)
-
-    input.errors.merge!(user.errors)
-
-    Failure(:invalid_input, input:)
+      Failure(:invalid_input, input:)
+    end
   end
 end

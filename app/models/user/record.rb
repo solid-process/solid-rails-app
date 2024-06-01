@@ -28,9 +28,5 @@ module User
     generates_token_for :email_confirmation, expires_in: 24.hours do
       email
     end
-
-    def self.find_by_reset_password(token:)
-      find_by_token_for(:reset_password, token)
-    end
   end
 end

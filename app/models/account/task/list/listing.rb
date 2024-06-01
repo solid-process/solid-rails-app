@@ -1,17 +1,23 @@
 # frozen_string_literal: true
 
-class Account::Task::List::Listing < Solid::Process
-  input do
-    attribute :account
+module Account::Task::List
+  class Listing < Solid::Process
+    deps do
+      attribute :repository, default: Repository
 
-    validates :account, instance_of: [Account::Record, Account::Member], is: :persisted?
-  end
+      validates :repository, respond_to: [:list_by]
+    end
 
-  def call(attributes)
-    attributes => {account:}
+    input do
+      attribute :account
 
-    relation = account.task_lists.order(created_at: :desc)
+      validates :account, instance_of: [Account::Record, Account::Member], is: :persisted?
+    end
 
-    Success(:records_found, relation:)
+    def call(attributes)
+      relation = deps.repository.list_by(**attributes)
+
+      Success(:task_lists_found, relation:)
+    end
   end
 end

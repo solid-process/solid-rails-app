@@ -15,11 +15,9 @@ Web and REST API application made with [Ruby on Rails](https://guides.rubyonrail
 
 ## 💡 Branch summary
 
-The [vanilla-rails summary](https://github.com/solid-process/solid-rails-app/blob/vanilla-rails?tab=readme-ov-file#-solid-rails-app-) presents the Account::Member as one of the application's most important components. It is responsible for controlling access to the accounts.
+Since [version 2.40 introduces the Repository pattern](https://github.com/solid-process/solid-rails-app/blob/solid-process-2.40/app/models/account/member/repository.rb), what would happen if all processes/contexts started using this pattern?
 
-It turns out that although it is a PORO (Solid::Model), its implementation also contains queries (ActiveRecord stuff).
-
-This version introduces [Account::Member::Repository](https://github.com/solid-process/solid-rails-app/blob/solid-process-2.40/app/models/account/member/repository.rb) to enhance the separation of concerns. This new component/pattern will serve as an abstraction layer for the data source, allowing queries to be moved to it and making the [Account::Member implementation more straightforward and concise](https://github.com/solid-process/solid-rails-app/blob/solid-process-2.40/app/models/account/member.rb).
+This version answers this question in practice by introducing a repository for each context and forcing the application to start using them instead of directly using the ActiveRecord models.
 
 ## 📣 Important info
 

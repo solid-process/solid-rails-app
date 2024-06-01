@@ -1,15 +1,27 @@
 # frozen_string_literal: true
 
-class Account::Task::Item::Incomplete < Solid::Process
-  self.input = Account::Task::Item::Finding::Input
+module Account::Task::Item
+  class Incomplete < Solid::Process
+    deps do
+      attribute :repository, default: Repository
 
-  def call(attributes)
-    case Account::Task::Item::Finding.call(attributes)
-    in Solid::Failure(type, value) then Failure(type, **value)
-    in Solid::Success(task:)
-      task.update!(completed_at: nil)
+      validates :repository, respond_to: [:incomplete!]
+    end
 
-      Success(:task_incomplete, task:)
+    input do
+      attribute :id, :integer
+      attribute :member
+
+      validates :id, numericality: {only_integer: true, greater_than: 0}
+      validates :member, instance_of: Account::Member
+    end
+
+    def call(attributes)
+      case deps.repository.incomplete!(**attributes)
+      in Solid::Failure(:task_list_not_found, _) then Failure(:task_list_not_found)
+      in Solid::Failure(:task_not_found, _) then Failure(:task_not_found)
+      in Solid::Success(task:) then Success(:task_incomplete, task:)
+      end
     end
   end
 end

@@ -26,7 +26,7 @@ module Web::Task
     end
 
     def edit
-      case Account::Task::List::Finding.call(account: current_member, id: params[:id])
+      case Account::Task::List::Repository.find_by(account: current_member, id: params[:id])
       in Solid::Failure(:task_list_not_found | :invalid_input, _) then render_not_found_error
       in Solid::Failure(:inbox_cannot_be_edited, _) then render_unprocessable_entity_error
       in Solid::Success(task_list:)

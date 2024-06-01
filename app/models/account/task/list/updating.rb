@@ -1,29 +1,34 @@
 # frozen_string_literal: true
 
-class Account::Task::List::Updating < Solid::Process
-  input do
-    attribute :id, :integer
-    attribute :name, :string
-    attribute :account
+module Account::Task::List
+  class Updating < Solid::Process
+    deps do
+      attribute :repository, default: Repository
 
-    before_validation do
-      self.name = name&.strip
+      validates :repository, respond_to: [:update!]
     end
 
-    validates :id, numericality: {only_integer: true, greater_than: 0}
-    validates :name, presence: true
-    validates :account, instance_of: [Account::Record, Account::Member]
-  end
+    input do
+      attribute :id, :integer
+      attribute :name, :string
+      attribute :account
 
-  def call(attributes)
-    attributes => {id:, account:, name:}
+      before_validation do
+        self.name = name&.strip
+      end
 
-    case Account::Task::List::Finding.call(account:, id:)
-    in Solid::Failure(type, value) then Failure(type, **value)
-    in Solid::Success(task_list:)
-      task_list.update!(name:)
+      validates :id, numericality: {only_integer: true, greater_than: 0}
+      validates :name, presence: true
+      validates :account, instance_of: [Account::Record, Account::Member]
+    end
 
-      Success(:task_list_updated, task_list:)
+    def call(attributes)
+      case deps.repository.update!(**attributes)
+      in Solid::Failure(:task_list_not_found, _) then Failure(:task_list_not_found)
+      in Solid::Failure(:inbox_cannot_be_edited, _) then Failure(:inbox_cannot_be_edited)
+      in Solid::Success(task_list:)
+        Success(:task_list_updated, task_list:)
+      end
     end
   end
 end

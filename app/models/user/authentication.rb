@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 class User::Authentication < Solid::Process
+  deps do
+    attribute :repository, default: User::Repository
+
+    validates :repository, respond_to: [:find_by_email_and_password]
+  end
+
   input do
     attribute :email, :string
     attribute :password, :string
@@ -16,8 +22,9 @@ class User::Authentication < Solid::Process
   end
 
   def call(attributes)
-    user = User::Record.authenticate_by(attributes)
-
-    user ? Success(:user_authenticated, user:) : Failure(:invalid_input, input:)
+    case deps.repository.find_by_email_and_password(**attributes)
+    in Solid::Failure then Failure(:invalid_input, input:)
+    in Solid::Success(user:) then Success(:user_authenticated, user:)
+    end
   end
 end

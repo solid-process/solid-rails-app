@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 
 class User::Password::Updating < Solid::Process
-  MAP_USER_ATTRIBUTE = -> { (_1 == :password_challenge) ? :current_password : _1 }
+  deps do
+    attribute :repository, default: User::Repository
+
+    validates :repository, respond_to: [:update_password]
+  end
 
   input do
     attribute :user
@@ -18,12 +22,11 @@ class User::Password::Updating < Solid::Process
   end
 
   def call(attributes)
-    attributes => {user:, password:, password_confirmation:, current_password: password_challenge}
-
-    if user.update(password:, password_confirmation:, password_challenge:)
+    case deps.repository.update_password(**attributes)
+    in Solid::Success(user:)
       Success(:password_updated, user:)
-    else
-      user.errors.each { input.errors.import(_1, attribute: MAP_USER_ATTRIBUTE[_1.attribute]) }
+    in Solid::Failure(user:)
+      input.errors.merge!(user.errors)
 
       Failure(:invalid_input, input:)
     end

@@ -1,7 +1,13 @@
 # frozen_string_literal: true
 
-module Account::Task
-  class Item::Creation < Solid::Process
+module Account::Task::Item
+  class Creation < Solid::Process
+    deps do
+      attribute :repository, default: Repository
+
+      validates :repository, respond_to: [:create!]
+    end
+
     input do
       attribute :name, :string
       attribute :member
@@ -15,13 +21,12 @@ module Account::Task
     end
 
     def call(attributes)
-      attributes => {name:, member:}
-
-      return Failure(:task_list_not_found) unless member.authorized?
-
-      task = Item::Record.create!(name:, task_list_id: member.task_list_id)
-
-      Success(:task_created, task:)
+      case deps.repository.create!(**attributes)
+      in Solid::Failure(:task_list_not_found, _)
+        Failure(:task_list_not_found)
+      in Solid::Success(task:)
+        Success(:task_created, task:)
+      end
     end
   end
 end

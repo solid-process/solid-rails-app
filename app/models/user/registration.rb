@@ -3,8 +3,11 @@
 class User::Registration < Solid::Process
   deps do
     attribute :mailer, default: UserMailer
+    attribute :repository, default: User::Repository
     attribute :token_creation, default: User::Token::Creation
     attribute :task_list_creation, default: Account::Task::List::Creation
+
+    validates :repository, respond_to: [:exists?, :create!, :create_account!]
   end
 
   input do
@@ -38,27 +41,25 @@ class User::Registration < Solid::Process
   private
 
   def check_if_email_is_taken(email:, **)
-    input.errors.add(:email, "has already been taken") if User::Record.exists?(email:)
+    input.errors.add(:email, "has already been taken") if deps.repository.exists?(email:)
 
     input.errors.any? ? Failure(:invalid_input, input:) : Continue()
   end
 
   def create_user(email:, password:, password_confirmation:, **)
-    user = User::Record.create(email:, password:, password_confirmation:)
+    case deps.repository.create!(email:, password:, password_confirmation:)
+    in Solid::Success(user:) then Continue(user:)
+    in Solid::Failure(user:)
+      input.errors.merge!(user.errors)
 
-    return Continue(user:) if user.persisted?
-
-    input.errors.merge!(user.errors)
-
-    Failure(:invalid_input, input:)
+      Failure(:invalid_input, input:)
+    end
   end
 
   def create_user_account(user:, **)
-    account = Account::Record.create!(uuid: SecureRandom.uuid)
+    result = deps.repository.create_account!(user:)
 
-    account.memberships.create!(user:, role: :owner)
-
-    Continue(account:)
+    Continue(account: result[:account])
   end
 
   def create_user_inbox(account:, **)

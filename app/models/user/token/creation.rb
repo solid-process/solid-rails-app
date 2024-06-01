@@ -1,37 +1,42 @@
 # frozen_string_literal: true
 
-class User::Token::Creation < Solid::Process
-  input do
-    attribute :user
-    attribute :token, default: -> { User::Token::Entity.generate }
+module User::Token
+  class Creation < Solid::Process
+    deps do
+      attribute :repository, default: Repository
 
-    validates :user, instance_of: User::Record, is: :persisted?
-    validates :token, instance_of: User::Token::Entity
-  end
+      validates :repository, respond_to: [:find_by_user, :create!]
+    end
 
-  def call(attributes)
-    Given(attributes)
-      .and_then(:validate_token)
-      .and_then(:check_token_existance)
-      .and_then(:create_token_if_not_exists)
-      .and_expose(:token_created, [:token])
-  end
+    input do
+      attribute :user
+      attribute :token, default: -> { User::Token::Entity.generate }
 
-  private
+      validates :user, instance_of: User::Record, is: :persisted?
+      validates :token, instance_of: User::Token::Entity
+    end
 
-  def validate_token(token:, **)
-    token.invalid? ? Failure(:invalid_token, token:) : Continue()
-  end
+    def call(attributes)
+      Given(attributes)
+        .and_then(:check_token_existance)
+        .and_then(:create_token_if_not_exists)
+        .and_expose(:token_created, [:token])
+    end
 
-  def check_token_existance(user:, **)
-    token = user.token
+    private
 
-    token&.persisted? ? Success(:token_already_exists, token:) : Continue()
-  end
+    def check_token_existance(user:, **)
+      case deps.repository.find_by_user(id: user.id)
+      in Solid::Failure then Continue()
+      in Solid::Success(token:) then Success(:token_already_exists, token:)
+      end
+    end
 
-  def create_token_if_not_exists(user:, token:, **)
-    user.create_token!(short: token.short.value, checksum: token.checksum)
-
-    Continue(token:)
+    def create_token_if_not_exists(user:, token:, **)
+      case deps.repository.create!(user:, token:)
+      in Solid::Failure(token:) then Failure(:invalid_token, token:)
+      in Solid::Success(token:) then Continue(token:)
+      end
+    end
   end
 end

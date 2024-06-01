@@ -1,15 +1,28 @@
 # frozen_string_literal: true
 
-class Account::Task::List::Deletion < Solid::Process
-  self.input = Account::Task::List::Finding::Input
+module Account::Task::List
+  class Deletion < Solid::Process
+    deps do
+      attribute :repository, default: Repository
 
-  def call(attributes)
-    case Account::Task::List::Finding.call(attributes)
-    in Solid::Failure(type, value) then Failure(type, **value)
-    in Solid::Success(task_list:)
-      task_list.destroy!
+      validates :repository, respond_to: [:destroy!]
+    end
 
-      Success(:task_list_deleted, task_list:)
+    input do
+      attribute :id, :integer
+      attribute :account
+
+      validates :id, numericality: {only_integer: true, greater_than: 0}
+      validates :account, instance_of: [Account::Record, Account::Member]
+    end
+
+    def call(attributes)
+      case deps.repository.destroy!(**attributes)
+      in Solid::Failure(:task_list_not_found, _) then Failure(:task_list_not_found)
+      in Solid::Failure(:inbox_cannot_be_edited, _) then Failure(:inbox_cannot_be_edited)
+      in Solid::Success(task_list:)
+        Success(:task_list_deleted, task_list:)
+      end
     end
   end
 end

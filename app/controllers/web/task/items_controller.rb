@@ -29,7 +29,7 @@ module Web::Task
     end
 
     def edit
-      case Account::Task::Item::Finding.call(member: current_member, id: params[:id])
+      case Account::Task::Item::Repository.find_by(member: current_member, id: params[:id])
       in Solid::Failure(:task_not_found, _)
         render_not_found_error
       in Solid::Success(task:)

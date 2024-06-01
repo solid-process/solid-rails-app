@@ -1,7 +1,13 @@
 # frozen_string_literal: true
 
-module Account::Task
-  class Item::Listing < Solid::Process
+module Account::Task::Item
+  class Listing < Solid::Process
+    deps do
+      attribute :repository, default: Repository
+
+      validates :repository, respond_to: [:list_by]
+    end
+
     input do
       attribute :member
       attribute :filter, default: "all"
@@ -10,20 +16,12 @@ module Account::Task
     end
 
     def call(attributes)
-      attributes => { member:, filter: }
-
-      return Failure(:task_list_not_found) unless member.authorized?
-
-      tasks = Item::Record.where(task_list_id: member.task_list_id)
-
-      tasks =
-        case filter
-        when "completed" then tasks.completed.order(completed_at: :desc)
-        when "incomplete" then tasks.incomplete.order(created_at: :desc)
-        else tasks.order(Arel.sql("task_items.completed_at DESC NULLS FIRST, task_items.created_at DESC"))
-        end
-
-      Success(:tasks_found, tasks:)
+      case deps.repository.list_by(**attributes)
+      in Solid::Failure(:task_list_not_found, _)
+        Failure(:task_list_not_found)
+      in Solid::Success(tasks:)
+        Success(:tasks_found, tasks:)
+      end
     end
   end
 end

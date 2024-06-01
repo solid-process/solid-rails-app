@@ -5,11 +5,14 @@ module Web::Guest
     def edit
       token = params[:token]
 
-      User::Record.find_by_reset_password(token:) or return invalid_or_expired_token
+      case User::Repository.find_by_reset_password(token:)
+      in Solid::Failure
+        invalid_or_expired_token
+      in Solid::Success
+        input = User::Password::Resetting::Input.new(token:)
 
-      input = User::Password::Resetting::Input.new(token:)
-
-      render("web/guest/passwords/reset", locals: {user: input})
+        render("web/guest/passwords/reset", locals: {user: input})
+      end
     end
 
     def update
