@@ -32,9 +32,9 @@ class API::V1::Task::ListsDestroyTest < ActionDispatch::IntegrationTest
   test "#destroy responds with 204" do
     user = users(:one)
 
-    task_list = user.account.task_lists.create!(name: "Bar")
+    task_list = member_record(user).account.task_lists.create!(name: "Bar")
 
-    assert_difference -> { user.account.task_lists.count }, -1 do
+    assert_difference -> { member_record(user).account.task_lists.count }, -1 do
       delete(api_v1_task_list_url(task_list), headers: api_v1_authorization_header(user))
     end
 

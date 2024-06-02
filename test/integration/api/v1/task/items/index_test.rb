@@ -16,7 +16,9 @@ class API::V1::Task::ItemsIndexTest < ActionDispatch::IntegrationTest
   test "#index responds with 404 when task list is not found" do
     user = users(:one)
 
-    get(api_v1_task_list_items_url(user.task_lists.maximum(:id) + 1), headers: api_v1_authorization_header(user))
+    list_id = member_record(user).task_lists.maximum(:id) + 1
+
+    get(api_v1_task_list_items_url(list_id), headers: api_v1_authorization_header(user))
 
     assert_api_v1_response_with_error(:not_found)
   end
@@ -24,7 +26,9 @@ class API::V1::Task::ItemsIndexTest < ActionDispatch::IntegrationTest
   test "#index responds with 404 when task list belongs to another user" do
     user = users(:one)
 
-    get(api_v1_task_list_items_url(users(:two).task_lists.first), headers: api_v1_authorization_header(user))
+    task_list = member_record(users(:two)).task_lists.first
+
+    get(api_v1_task_list_items_url(task_list), headers: api_v1_authorization_header(user))
 
     assert_api_v1_response_with_error(:not_found)
   end
@@ -32,11 +36,11 @@ class API::V1::Task::ItemsIndexTest < ActionDispatch::IntegrationTest
   test "#index responds with 200" do
     user = users(:one)
 
-    task1 = user.inbox.task_items.first
+    task1 = member_record(user).inbox.task_items.first
     task2 = create_task(user, name: "Foo")
     task2.update_column(:completed_at, Time.current)
 
-    get(api_v1_task_list_items_url(user.inbox), headers: api_v1_authorization_header(user))
+    get(api_v1_task_list_items_url(member_record(user).inbox), headers: api_v1_authorization_header(user))
 
     collection = assert_api_v1_response_with_success(:ok)
 
@@ -53,7 +57,9 @@ class API::V1::Task::ItemsIndexTest < ActionDispatch::IntegrationTest
 
     task = create_task(user, name: "Foo", completed: true)
 
-    get(api_v1_task_list_items_url(user.inbox, filter: "completed"), headers: api_v1_authorization_header(user))
+    task_list = member_record(user).inbox
+
+    get(api_v1_task_list_items_url(task_list, filter: "completed"), headers: api_v1_authorization_header(user))
 
     collection = assert_api_v1_response_with_success(:ok)
 
@@ -65,11 +71,13 @@ class API::V1::Task::ItemsIndexTest < ActionDispatch::IntegrationTest
   test "#index responds with 200 when filtering by incomplete" do
     user = users(:one)
 
-    task1 = user.inbox.task_items.first
+    task1 = member_record(user).inbox.task_items.first
     task2 = create_task(user, name: "Foo")
     task2.update_column(:completed_at, Time.current)
 
-    get(api_v1_task_list_items_url(user.inbox, filter: "incomplete"), headers: api_v1_authorization_header(user))
+    task_list = member_record(user).inbox
+
+    get(api_v1_task_list_items_url(task_list, filter: "incomplete"), headers: api_v1_authorization_header(user))
 
     collection = assert_api_v1_response_with_success(:ok)
 

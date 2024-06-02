@@ -34,7 +34,7 @@ class API::V1::Task::ListsCreateTest < ActionDispatch::IntegrationTest
 
     params = {task_list: {name: "Foo"}}
 
-    assert_difference -> { user.account.task_lists.count } do
+    assert_difference -> { member_record(user).account.task_lists.count } do
       post(api_v1_task_lists_url, params:, headers: api_v1_authorization_header(user))
     end
 

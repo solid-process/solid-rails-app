@@ -30,19 +30,19 @@ class Web::BaseController < ApplicationController
   end
 
   def current_member
-    @current_member ||= Account::Member.fetch_by(user_id: current_user_id, task_list_id: current_task_list_id)
+    @current_member ||= Account::Member.fetch_by(uuid: current_user_uuid, task_list_id: current_task_list_id)
   end
 
   def current_account
     current_member.account
   end
 
-  def current_user_id=(id)
-    session[:user_id] = id
+  def current_user_uuid=(id)
+    session[:user_uuid] = id
   end
 
-  def current_user_id
-    session[:user_id]
+  def current_user_uuid
+    session[:user_uuid]
   end
 
   def current_task_list_id=(id)
@@ -56,7 +56,7 @@ class Web::BaseController < ApplicationController
   def sign_in(user)
     reset_session
 
-    self.current_user_id = user.id
+    self.current_user_uuid = user.uuid
   end
 
   def sign_out

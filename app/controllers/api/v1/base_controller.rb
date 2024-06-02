@@ -34,7 +34,7 @@ module API::V1
           when "items", "incomplete", "complete" then params[:list_id]
           end
 
-        Account::Member.fetch_by(user_token:, task_list_id:)
+        Account::Member.fetch_by(token: user_token, task_list_id:)
       end
     end
 

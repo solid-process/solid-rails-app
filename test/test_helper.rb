@@ -29,7 +29,7 @@ module ActiveSupport
       account.task_lists.create!(name: name)
     end
 
-    def create_task(user, name:, completed: false, task_list: user.inbox)
+    def create_task(user, name:, completed: false, task_list: member_record(user).inbox)
       task = task_list.task_items.create!(name: "Foo")
 
       completed ? complete_task(task) : task
@@ -55,6 +55,10 @@ module ActiveSupport
 end
 
 class ActionDispatch::IntegrationTest
+  def member_record(user)
+    Account::Member::Record.find_by!(uuid: user.uuid)
+  end
+
   def web_sign_in(user, password: "123123123")
     post(web_guest_sessions_url, params: {user: {email: user.email, password:}})
 

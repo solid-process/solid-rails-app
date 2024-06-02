@@ -12,7 +12,7 @@ class WebTaskListsTest < ActionDispatch::IntegrationTest
   test "user views all task lists" do
     user = users(:one)
 
-    create_task_list(user.account, name: "Foo")
+    create_task_list(member_record(user).account, name: "Foo")
 
     web_sign_in(user)
 
@@ -27,7 +27,7 @@ class WebTaskListsTest < ActionDispatch::IntegrationTest
   test "user destroys a task list" do
     user = users(:one)
 
-    create_task_list(user.account, name: "Foo")
+    create_task_list(member_record(user).account, name: "Foo")
 
     web_sign_in(user)
 
@@ -55,7 +55,7 @@ class WebTaskListsTest < ActionDispatch::IntegrationTest
 
     web_sign_in(user)
 
-    delete(web_task_list_url(user.inbox))
+    delete(web_task_list_url(member_record(user).inbox))
 
     assert_response :unprocessable_entity
   end

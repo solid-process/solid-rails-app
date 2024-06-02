@@ -13,10 +13,10 @@ module Account
     end
 
     has_many :task_items, through: :task_lists
-    has_many :users, through: :memberships, class_name: "User::Record"
+    has_many :members, through: :memberships, class_name: "Member::Record"
 
     has_one :inbox, -> { inbox }, inverse_of: :account, dependent: nil, class_name: "Task::List::Record"
-    has_one :owner, through: :ownership, source: :user
+    has_one :owner, through: :ownership, source: :member
 
     validates :uuid, presence: true
   end

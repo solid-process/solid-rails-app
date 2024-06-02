@@ -8,7 +8,7 @@ class API::V1::Task::ItemsDestroyTest < ActionDispatch::IntegrationTest
     task = task_items(:one)
     headers = [{}, api_v1_authorization_header(SecureRandom.hex(20))].sample
 
-    delete(api_v1_task_list_item_url(user.inbox, task), headers:)
+    delete(api_v1_task_list_item_url(member_record(user).inbox, task), headers:)
 
     assert_api_v1_response_with_error(:unauthorized)
   end
@@ -31,7 +31,7 @@ class API::V1::Task::ItemsDestroyTest < ActionDispatch::IntegrationTest
 
     id = Account::Task::Item::Record.maximum(:id) + 1
 
-    url = api_v1_task_list_item_url(list_id: user.inbox, id:)
+    url = api_v1_task_list_item_url(list_id: member_record(user).inbox, id:)
 
     delete(url, headers: api_v1_authorization_header(user))
 
@@ -51,8 +51,8 @@ class API::V1::Task::ItemsDestroyTest < ActionDispatch::IntegrationTest
     user = users(:one)
     task = task_items(:one)
 
-    assert_difference -> { user.task_items.count }, -1 do
-      delete(api_v1_task_list_item_url(user.inbox, task), headers: api_v1_authorization_header(user))
+    assert_difference -> { member_record(user).task_items.count }, -1 do
+      delete(api_v1_task_list_item_url(member_record(user).inbox, task), headers: api_v1_authorization_header(user))
     end
 
     assert_api_v1_response_with_success(:ok)

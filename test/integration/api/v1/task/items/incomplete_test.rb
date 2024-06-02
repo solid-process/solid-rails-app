@@ -8,7 +8,7 @@ class API::V1::Task::ItemsIncompleteTest < ActionDispatch::IntegrationTest
     task = task_items(:one)
     headers = [{}, api_v1_authorization_header(SecureRandom.hex(20))].sample
 
-    put(incomplete_api_v1_task_list_item_url(user.inbox, task), headers:)
+    put(incomplete_api_v1_task_list_item_url(member_record(user).inbox, task), headers:)
 
     assert_api_v1_response_with_error(:unauthorized)
   end
@@ -31,7 +31,7 @@ class API::V1::Task::ItemsIncompleteTest < ActionDispatch::IntegrationTest
 
     id = Account::Task::Item::Record.maximum(:id) + 1
 
-    url = incomplete_api_v1_task_list_item_url(list_id: user.inbox, id:)
+    url = incomplete_api_v1_task_list_item_url(list_id: member_record(user).inbox, id:)
 
     put(url, headers: api_v1_authorization_header(user))
 
@@ -52,7 +52,7 @@ class API::V1::Task::ItemsIncompleteTest < ActionDispatch::IntegrationTest
     task = task_items(:one).then { complete_task(_1) }
 
     assert_changes -> { task.reload.completed_at } do
-      put(incomplete_api_v1_task_list_item_url(user.inbox, task), headers: api_v1_authorization_header(user))
+      put(incomplete_api_v1_task_list_item_url(member_record(user).inbox, task), headers: api_v1_authorization_header(user))
     end
 
     assert_nil(task.completed_at)

@@ -11,6 +11,7 @@ class User::Registration < Solid::Process
   end
 
   input do
+    attribute :uuid, :string, default: -> { ::UUID.generate }
     attribute :email, :string
     attribute :password, :string
     attribute :password_confirmation, :string
@@ -20,6 +21,7 @@ class User::Registration < Solid::Process
     end
 
     with_options presence: true do
+      validates :uuid, format: ::UUID::REGEXP
       validates :email, format: User::Email::REGEXP
       validates :password, confirmation: true, length: {minimum: User::Password::MINIMUM_LENGTH}
     end
@@ -46,8 +48,8 @@ class User::Registration < Solid::Process
     input.errors.any? ? Failure(:invalid_input, input:) : Continue()
   end
 
-  def create_user(email:, password:, password_confirmation:, **)
-    case deps.repository.create!(email:, password:, password_confirmation:)
+  def create_user(uuid:, email:, password:, password_confirmation:, **)
+    case deps.repository.create!(uuid:, email:, password:, password_confirmation:)
     in Solid::Success(user:) then Continue(user:)
     in Solid::Failure(user:)
       input.errors.merge!(user.errors)

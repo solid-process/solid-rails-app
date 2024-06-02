@@ -4,10 +4,10 @@ _fixture:
 
 one:
   role: <%= Account::Membership::Record.roles.fetch(:owner) %>
-  user: one
+  member: one
   account: one
 
 two:
   role: <%= Account::Membership::Record.roles.fetch(:owner) %>
-  user: two
+  member: two
   account: two

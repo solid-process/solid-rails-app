@@ -12,6 +12,10 @@ module Account::Member::Repository
       .select("users.*, task_lists.id AS member_task_list_id, #{account_id} AS member_account_id").first
   end
 
+  def find_account!(member)
+    member.account_id.try { Account::Record.find(_1) }
+  end
+
   def find_task_lists(member)
     account_id = member.account_id
 
@@ -21,9 +25,9 @@ module Account::Member::Repository
   private
 
   def users_relation(member)
-    return users_left_joins(member).where(users: {id: member.user_id}) if member.user_id?
+    return users_left_joins(member).where(users: {uuid: member.uuid}) if member.uuid?
 
-    short, checksum = User::Token::Entity.parse(member.user_token).values_at(:short, :checksum)
+    short, checksum = User::Token::Entity.parse(member.token).values_at(:short, :checksum)
 
     users_left_joins(member).joins(:token).where(user_tokens: {short: short.value, checksum:})
   end
@@ -36,7 +40,8 @@ module Account::Member::Repository
     memberships_condition = "AND memberships.#{membership_assignment}" if membership_assignment
 
     User::Record
-      .joins("LEFT JOIN memberships ON users.id = memberships.user_id #{memberships_condition}")
+      .joins("INNER JOIN account_members ON users.uuid = account_members.uuid")
+      .joins("LEFT JOIN memberships ON account_members.id = memberships.member_id #{memberships_condition}")
       .joins("LEFT JOIN task_lists ON task_lists.account_id = memberships.account_id AND #{task_lists_condition}")
   end
 

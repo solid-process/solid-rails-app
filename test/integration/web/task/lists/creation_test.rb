@@ -26,7 +26,7 @@ class WebTaskListsCreationTest < ActionDispatch::IntegrationTest
 
     assert_select("h2", "New list")
 
-    assert_no_difference(-> { user.account.task_lists.count }) do
+    assert_no_difference(-> { member_record(user).account.task_lists.count }) do
       post(web_task_lists_url, params: {task_list: {name: ""}})
     end
 
@@ -40,7 +40,7 @@ class WebTaskListsCreationTest < ActionDispatch::IntegrationTest
 
     web_sign_in(user)
 
-    assert_difference(-> { user.account.task_lists.count }) do
+    assert_difference(-> { member_record(user).account.task_lists.count }) do
       post(web_task_lists_url, params: {task_list: {name: "Foo"}})
     end
 

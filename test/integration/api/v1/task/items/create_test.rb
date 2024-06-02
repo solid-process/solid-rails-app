@@ -8,7 +8,7 @@ class API::V1::Task::ItemsCreateTest < ActionDispatch::IntegrationTest
     params = {task: {name: "Foo"}}
     headers = [{}, api_v1_authorization_header(SecureRandom.hex(20))].sample
 
-    post(api_v1_task_list_items_url(user.inbox), params:, headers:)
+    post(api_v1_task_list_items_url(member_record(user).inbox), params:, headers:)
 
     assert_api_v1_response_with_error(:unauthorized)
   end
@@ -17,7 +17,7 @@ class API::V1::Task::ItemsCreateTest < ActionDispatch::IntegrationTest
     user = users(:one)
     params = [{}, {task: {}}, {task: nil}].sample
 
-    post(api_v1_task_list_items_url(user.inbox), params:, headers: api_v1_authorization_header(user))
+    post(api_v1_task_list_items_url(member_record(user).inbox), params:, headers: api_v1_authorization_header(user))
 
     assert_api_v1_response_with_error(:bad_request)
   end
@@ -47,7 +47,7 @@ class API::V1::Task::ItemsCreateTest < ActionDispatch::IntegrationTest
     user = users(:one)
     params = {task: {name: [nil, ""].sample}}
 
-    post(api_v1_task_list_items_url(user.inbox), params:, headers: api_v1_authorization_header(user))
+    post(api_v1_task_list_items_url(member_record(user).inbox), params:, headers: api_v1_authorization_header(user))
 
     assert_api_v1_response_with_error(:unprocessable_entity)
   end
@@ -56,14 +56,14 @@ class API::V1::Task::ItemsCreateTest < ActionDispatch::IntegrationTest
     user = users(:one)
     params = {task: {name: "Foo"}}
 
-    assert_difference -> { user.inbox.task_items.count } do
-      post(api_v1_task_list_items_url(user.inbox), params:, headers: api_v1_authorization_header(user))
+    assert_difference -> { member_record(user).inbox.task_items.count } do
+      post(api_v1_task_list_items_url(member_record(user).inbox), params:, headers: api_v1_authorization_header(user))
     end
 
     json_data = assert_api_v1_response_with_success(:created)
 
     assert_equal "Foo", json_data["name"]
 
-    assert user.task_items.exists?(json_data["id"])
+    assert member_record(user).task_items.exists?(json_data["id"])
   end
 end

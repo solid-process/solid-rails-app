@@ -26,7 +26,7 @@ class API::V1::Task::ListsUpdateTest < ActionDispatch::IntegrationTest
   test "#update responds with 400 when params are missing" do
     user = users(:one)
 
-    task_list = user.account.task_lists.create!(name: "Bar")
+    task_list = member_record(user).account.task_lists.create!(name: "Bar")
 
     params = [{}, {task_list: {}}, {task_list: nil}].sample
 
@@ -48,7 +48,7 @@ class API::V1::Task::ListsUpdateTest < ActionDispatch::IntegrationTest
   test "#update responds with 422 when params are invalid" do
     user = users(:one)
 
-    task_list = user.account.task_lists.create!(name: "Bar")
+    task_list = member_record(user).account.task_lists.create!(name: "Bar")
 
     params = {task_list: {name: [nil, ""].sample}}
 
@@ -60,7 +60,7 @@ class API::V1::Task::ListsUpdateTest < ActionDispatch::IntegrationTest
   test "#update responds with 200" do
     user = users(:one)
 
-    task_list = user.account.task_lists.create!(name: "Bar")
+    task_list = member_record(user).account.task_lists.create!(name: "Bar")
 
     params = {task_list: {name: "Foo"}}
 

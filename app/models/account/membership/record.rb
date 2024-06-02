@@ -4,7 +4,7 @@ module Account::Membership
   class Record < ApplicationRecord
     self.table_name = "memberships"
 
-    belongs_to :user, class_name: "User::Record"
+    belongs_to :member, class_name: "Account::Member::Record"
     belongs_to :account, class_name: "Account::Record"
 
     enum role: {owner: "owner"}

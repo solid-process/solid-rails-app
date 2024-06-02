@@ -17,27 +17,32 @@ module User
       Record.exists?(attributes)
     end
 
-    def create!(email:, password:, password_confirmation:)
-      user = Record.create(email:, password:, password_confirmation:)
+    def create!(uuid:, email:, password:, password_confirmation:)
+      user = Record.create(uuid:, email:, password:, password_confirmation:)
 
       user.persisted? ? Success(:user_created, user:) : Failure(:invalid_user, user:)
     end
 
     def create_account!(user:)
-      account = Account::Record.create!(uuid: SecureRandom.uuid)
+      account = Account::Record.create!(uuid: ::UUID.generate)
 
-      account.memberships.create!(user:, role: :owner)
+      member = Account::Member::Record.create!(uuid: user.uuid)
+
+      account.memberships.create!(member:, role: :owner)
 
       Success(:account_created, account:)
     end
 
     def destroy_account!(user:)
+      member = Account::Member::Record.find_by!(uuid: user.uuid)
+
       user.transaction do
-        user.account.destroy!
+        member.account.destroy!
+        member.destroy!
         user.destroy!
       end
 
-      Success(:account_deleted, user:, account: user.account)
+      Success(:account_deleted, user:, account: member.account)
     end
 
     def find_by_email_and_password(email:, password:)

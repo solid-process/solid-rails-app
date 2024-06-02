@@ -68,6 +68,6 @@ class WebGuestSignUpTest < ActionDispatch::IntegrationTest
 
     assert_select(".notice", "You have successfully registered!")
 
-    assert User::Record.exists?(email: params.dig(:guest, :email), id: session[:user_id])
+    assert User::Record.exists?(email: params.dig(:guest, :email), uuid: session[:user_uuid])
   end
 end

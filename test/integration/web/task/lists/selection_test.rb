@@ -6,7 +6,7 @@ class WebTaskListsSelectionTest < ActionDispatch::IntegrationTest
   test "guest tries to select a task list" do
     user = users(:one)
 
-    task_list = create_task_list(user.account, name: "Foo")
+    task_list = create_task_list(member_record(user).account, name: "Foo")
 
     put(select_web_task_list_url(task_list))
 
@@ -16,7 +16,7 @@ class WebTaskListsSelectionTest < ActionDispatch::IntegrationTest
   test "user selects a task list" do
     user = users(:one)
 
-    task_list = create_task_list(user.account, name: "Foo")
+    task_list = create_task_list(member_record(user).account, name: "Foo")
 
     web_sign_in(user)
 
