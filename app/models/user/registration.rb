@@ -5,9 +5,9 @@ class User::Registration < Solid::Process
     attribute :mailer, default: UserMailer
     attribute :repository, default: User::Repository
     attribute :token_creation, default: User::Token::Creation
-    attribute :task_list_creation, default: Account::Task::List::Creation
+    attribute :account_creation, default: Account::Member::OwnerCreation
 
-    validates :repository, respond_to: [:exists?, :create!, :create_account!]
+    validates :repository, respond_to: [:exists?, :create!]
   end
 
   input do
@@ -33,7 +33,6 @@ class User::Registration < Solid::Process
         .and_then(:check_if_email_is_taken)
         .and_then(:create_user)
         .and_then(:create_user_account)
-        .and_then(:create_user_inbox)
         .and_then(:create_user_token)
     }
       .and_then(:send_email_confirmation)
@@ -59,20 +58,14 @@ class User::Registration < Solid::Process
   end
 
   def create_user_account(user:, **)
-    result = deps.repository.create_account!(user:)
-
-    Continue(account: result[:account])
-  end
-
-  def create_user_inbox(account:, **)
-    case deps.task_list_creation.call(account:, inbox: true)
-    in Solid::Success(task_list:) then Continue()
+    case deps.account_creation.call(uuid: user.uuid)
+    in Solid::Success then Continue()
     end
   end
 
   def create_user_token(user:, **)
     case deps.token_creation.call(user:)
-    in Solid::Success(token:) then Continue()
+    in Solid::Success then Continue()
     end
   end
 

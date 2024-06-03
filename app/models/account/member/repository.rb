@@ -1,51 +1,77 @@
 # frozen_string_literal: true
 
-module Account::Member::Repository
-  extend self
+class Account::Member
+  module Repository
+    extend Solid::Output.mixin
+    extend self
 
-  def find_user(member)
-    return if member.invalid?
+    def create!(uuid:)
+      member = Record.create!(uuid:)
 
-    account_id = member.task_list_id ? "task_lists.account_id" : "memberships.account_id"
+      Success(:member_created, member:)
+    rescue ::ActiveRecord::RecordNotUnique
+      Failure(:uuid_has_already_been_taken)
+    end
 
-    users_relation(member)
-      .select("users.*, task_lists.id AS member_task_list_id, #{account_id} AS member_account_id").first
-  end
+    def create_account!(member:, uuid: ::UUID.generate)
+      account = Account::Record.create!(uuid:)
 
-  def find_account!(member)
-    member.account_id.try { Account::Record.find(_1) }
-  end
+      account.memberships.create!(member:, role: :owner)
 
-  def find_task_lists(member)
-    account_id = member.account_id
+      Success(:account_created, account:)
+    rescue ::ActiveRecord::RecordNotUnique
+      Failure(:uuid_has_already_been_taken)
+    end
 
-    Account::Task::List::Record.then { account_id ? _1.where(account_id:) : _1.none }
-  end
+    def destroy_account!(uuid:)
+      member = Record.find_by!(uuid:)
 
-  private
+      member.transaction do
+        member.account.destroy!
+        member.destroy!
+      end
 
-  def users_relation(member)
-    return users_left_joins(member).where(users: {uuid: member.uuid}) if member.uuid?
+      Success(:member_deleted, member:, account: member.account)
+    end
 
-    short, checksum = User::Token::Entity.parse(member.token).values_at(:short, :checksum)
+    def find_record(member)
+      return Failure(:invalid_member) if member.invalid?
 
-    users_left_joins(member).joins(:token).where(user_tokens: {short: short.value, checksum:})
-  end
+      member = members_relation(member).first
 
-  def users_left_joins(member)
-    task_list_assignment = member.task_list_id ? ["id = ?", member.task_list_id] : "inbox = TRUE"
-    task_lists_condition = "task_lists.#{sanitize_sql_for_assignment(task_list_assignment)}"
+      member ? Success(:member_found, member:) : Failure(:member_not_found)
+    end
 
-    membership_assignment = sanitize_sql_for_assignment(["account_id = ?", member.account_id]) if member.account_id
-    memberships_condition = "AND memberships.#{membership_assignment}" if membership_assignment
+    def find_account!(member)
+      member.account_id.try { Account::Record.find(_1) }
+    end
 
-    User::Record
-      .joins("INNER JOIN account_members ON users.uuid = account_members.uuid")
-      .joins("LEFT JOIN memberships ON account_members.id = memberships.member_id #{memberships_condition}")
-      .joins("LEFT JOIN task_lists ON task_lists.account_id = memberships.account_id AND #{task_lists_condition}")
-  end
+    def find_task_lists(member)
+      account_id = member.account_id
 
-  def sanitize_sql_for_assignment(...)
-    ActiveRecord::Base.sanitize_sql_for_assignment(...)
+      Account::Task::List::Record.then { account_id ? _1.where(account_id:) : _1.none }
+    end
+
+    private
+
+    def members_relation(member)
+      task_list_assignment = member.task_list_id ? ["id = ?", member.task_list_id] : "inbox = TRUE"
+      task_lists_condition = "task_lists.#{sanitize_sql_for_assignment(task_list_assignment)}"
+
+      membership_assignment = sanitize_sql_for_assignment(["account_id = ?", member.account_id]) if member.account_id
+      memberships_condition = "AND memberships.#{membership_assignment}" if membership_assignment
+
+      account_id = member.task_list_id ? "task_lists.account_id" : "memberships.account_id"
+
+      Record
+        .select("account_members.*, task_lists.id AS member_task_list_id, #{account_id} AS member_account_id")
+        .joins("LEFT JOIN memberships ON account_members.id = memberships.member_id #{memberships_condition}")
+        .joins("LEFT JOIN task_lists ON task_lists.account_id = memberships.account_id AND #{task_lists_condition}")
+        .where(account_members: {uuid: member.uuid})
+    end
+
+    def sanitize_sql_for_assignment(...)
+      ActiveRecord::Base.sanitize_sql_for_assignment(...)
+    end
   end
 end

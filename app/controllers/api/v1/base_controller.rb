@@ -21,24 +21,28 @@ module API::V1
     protected
 
     def authenticate_user!
-      return if current_member&.user?
+      return if current_user.present?
 
       render_json_with_error(status: :unauthorized, message: "Invalid API token")
     end
 
+    def current_user
+      @current_user ||= authenticate_with_http_token do |value|
+        ::User::Repository.fetch_by_token(value).fetch(:user, nil)
+      end
+    end
+
     def current_member
-      @current_member ||= authenticate_with_http_token do |user_token|
+      @current_member ||= begin
         task_list_id =
           case controller_name
           when "lists" then params[:id]
           when "items", "incomplete", "complete" then params[:list_id]
           end
 
-        Account::Member.fetch_by(token: user_token, task_list_id:)
+        Account::Member.fetch_by(uuid: current_user.uuid, task_list_id:)
       end
     end
-
-    def current_user = current_member.user
 
     def current_account = current_member.account
 

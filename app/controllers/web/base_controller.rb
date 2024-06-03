@@ -8,11 +8,11 @@ class Web::BaseController < ApplicationController
   private
 
   helper_method def user_signed_in?
-    current_member.user?
+    current_user.present?
   end
 
   helper_method def current_user
-    current_member.user
+    @current_user ||= User::Repository.find_by(uuid: current_user_uuid).fetch(:user, nil)
   end
 
   helper_method def current_task_list
@@ -24,7 +24,7 @@ class Web::BaseController < ApplicationController
   end
 
   def authenticate_user!
-    return if current_member.user?
+    return if current_user.present?
 
     redirect_to new_web_guest_session_path, alert: "You need to sign in or sign up before continuing."
   end

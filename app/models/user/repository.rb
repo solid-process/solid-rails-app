@@ -23,26 +23,18 @@ module User
       user.persisted? ? Success(:user_created, user:) : Failure(:invalid_user, user:)
     end
 
-    def create_account!(user:)
-      account = Account::Record.create!(uuid: ::UUID.generate)
+    def destroy!(user:)
+      user.destroy!
 
-      member = Account::Member::Record.create!(uuid: user.uuid)
-
-      account.memberships.create!(member:, role: :owner)
-
-      Success(:account_created, account:)
+      Success(:user_deleted, user:)
     end
 
-    def destroy_account!(user:)
-      member = Account::Member::Record.find_by!(uuid: user.uuid)
+    def fetch_by_token(value)
+      short, checksum = Token::Entity.parse(value).values_at(:short, :checksum)
 
-      user.transaction do
-        member.account.destroy!
-        member.destroy!
-        user.destroy!
-      end
+      user = Record.joins(:token).find_by(user_tokens: {short: short.value, checksum:})
 
-      Success(:account_deleted, user:, account: member.account)
+      user ? Success(:user_found, user:) : Failure(:invalid_token)
     end
 
     def find_by_email_and_password(email:, password:)

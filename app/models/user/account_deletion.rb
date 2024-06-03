@@ -4,7 +4,9 @@ class User::AccountDeletion < Solid::Process
   deps do
     attribute :repository, default: User::Repository
 
-    validates :repository, respond_to: [:destroy_account!]
+    attribute :account_deletion, default: Account::Member::Deletion
+
+    validates :repository, respond_to: [:destroy!]
   end
 
   input do
@@ -14,10 +16,25 @@ class User::AccountDeletion < Solid::Process
   end
 
   def call(attributes)
-    result = deps.repository.destroy_account!(**attributes)
+    rollback_on_failure do
+      Given(attributes)
+        .and_then(:delete_account)
+        .and_then(:delete_user)
+    end
+      .and_expose(:account_deleted, [:user, :account])
+  end
 
-    user, account = result.values_at(:user, :account)
+  private
 
-    Success(:account_deleted, user:, account:)
+  def delete_account(user:)
+    result = deps.account_deletion.call(uuid: user.uuid)
+
+    Continue(account: result.fetch(:account))
+  end
+
+  def delete_user(user:, **)
+    deps.repository.destroy!(user:)
+
+    Continue()
   end
 end
