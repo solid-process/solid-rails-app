@@ -3,7 +3,9 @@
 module Web::Task
   class Lists::SelectController < BaseController
     def update
-      case Account::Task::List::Repository.find_by(id: params[:id], account: current_account)
+      account = Account::Entity.new(id: current_member.account_id)
+
+      case Account::Task::List::Repository.find_by(id: params[:id], account:)
       in Solid::Failure(:task_list_not_found, _)
         render_not_found_error
       in Solid::Success(task_list:)

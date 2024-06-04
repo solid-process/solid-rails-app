@@ -11,7 +11,7 @@ module Account::Task::List
     input do
       attribute :account
 
-      validates :account, instance_of: [Account::Record, Account::Member], is: :persisted?
+      validates :account, instance_of: Account::Entity, is: :persisted?
     end
 
     def call(attributes)

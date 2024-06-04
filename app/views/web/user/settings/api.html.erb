@@ -3,7 +3,7 @@
 <main>
   <h2>My API token</h2>
 
-  <pre><%= cookies.encrypted[:user_token] || current_user.token.value %></pre>
+  <pre><%= user_token %></pre>
 
   <%= button_to("Refresh", web_user_tokens_path, {
     method: :put,

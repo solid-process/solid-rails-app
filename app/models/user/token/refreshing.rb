@@ -15,7 +15,7 @@ module User::Token
     input do
       attribute :user
 
-      validates :user, instance_of: User::Record, is: :persisted?
+      validates :user, instance_of: User::Entity, is: :persisted?
     end
 
     def call(attributes)

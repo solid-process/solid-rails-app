@@ -6,8 +6,8 @@ module API::V1
 
     def create
       case ::User::Registration.call(user_params)
-      in Solid::Success(user:)
-        render_json_with_success(status: :created, data: {user_token: user.token.value})
+      in Solid::Success(user_token:)
+        render_json_with_success(status: :created, data: {user_token:})
       in Solid::Failure(input:)
         render_json_with_model_errors(input)
       end

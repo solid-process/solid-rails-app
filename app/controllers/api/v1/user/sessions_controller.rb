@@ -7,7 +7,9 @@ module API::V1
     def create
       case ::User::Authentication.call(user_params)
       in Solid::Success(user:)
-        render_json_with_success(status: :ok, data: {user_token: user.token.value})
+        token = ::User::Token::Repository.find_by_user(id: user.id).fetch(:token)
+
+        render_json_with_success(status: :ok, data: {user_token: token.value})
       else
         render_json_with_error(status: :unauthorized, message: "Invalid email or password. Please try again.")
       end

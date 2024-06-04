@@ -1,19 +1,19 @@
 # frozen_string_literal: true
 
-module Account::Task::Item
-  class Completion < Solid::Process
+module Account::Task
+  class Item::Completion < Solid::Process
     deps do
-      attribute :repository, default: Repository
+      attribute :repository, default: Item::Repository
 
       validates :repository, respond_to: [:complete!]
     end
 
     input do
       attribute :id, :integer
-      attribute :member
+      attribute :task_list
 
       validates :id, numericality: {only_integer: true, greater_than: 0}
-      validates :member, instance_of: Account::Member
+      validates :task_list, instance_of: List::Entity
     end
 
     def call(attributes)

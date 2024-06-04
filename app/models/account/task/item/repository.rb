@@ -1,81 +1,105 @@
 # frozen_string_literal: true
 
-module Account::Task::Item
-  module Repository
+module Account::Task
+  module Item::Repository
     extend Solid::Output.mixin
     extend self
 
-    def list_by(filter:, member:)
-      task_list_id = member.task_list_id
+    def list_by(filter:, task_list:)
+      task_list_id = task_list.id
 
-      return Failure(:task_list_not_found) unless task_list_id
+      return Failure(:task_list_not_found) unless task_list.id
 
-      tasks = Record.where(task_list_id:)
+      relation = Item::Record.where(task_list_id:)
 
-      tasks =
+      relation =
         case filter
-        when "completed" then tasks.completed.order(completed_at: :desc)
-        when "incomplete" then tasks.incomplete.order(created_at: :desc)
-        else tasks.order(Arel.sql("task_items.completed_at DESC NULLS FIRST, task_items.created_at DESC"))
+        when "completed" then relation.completed.order(completed_at: :desc)
+        when "incomplete" then relation.incomplete.order(created_at: :desc)
+        else relation.order(Arel.sql("task_items.completed_at DESC NULLS FIRST, task_items.created_at DESC"))
         end
+
+      tasks = relation.map { entity!(_1) }
 
       Success(:tasks_found, tasks:)
     end
 
-    def find_by(id:, member:)
-      task_list_id = member.task_list_id
+    def find_by(id:, task_list:)
+      task_list_id = task_list.id
 
       return Failure(:task_list_not_found) unless task_list_id
 
-      task = Record.find_by(id:, task_list_id:)
+      task = Item::Record.find_by(id:, task_list_id:)
 
       return Failure(:task_not_found) unless task
 
-      block_given? ? yield(task) : Success(:task_found, task:)
+      block_given? ? yield(task) : success_with(:task_found, task)
     end
 
-    def create!(name:, member:)
-      task_list_id = member.task_list_id
+    def create!(name:, task_list:)
+      task_list_id = task_list.id
 
       return Failure(:task_list_not_found) unless task_list_id
 
-      task = Record.create!(name:, task_list_id:)
+      task = Item::Record.create!(name:, task_list_id:)
 
-      Success(:task_created, task:)
+      success_with(:task_created, task)
     end
 
-    def update!(id:, member:, **new_attributes)
-      find_by(id:, member:) do |task|
+    def update!(id:, task_list:, **new_attributes)
+      find_by(id:, task_list:) do |task|
         if task.update(new_attributes)
-          Success(:task_updated, task:)
+          success_with(:task_updated, task)
         else
           Failure(:invalid_task, task:)
         end
       end
     end
 
-    def complete!(id:, member:)
-      find_by(id:, member:) do |task|
+    def complete!(id:, task_list:)
+      find_by(id:, task_list:) do |task|
         task.update!(completed_at: Time.current)
 
-        Success(:task_completed, task:)
+        success_with(:task_completed, task)
       end
     end
 
-    def incomplete!(id:, member:)
-      find_by(id:, member:) do |task|
+    def incomplete!(id:, task_list:)
+      find_by(id:, task_list:) do |task|
         task.update!(completed_at: nil)
 
-        Success(:task_incomplete, task:)
+        success_with(:task_incomplete, task)
       end
     end
 
-    def delete!(id:, member:)
-      find_by(id:, member:) do |task|
+    def delete!(id:, task_list:)
+      find_by(id:, task_list:) do |task|
         task.destroy!
 
-        Success(:task_deleted, task:)
+        success_with(:task_deleted, task)
       end
+    end
+
+    private
+
+    def entity(record)
+      entity!(record)
+        .tap { _1.errors.merge!(record.errors) if record.errors.any? }
+    end
+
+    def entity!(record)
+      Item::Entity.new(
+        id: record.id,
+        name: record.name,
+        completed_at: record.completed_at,
+        created_at: record.created_at,
+        updated_at: record.updated_at,
+        task_list_id: record.task_list_id
+      )
+    end
+
+    def success_with(type, record)
+      Success(type, task: entity!(record))
     end
   end
 end

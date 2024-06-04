@@ -1,23 +1,23 @@
 # frozen_string_literal: true
 
-module Account::Task::Item
-  class Creation < Solid::Process
+module Account::Task
+  class Item::Creation < Solid::Process
     deps do
-      attribute :repository, default: Repository
+      attribute :repository, default: Item::Repository
 
       validates :repository, respond_to: [:create!]
     end
 
     input do
       attribute :name, :string
-      attribute :member
+      attribute :task_list
 
       before_validation do
         self.name = name&.strip
       end
 
       validates :name, presence: true
-      validates :member, instance_of: Account::Member
+      validates :task_list, instance_of: List::Entity
     end
 
     def call(attributes)

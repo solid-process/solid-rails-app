@@ -1,18 +1,18 @@
 # frozen_string_literal: true
 
-module Account::Task::Item
-  class Listing < Solid::Process
+module Account::Task
+  class Item::Listing < Solid::Process
     deps do
-      attribute :repository, default: Repository
+      attribute :repository, default: Item::Repository
 
       validates :repository, respond_to: [:list_by]
     end
 
     input do
-      attribute :member
       attribute :filter, default: "all"
+      attribute :task_list
 
-      validates :member, instance_of: Account::Member
+      validates :task_list, instance_of: List::Entity
     end
 
     def call(attributes)

@@ -18,7 +18,7 @@ module Account::Task::List
       end
 
       validates :name, presence: true
-      validates :account, instance_of: [Account::Record, Account::Member], is: :persisted?
+      validates :account, instance_of: Account::Entity, is: :persisted?
     end
 
     def call(attributes)

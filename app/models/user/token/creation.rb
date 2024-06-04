@@ -12,7 +12,7 @@ module User::Token
       attribute :user
       attribute :token, default: -> { User::Token::Entity.generate }
 
-      validates :user, instance_of: User::Record, is: :persisted?
+      validates :user, instance_of: User::Entity, is: :persisted?
       validates :token, instance_of: User::Token::Entity
     end
 

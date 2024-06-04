@@ -44,8 +44,6 @@ module API::V1
       end
     end
 
-    def current_account = current_member.account
-
     def render_json_with_success(status:, data: nil)
       json = {status: :success}
 

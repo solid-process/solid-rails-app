@@ -14,9 +14,11 @@ class Account::Member
     end
 
     def create_account!(member:, uuid: ::UUID.generate)
-      account = Account::Record.create!(uuid:)
+      account_record = Account::Record.create!(uuid:)
 
-      account.memberships.create!(member:, role: :owner)
+      account_record.memberships.create!(member:, role: :owner)
+
+      account = Account::Entity.new(id: account_record.id)
 
       Success(:account_created, account:)
     rescue ::ActiveRecord::RecordNotUnique
@@ -24,14 +26,16 @@ class Account::Member
     end
 
     def destroy_account!(uuid:)
-      member = Record.find_by!(uuid:)
+      record = Record.find_by!(uuid:)
 
-      member.transaction do
-        member.account.destroy!
-        member.destroy!
+      record.transaction do
+        record.account.destroy!
+        record.destroy!
       end
 
-      Success(:member_deleted, member:, account: member.account)
+      account = Account::Entity.new(id: record.account.id)
+
+      Success(:member_deleted, member: record, account:)
     end
 
     def find_record(member)

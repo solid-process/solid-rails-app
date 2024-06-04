@@ -19,7 +19,7 @@ module Account::Task::List
 
       validates :id, numericality: {only_integer: true, greater_than: 0}
       validates :name, presence: true
-      validates :account, instance_of: [Account::Record, Account::Member]
+      validates :account, instance_of: Account::Entity
     end
 
     def call(attributes)
