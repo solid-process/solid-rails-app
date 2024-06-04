@@ -5,6 +5,7 @@ ruby "3.3.1"
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 7.1", ">= 7.1.3.3"
 
+gem "solid-adapters", "~> 1.1"
 gem "solid-process", github: "solid-process/solid-process"
 
 # Use sqlite3 as the database for Active Record

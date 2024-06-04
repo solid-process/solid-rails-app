@@ -5,11 +5,12 @@ class User::Registration < Solid::Process
     attribute :token_creation, default: User::Token::Creation
     attribute :account_creation, default: Account::Member::OwnerCreation
 
-    attribute :mailer, default: UserMailer
-    attribute :repository, default: User::Repository
-    attribute :temporary_token, default: User::TemporaryToken
+    attribute :mailer, default: -> { User::Adapters.mailer }
+    attribute :repository, default: -> { User::Adapters.repository }
+    attribute :temporary_token, default: -> { User::Adapters.temporary_token }
 
-    validates :repository, respond_to: [:exists?, :create!]
+    validates :mailer, respond_to: [:send_email_confirmation]
+    validates :repository, respond_to: [:create!, :exists?]
     validates :temporary_token, respond_to: [:to]
   end
 
@@ -75,7 +76,7 @@ class User::Registration < Solid::Process
   def send_email_confirmation(user:, **)
     token = deps.temporary_token.to(:email_confirmation, user)
 
-    deps.mailer.with(token:, email: user.email).email_confirmation.deliver_later
+    deps.mailer.send_email_confirmation(token:, email: user.email)
 
     Continue()
   end

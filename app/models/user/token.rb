@@ -7,5 +7,5 @@ module User::Token
     refresh: Refreshing
   }
 
-  def repository = Repository
+  def repository = Adapters.repository
 end

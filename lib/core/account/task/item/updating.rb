@@ -5,7 +5,7 @@ module Account::Task
     UNDEFINED = Object.new
 
     deps do
-      attribute :repository, default: Item::Repository
+      attribute :repository, default: -> { Item::Adapters.repository }
 
       validates :repository, respond_to: [:update!]
     end

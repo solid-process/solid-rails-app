@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module User
-  module Repository
+  module RepositoryAdapter
     extend Solid::Output.mixin
     extend self
 
@@ -26,11 +26,9 @@ module User
     end
 
     def destroy!(user:)
-      record = Record.find(user.id)
+      Record.find(user.id).destroy!
 
-      record.destroy!
-
-      Success(:user_deleted, user: entity(record))
+      Success(:user_deleted, user:)
     end
 
     def fetch_by_token(value)

@@ -2,7 +2,7 @@
 
 class User::Password::Updating < Solid::Process
   deps do
-    attribute :repository, default: User::Repository
+    attribute :repository, default: -> { User::Adapters.repository }
 
     validates :repository, respond_to: [:update_password]
   end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module User::Token
-  module Repository
+  module RepositoryAdapter
     extend Solid::Output.mixin
     extend self
 

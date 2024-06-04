@@ -2,7 +2,7 @@
 
 class User::AccountDeletion < Solid::Process
   deps do
-    attribute :repository, default: User::Repository
+    attribute :repository, default: -> { User::Adapters.repository }
 
     attribute :account_deletion, default: Account::Member::Deletion
 

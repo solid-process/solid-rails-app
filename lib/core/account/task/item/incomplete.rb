@@ -3,7 +3,7 @@
 module Account::Task
   class Item::Incomplete < Solid::Process
     deps do
-      attribute :repository, default: Item::Repository
+      attribute :repository, default: -> { Item::Adapters.repository }
 
       validates :repository, respond_to: [:incomplete!]
     end

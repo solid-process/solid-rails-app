@@ -3,6 +3,7 @@
 require "solid/value"
 
 require "solid/validators/is_validator"
+require "solid/validators/kind_of_validator"
 require "solid/validators/respond_to_validator"
 require "solid/validators/instance_of_validator"
 

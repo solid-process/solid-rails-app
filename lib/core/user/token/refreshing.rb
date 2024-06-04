@@ -7,7 +7,7 @@ module User::Token
     deps do
       attribute :token_generator, default: User::Token::Entity
 
-      attribute :repository, default: Repository
+      attribute :repository, default: -> { Adapters.repository }
 
       validates :repository, respond_to: [:refresh]
     end

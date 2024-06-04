@@ -2,7 +2,7 @@
 
 class User::Authentication < Solid::Process
   deps do
-    attribute :repository, default: User::Repository
+    attribute :repository, default: -> { User::Adapters.repository }
 
     validates :repository, respond_to: [:find_by_email_and_password]
   end

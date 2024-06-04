@@ -10,7 +10,7 @@ module Account::Task::List
     update!: Updating
   }
 
-  def find_by(...) = Repository.find_by(...)
+  def find_by(...) = Adapters.repository.find_by(...)
 
   def entity(member) = Entity.new(id: member.task_list_id)
 end

@@ -3,7 +3,7 @@
 module Account::Member
   class OwnerCreation < Solid::Process
     deps do
-      attribute :repository, default: Repository
+      attribute :repository, default: -> { Adapters.repository }
 
       attribute :task_list_creation, default: Account::Task::List::Creation
 

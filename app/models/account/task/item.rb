@@ -12,5 +12,5 @@ module Account::Task::Item
     incomplete: Incomplete
   }
 
-  def find_by(...) = Repository.find_by(...)
+  def find_by(...) = Adapters.repository.find_by(...)
 end

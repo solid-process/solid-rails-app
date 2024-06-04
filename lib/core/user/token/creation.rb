@@ -3,7 +3,7 @@
 module User::Token
   class Creation < Solid::Process
     deps do
-      attribute :repository, default: Repository
+      attribute :repository, default: -> { Adapters.repository }
 
       validates :repository, respond_to: [:find_by_user, :create!]
     end

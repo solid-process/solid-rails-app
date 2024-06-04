@@ -14,5 +14,5 @@ module User
     send_reset_password_instructions: Password::SendingResetInstructions
   }
 
-  def repository = Repository
+  def repository = Adapters.repository
 end

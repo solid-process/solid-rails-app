@@ -2,10 +2,11 @@
 
 class User::Password::SendingResetInstructions < Solid::Process
   deps do
-    attribute :mailer, default: UserMailer
-    attribute :repository, default: User::Repository
-    attribute :temporary_token, default: User::TemporaryToken
+    attribute :mailer, default: -> { User::Adapters.mailer }
+    attribute :repository, default: -> { User::Adapters.repository }
+    attribute :temporary_token, default: -> { User::Adapters.temporary_token }
 
+    validates :mailer, respond_to: [:send_reset_password]
     validates :repository, respond_to: [:find_by]
     validates :temporary_token, respond_to: [:to]
   end
@@ -26,7 +27,7 @@ class User::Password::SendingResetInstructions < Solid::Process
     in Solid::Success(user:)
       token = deps.temporary_token.to(:reset_password, user)
 
-      deps.mailer.with(token:, email: user.email).reset_password.deliver_later
+      deps.mailer.send_reset_password(token:, email: user.email)
 
       Success(:resetting_instructions_sent)
     end

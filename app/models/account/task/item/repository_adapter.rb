@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Account::Task
-  module Item::Repository
+  module Item::RepositoryAdapter
     extend Solid::Output.mixin
     extend self
 
@@ -53,7 +53,7 @@ module Account::Task
         if task.update(new_attributes)
           success_with(:task_updated, task)
         else
-          Failure(:invalid_task, task:)
+          Failure(:invalid_task, task: entity(task))
         end
       end
     end

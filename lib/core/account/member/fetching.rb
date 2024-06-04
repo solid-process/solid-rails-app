@@ -3,7 +3,7 @@
 module Account::Member
   class Fetching < Solid::Process
     deps do
-      attribute :repository, default: Repository
+      attribute :repository, default: -> { Adapters.repository }
 
       validates :repository, respond_to: [:find_including_task_list]
     end

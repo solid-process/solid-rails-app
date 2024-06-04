@@ -3,7 +3,7 @@
 module Account::Task::List
   class Updating < Solid::Process
     deps do
-      attribute :repository, default: Repository
+      attribute :repository, default: -> { Adapters.repository }
 
       validates :repository, respond_to: [:update!]
     end
