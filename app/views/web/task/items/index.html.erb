@@ -17,7 +17,7 @@
 <%= render("web/task/shared/header", current_page: "tasks", back_to: scope) %>
 
 <main>
-  <% if current_task_list.task_items.exists? %>
+  <% if current_task_list.item_counter.nonzero? %>
     <center>
       <p>
         <strong>Filter:</strong>

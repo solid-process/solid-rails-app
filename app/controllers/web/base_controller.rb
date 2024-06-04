@@ -30,7 +30,8 @@ class Web::BaseController < ApplicationController
   end
 
   def current_member
-    @current_member ||= Account::Member.fetch_by(uuid: current_user_uuid, task_list_id: current_task_list_id)
+    @current_member ||=
+      Account::Member::Fetching.call(uuid: current_user.uuid, task_list_id: current_task_list_id).fetch(:member)
   end
 
   def current_user_uuid=(id)

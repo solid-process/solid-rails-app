@@ -40,7 +40,7 @@ module API::V1
           when "items", "incomplete", "complete" then params[:list_id]
           end
 
-        Account::Member.fetch_by(uuid: current_user.uuid, task_list_id:)
+        Account::Member::Fetching.call(uuid: current_user.uuid, task_list_id:).fetch(:member)
       end
     end
 

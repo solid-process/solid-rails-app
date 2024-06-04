@@ -14,7 +14,7 @@ class API::V1::User::TokensTest < ActionDispatch::IntegrationTest
   test "#update refreshes user API token and responds with 200" do
     user = users(:one)
 
-    assert_changes -> { user.token.reload.value } do
+    assert_changes -> { user.token.reload.short } do
       put(api_v1_user_tokens_url, headers: api_v1_authorization_header(user))
     end
 

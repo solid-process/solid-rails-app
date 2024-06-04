@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Account::Member
+module Account::Member
   class OwnerCreation < Solid::Process
     deps do
       attribute :repository, default: Repository
@@ -35,7 +35,7 @@ class Account::Member
     end
 
     def create_owner_account(member:, **)
-      result = deps.repository.create_account!(member:)
+      result = deps.repository.create_account!(member:, uuid: member.uuid)
 
       Continue(account: result.fetch(:account))
     end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_02_004012) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_04_213750) do
   create_table "account_members", force: :cascade do |t|
     t.string "uuid", null: false
     t.datetime "created_at", null: false
@@ -51,6 +51,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_02_004012) do
     t.integer "account_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "item_counter", default: 0, null: false
     t.index ["account_id"], name: "index_task_lists_inbox", unique: true, where: "inbox"
     t.index ["account_id"], name: "index_task_lists_on_account_id"
   end

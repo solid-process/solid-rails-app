@@ -24,9 +24,9 @@ class WebUserSettingsTokenRefreshingTest < ActionDispatch::IntegrationTest
 
     assert_select("h2", "My API token")
 
-    assert_select("pre", user.token.value)
+    assert_select("pre", /#{user.token.short}_.{32}/)
 
-    assert_changes -> { user.token.reload.value } do
+    assert_changes -> { user.token.reload.short } do
       put(web_user_tokens_url)
     end
 

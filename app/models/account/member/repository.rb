@@ -1,22 +1,24 @@
 # frozen_string_literal: true
 
-class Account::Member
+module Account::Member
   module Repository
     extend Solid::Output.mixin
     extend self
 
     def create!(uuid:)
-      member = Record.create!(uuid:)
+      Record.create!(uuid:)
 
-      Success(:member_created, member:)
+      Success(:member_created, member: Entity.new(uuid:))
     rescue ::ActiveRecord::RecordNotUnique
       Failure(:uuid_has_already_been_taken)
     end
 
-    def create_account!(member:, uuid: ::UUID.generate)
+    def create_account!(member:, uuid:)
+      member_record = Record.find_by!(uuid: member.uuid)
+
       account_record = Account::Record.create!(uuid:)
 
-      account_record.memberships.create!(member:, role: :owner)
+      account_record.memberships.create!(member: member_record, role: :owner)
 
       account = Account::Entity.new(id: account_record.id)
 
@@ -33,27 +35,33 @@ class Account::Member
         record.destroy!
       end
 
+      member = Entity.new(uuid:)
       account = Account::Entity.new(id: record.account.id)
 
-      Success(:member_deleted, member: record, account:)
+      Success(:member_deleted, member:, account:)
     end
 
-    def find_record(member)
-      return Failure(:invalid_member) if member.invalid?
+    def find_including_task_list(uuid:, account_id:, task_list_id:)
+      member = Entity.new(uuid:, account_id:, task_list_id:)
 
-      member = members_relation(member).first
+      return Failure(:invalid_member, member:) if member.invalid?
 
-      member ? Success(:member_found, member:) : Failure(:member_not_found)
-    end
+      record = members_relation(member).first
 
-    def find_account!(member)
-      member.account_id.try { Account::Record.find(_1) }
-    end
+      member.account_id = record&.member_account_id
+      member.task_list_id = record&.member_task_list_id
 
-    def find_task_lists(member)
-      account_id = member.account_id
+      if record&.member_task_list_id
+        task_list = Account::Task::List::Entity.new(
+          id: record.member_task_list_id,
+          name: record.member_task_list_name,
+          item_counter: record.member_task_list_item_counter
+        )
 
-      Account::Task::List::Record.then { account_id ? _1.where(account_id:) : _1.none }
+        member.send(:task_list=, task_list)
+      end
+
+      record ? Success(:member_found, member:) : Failure(:member_not_found, member:)
     end
 
     private
@@ -67,8 +75,14 @@ class Account::Member
 
       account_id = member.task_list_id ? "task_lists.account_id" : "memberships.account_id"
 
+      columns = "account_members.*, " \
+                "#{account_id} AS member_account_id, " \
+                "task_lists.id AS member_task_list_id, " \
+                "task_lists.name AS member_task_list_name, " \
+                "task_lists.item_counter AS member_task_list_item_counter"
+
       Record
-        .select("account_members.*, task_lists.id AS member_task_list_id, #{account_id} AS member_account_id")
+        .select(columns)
         .joins("LEFT JOIN memberships ON account_members.id = memberships.member_id #{memberships_condition}")
         .joins("LEFT JOIN task_lists ON task_lists.account_id = memberships.account_id AND #{task_lists_condition}")
         .where(account_members: {uuid: member.uuid})

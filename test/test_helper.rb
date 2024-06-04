@@ -30,7 +30,9 @@ module ActiveSupport
     end
 
     def create_task(user, name:, completed: false, task_list: member_record(user).inbox)
-      task = task_list.task_items.create!(name: "Foo")
+      task = task_list.task_items.create!(name:)
+
+      task_list.class.increment_counter(:item_counter, task_list.id)
 
       completed ? complete_task(task) : task
     end

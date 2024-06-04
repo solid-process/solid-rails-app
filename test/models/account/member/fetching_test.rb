@@ -1,45 +1,12 @@
 require "test_helper"
 
 class Account::MemberTest < ActiveSupport::TestCase
-  test "validations" do
-    uuid = account_members(:one).uuid
-
-    member = Account::Member.new
-
-    assert_not_predicate member, :valid?
-
-    member.uuid = uuid
-
-    assert_predicate member, :valid?
-
-    member.uuid = "foo"
-
-    assert_not_predicate member, :valid?
-
-    member.uuid = uuid
-    member.task_list_id = [0, -1].sample
-
-    assert_not_predicate member, :valid?
-
-    member.task_list_id = 1
-
-    assert_predicate member, :valid?
-
-    member.account_id = [0, -1].sample
-
-    assert_not_predicate member, :valid?
-
-    member.account_id = 1
-
-    assert_predicate member, :valid?
-  end
-
-  test ".fetch_by with uuid" do
+  test ".call with uuid" do
     record = account_members(:one)
 
     create_task_list(record.account, name: "Foo")
 
-    member = Account::Member.fetch_by(uuid: record.uuid)
+    member = Account::Member::Fetching.call(uuid: record.uuid).fetch(:member)
 
     assert_predicate member, :authorized?
     assert_predicate member, :persisted?
@@ -48,23 +15,20 @@ class Account::MemberTest < ActiveSupport::TestCase
     assert_equal record.account.id, member.account_id
     assert_equal record.inbox.id, member.task_list_id
 
-    assert_equal record.inbox, member.task_list
-    assert_equal record.account, member.account
-
-    assert_equal record.task_lists, member.task_lists
-    assert_equal 2, member.task_lists.size
+    assert_equal record.inbox.id, member.task_list.id
+    assert_equal record.inbox.name, member.task_list.name
+    assert_equal record.inbox.item_counter, member.task_list.item_counter
 
     assert_predicate member, :uuid?
     assert_predicate member, :account_id?
     assert_predicate member, :task_list_id?
-    assert_predicate member, :account?
     assert_predicate member, :task_list?
 
     # ---
 
     uuid = ::UUID.generate
 
-    member = Account::Member.fetch_by(uuid:)
+    member = Account::Member::Fetching.call(uuid:).fetch(:member)
 
     refute_predicate member, :authorized?
     refute_predicate member, :persisted?
@@ -74,11 +38,11 @@ class Account::MemberTest < ActiveSupport::TestCase
     assert_nil member.task_list_id
   end
 
-  test ".fetch_by with uuid and account_id" do
+  test ".call with uuid and account_id" do
     record = account_members(:one)
     account = accounts(:one)
 
-    member = Account::Member.fetch_by(uuid: record.uuid, account_id: account.id)
+    member = Account::Member::Fetching.call(uuid: record.uuid, account_id: account.id).fetch(:member)
 
     assert_predicate member, :authorized?
     assert_predicate member, :persisted?
@@ -89,7 +53,7 @@ class Account::MemberTest < ActiveSupport::TestCase
 
     # ---
 
-    member = Account::Member.fetch_by(uuid: record.uuid, account_id: accounts(:two).id)
+    member = Account::Member::Fetching.call(uuid: record.uuid, account_id: accounts(:two).id).fetch(:member)
 
     refute_predicate member, :authorized?
     refute_predicate member, :persisted?
@@ -102,7 +66,7 @@ class Account::MemberTest < ActiveSupport::TestCase
 
     uuid = ::UUID.generate
 
-    member = Account::Member.fetch_by(uuid:, account_id: account.id)
+    member = Account::Member::Fetching.call(uuid:, account_id: account.id).fetch(:member)
 
     refute_predicate member, :authorized?
     refute_predicate member, :persisted?
@@ -112,11 +76,11 @@ class Account::MemberTest < ActiveSupport::TestCase
     assert_nil member.task_list_id
   end
 
-  test ".fetch_by with uuid and task_list_id" do
+  test ".call with uuid and task_list_id" do
     record = account_members(:one)
     task_list = create_task_list(record.account, name: "Foo")
 
-    member = Account::Member.fetch_by(uuid: record.uuid, task_list_id: task_list.id)
+    member = Account::Member::Fetching.call(uuid: record.uuid, task_list_id: task_list.id).fetch(:member)
 
     assert_predicate member, :authorized?
     assert_predicate member, :persisted?
@@ -127,7 +91,8 @@ class Account::MemberTest < ActiveSupport::TestCase
 
     # ---
 
-    member = Account::Member.fetch_by(uuid: record.uuid, task_list_id: task_lists(:two_inbox).id)
+    member =
+      Account::Member::Fetching.call(uuid: record.uuid, task_list_id: task_lists(:two_inbox).id).fetch(:member)
 
     refute_predicate member, :authorized?
     refute_predicate member, :persisted?
@@ -140,7 +105,7 @@ class Account::MemberTest < ActiveSupport::TestCase
 
     uuid = ::UUID.generate
 
-    member = Account::Member.fetch_by(uuid:, task_list_id: task_list.id)
+    member = Account::Member::Fetching.call(uuid:, task_list_id: task_list.id).fetch(:member)
 
     refute_predicate member, :authorized?
     refute_predicate member, :persisted?
@@ -150,12 +115,14 @@ class Account::MemberTest < ActiveSupport::TestCase
     assert_nil member.task_list_id
   end
 
-  test ".fetch_by with uuid, account_id, and task_list_id" do
+  test ".call with uuid, account_id, and task_list_id" do
     record = account_members(:one)
     account = accounts(:one)
     task_list = create_task_list(account, name: "Foo")
 
-    member = Account::Member.fetch_by(uuid: record.uuid, account_id: account.id, task_list_id: task_list.id)
+    member = Account::Member::Fetching
+      .call(uuid: record.uuid, account_id: account.id, task_list_id: task_list.id)
+      .fetch(:member)
 
     assert_predicate member, :authorized?
     assert_predicate member, :persisted?
@@ -166,7 +133,9 @@ class Account::MemberTest < ActiveSupport::TestCase
 
     # ---
 
-    member = Account::Member.fetch_by(uuid: record.uuid, account_id: accounts(:two).id, task_list_id: task_list.id)
+    member = Account::Member::Fetching
+      .call(uuid: record.uuid, account_id: accounts(:two).id, task_list_id: task_list.id)
+      .fetch(:member)
 
     refute_predicate member, :authorized?
     refute_predicate member, :persisted?
@@ -179,7 +148,9 @@ class Account::MemberTest < ActiveSupport::TestCase
 
     task_list_id = task_lists(:two_inbox).id
 
-    member = Account::Member.fetch_by(uuid: record.uuid, account_id: account.id, task_list_id:)
+    member = Account::Member::Fetching
+      .call(uuid: record.uuid, account_id: account.id, task_list_id:)
+      .fetch(:member)
 
     refute_predicate member, :authorized?
     refute_predicate member, :persisted?

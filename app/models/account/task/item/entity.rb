@@ -21,6 +21,4 @@ class Account::Task::Item::Entity
   def incomplete?
     !completed?
   end
-
-  alias_method :[], :public_send
 end

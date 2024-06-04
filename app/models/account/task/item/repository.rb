@@ -43,6 +43,8 @@ module Account::Task
 
       task = Item::Record.create!(name:, task_list_id:)
 
+      List::Record.increment_counter(:item_counter, task_list_id)
+
       success_with(:task_created, task)
     end
 
@@ -75,6 +77,8 @@ module Account::Task
     def delete!(id:, task_list:)
       find_by(id:, task_list:) do |task|
         task.destroy!
+
+        List::Record.decrement_counter(:item_counter, task_list.id)
 
         success_with(:task_deleted, task)
       end

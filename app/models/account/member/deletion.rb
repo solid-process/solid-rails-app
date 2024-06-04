@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Account::Member
+module Account::Member
   class Deletion < Solid::Process
     deps do
       attribute :repository, default: Repository

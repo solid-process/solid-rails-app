@@ -17,6 +17,4 @@ class Account::Task::List::Entity
   def inbox?
     inbox
   end
-
-  alias_method :[], :public_send
 end

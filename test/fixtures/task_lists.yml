@@ -6,8 +6,10 @@ one_inbox:
   name: Inbox
   inbox: true
   account: one
+  item_counter: 1
 
 two_inbox:
   name: Inbox
   inbox: true
   account: two
+  item_counter: 1

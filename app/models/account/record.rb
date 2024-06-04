@@ -17,7 +17,5 @@ module Account
 
     has_one :inbox, -> { inbox }, inverse_of: :account, dependent: nil, class_name: "Task::List::Record"
     has_one :owner, through: :ownership, source: :member
-
-    validates :uuid, presence: true
   end
 end
