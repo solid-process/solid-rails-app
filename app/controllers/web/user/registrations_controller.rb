@@ -3,7 +3,7 @@
 module Web::User
   class RegistrationsController < BaseController
     def destroy
-      case User::AccountDeletion.call(user: current_user)
+      case User.delete_account(user: current_user)
       in Solid::Success
         sign_out
 

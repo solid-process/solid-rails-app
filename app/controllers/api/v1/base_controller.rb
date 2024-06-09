@@ -28,7 +28,7 @@ module API::V1
 
     def current_user
       @current_user ||= authenticate_with_http_token do |value|
-        ::User::Repository.fetch_by_token(value).fetch(:user, nil)
+        ::User.repository.fetch_by_token(value).fetch(:user, nil)
       end
     end
 
@@ -40,7 +40,7 @@ module API::V1
           when "items", "incomplete", "complete" then params[:list_id]
           end
 
-        Account::Member::Fetching.call(uuid: current_user.uuid, task_list_id:).fetch(:member)
+        Account.member.find_by(uuid: current_user.uuid, task_list_id:).fetch(:member)
       end
     end
 

@@ -3,11 +3,11 @@
 module Web::Guest
   class RegistrationsController < BaseController
     def new
-      render("web/guest/registrations/new", locals: {user: ::User::Registration::Input.new})
+      render("web/guest/registrations/new", locals: {user: ::User.register.input.new})
     end
 
     def create
-      case ::User::Registration.call(registrations_params)
+      case ::User.register(registrations_params)
       in Solid::Success(user:)
         sign_in(user)
 

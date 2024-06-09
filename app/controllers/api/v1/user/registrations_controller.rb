@@ -5,7 +5,7 @@ module API::V1
     skip_before_action :authenticate_user!, only: [:create]
 
     def create
-      case ::User::Registration.call(user_params)
+      case ::User.register(user_params)
       in Solid::Success(user_token:)
         render_json_with_success(status: :created, data: {user_token:})
       in Solid::Failure(input:)
@@ -14,7 +14,7 @@ module API::V1
     end
 
     def destroy
-      result = ::User::AccountDeletion.call(user: current_user)
+      result = ::User.delete_account(user: current_user)
 
       result.account_deleted? and return render_json_with_success(status: :ok)
     end

@@ -5,18 +5,18 @@ module Web::Guest
     def edit
       token = params[:token]
 
-      case User::Repository.find_by_reset_password(token:)
+      case User.repository.find_by_reset_password(token:)
       in Solid::Failure
         invalid_or_expired_token
       in Solid::Success
-        input = User::Password::Resetting::Input.new(token:)
+        input = User.reset_password.input.new(token:)
 
         render("web/guest/passwords/reset", locals: {user: input})
       end
     end
 
     def update
-      case User::Password::Resetting.call(token: params[:token], **password_params)
+      case User.reset_password(token: params[:token], **password_params)
       in Solid::Success
         redirect_to new_web_guest_session_path, notice: "Your password has been reset successfully. Please sign in."
       in Solid::Failure(:user_not_found, _)

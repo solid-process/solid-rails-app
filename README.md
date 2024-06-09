@@ -15,9 +15,7 @@ Web and REST API application made with [Ruby on Rails](https://guides.rubyonrail
 
 ## 💡 Branch summary
 
-Once the contexts are more decoupled, the next step is to make the processes start to expose and receive only [entities (POROS)](https://github.com/solid-process/solid-rails-app/blob/solid-process-2.95/app/models/user/entity.rb) and no longer ActiveRecord objects.
-
-With this approach, each context gains enhanced control over side effects, be it writing or reading. All interactions with the database/ActiveRecord are now wrapped within the repositories, ensuring a more controlled and predictable system behavior.
+This version transforms the User and Account modules into facades. Processes and repositories are now exposed through simple methods. Another benefit is that shared and repeated behavior (such as instantiating entities) can be done through the facade, eliminating duplication and abstracting this complexity from the entry points.
 
 ## 📣 Important info
 

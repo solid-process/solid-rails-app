@@ -3,7 +3,7 @@
 module API::V1
   class User::TokensController < BaseController
     def update
-      case ::User::Token::Refreshing.call(user: current_user)
+      case ::User.token.refresh(user: current_user)
       in Solid::Success(token:)
         render_json_with_success(status: :ok, data: {user_token: token.value})
       else

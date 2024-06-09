@@ -5,9 +5,9 @@ module API::V1
     include Task::Items::Concerns::Rendering
 
     def index
-      task_list = Account::Task::List::Entity.new(id: current_member.task_list_id)
+      task_list = Account.task_list.entity(current_member)
 
-      case Account::Task::Item::Listing.call(task_list:, filter: params[:filter])
+      case Account.task_item.list(task_list:, filter: params[:filter])
       in Solid::Failure(:task_list_not_found, _)
         render_task_or_list_not_found
       in Solid::Success(tasks:)
@@ -20,9 +20,9 @@ module API::V1
     def create
       create_params = params.require(:task).permit(:name)
 
-      task_list = Account::Task::List::Entity.new(id: current_member.task_list_id)
+      task_list = Account.task_list.entity(current_member)
 
-      case Account::Task::Item::Creation.call(task_list:, **create_params)
+      case Account.task_item.create!(task_list:, **create_params)
       in Solid::Failure(:task_list_not_found | :task_not_found, _)
         render_task_or_list_not_found
       in Solid::Failure(input:)
@@ -35,9 +35,9 @@ module API::V1
     def update
       update_params = params.require(:task).permit(:name, :completed)
 
-      task_list = Account::Task::List::Entity.new(id: current_member.task_list_id)
+      task_list = Account.task_list.entity(current_member)
 
-      case Account::Task::Item::Updating.call(task_list:, id: params[:id], **update_params)
+      case Account.task_item.update!(task_list:, id: params[:id], **update_params)
       in Solid::Failure(:task_list_not_found | :task_not_found, _)
         render_task_or_list_not_found
       in Solid::Failure(input:)
@@ -48,9 +48,9 @@ module API::V1
     end
 
     def destroy
-      task_list = Account::Task::List::Entity.new(id: current_member.task_list_id)
+      task_list = Account.task_list.entity(current_member)
 
-      case Account::Task::Item::Deletion.call(task_list:, id: params[:id])
+      case Account.task_item.delete!(task_list:, id: params[:id])
       in Solid::Failure(:task_list_not_found | :task_not_found, _)
         render_task_or_list_not_found
       in Solid::Success

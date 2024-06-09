@@ -3,9 +3,9 @@
 module Web::Task
   class ListsController < BaseController
     def index
-      account = Account::Entity.new(id: current_member.account_id)
+      account = Account.entity(current_member)
 
-      result = Account::Task::List::Listing.call(account:)
+      result = Account.task_list.list(account:)
 
       result.value => {relation: task_lists}
 
@@ -13,15 +13,15 @@ module Web::Task
     end
 
     def new
-      input = Account::Task::List::Creation::Input.new
+      input = Account.task_list.create!.input.new
 
       render("web/task/lists/new", locals: {task_list: input})
     end
 
     def create
-      account = Account::Entity.new(id: current_member.account_id)
+      account = Account.entity(current_member)
 
-      case Account::Task::List::Creation.call(account:, **task_list_params)
+      case Account.task_list.create!(account:, **task_list_params)
       in Solid::Success
         redirect_to web_task_lists_path, notice: "Task list created."
       in Solid::Failure(input:)
@@ -30,22 +30,22 @@ module Web::Task
     end
 
     def edit
-      account = Account::Entity.new(id: current_member.account_id)
+      account = Account.entity(current_member)
 
-      case Account::Task::List::Repository.find_by(account:, id: params[:id])
+      case Account.task_list.find_by(account:, id: params[:id])
       in Solid::Failure(:task_list_not_found | :invalid_input, _) then render_not_found_error
       in Solid::Failure(:inbox_cannot_be_edited, _) then render_unprocessable_entity_error
       in Solid::Success(task_list:)
-        input = Account::Task::List::Updating::Input.new(task_list.slice(:id, :name))
+        input = Account.task_list.update!.input.new(task_list.slice(:id, :name))
 
         render("web/task/lists/edit", locals: {task_list: input})
       end
     end
 
     def update
-      account = Account::Entity.new(id: current_member.account_id)
+      account = Account.entity(current_member)
 
-      case Account::Task::List::Updating.call(account:, id: params[:id], **task_list_params)
+      case Account.task_list.update!(account:, id: params[:id], **task_list_params)
       in Solid::Failure(:task_list_not_found, _) then render_not_found_error
       in Solid::Failure(:inbox_cannot_be_edited, _) then render_unprocessable_entity_error
       in Solid::Failure(input:)
@@ -56,9 +56,9 @@ module Web::Task
     end
 
     def destroy
-      account = Account::Entity.new(id: current_member.account_id)
+      account = Account.entity(current_member)
 
-      case Account::Task::List::Deletion.call(account:, id: params[:id])
+      case Account.task_list.delete!(account:, id: params[:id])
       in Solid::Failure(:task_list_not_found, _) then render_not_found_error
       in Solid::Failure(:inbox_cannot_be_edited, _) then render_unprocessable_entity_error
       in Solid::Success

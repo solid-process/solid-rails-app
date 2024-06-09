@@ -12,7 +12,7 @@ class Web::BaseController < ApplicationController
   end
 
   helper_method def current_user
-    @current_user ||= User::Repository.find_by(uuid: current_user_uuid).fetch(:user, nil)
+    @current_user ||= User.repository.find_by(uuid: current_user_uuid).fetch(:user, nil)
   end
 
   helper_method def current_task_list
@@ -31,7 +31,7 @@ class Web::BaseController < ApplicationController
 
   def current_member
     @current_member ||=
-      Account::Member::Fetching.call(uuid: current_user.uuid, task_list_id: current_task_list_id).fetch(:member)
+      Account.member.find_by(uuid: current_user.uuid, task_list_id: current_task_list_id).fetch(:member)
   end
 
   def current_user_uuid=(id)

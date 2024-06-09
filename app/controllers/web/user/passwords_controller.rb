@@ -3,7 +3,7 @@
 module Web::User
   class PasswordsController < BaseController
     def update
-      case User::Password::Updating.call(user: current_user, **password_params)
+      case User.update_password(user: current_user, **password_params)
       in Solid::Success
         redirect_to web_user_settings_profile_path, notice: "Your password has been updated."
       in Solid::Failure(input:)

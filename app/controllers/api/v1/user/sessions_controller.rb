@@ -5,9 +5,9 @@ module API::V1
     skip_before_action :authenticate_user!
 
     def create
-      case ::User::Authentication.call(user_params)
+      case ::User.authenticate(user_params)
       in Solid::Success(user:)
-        token = ::User::Token::Repository.find_by_user(id: user.id).fetch(:token)
+        token = ::User.token.repository.find_by_user(id: user.id).fetch(:token)
 
         render_json_with_success(status: :ok, data: {user_token: token.value})
       else

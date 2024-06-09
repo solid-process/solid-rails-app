@@ -11,7 +11,7 @@ module Web::User
     private
 
     def find_user_token
-      ::User::Token::Repository.find_by_user(id: current_user.id).fetch(:token)
+      ::User.token.repository.find_by_user(id: current_user.id).fetch(:token)
     end
   end
 end

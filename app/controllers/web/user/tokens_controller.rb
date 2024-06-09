@@ -3,7 +3,7 @@
 module Web::User
   class TokensController < BaseController
     def update
-      result = User::Token::Refreshing.call(user: current_user)
+      result = User.token.refresh(user: current_user)
 
       message =
         if result.success?

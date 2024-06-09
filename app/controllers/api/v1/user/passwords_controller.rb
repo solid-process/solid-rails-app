@@ -3,7 +3,7 @@
 module API::V1
   class User::PasswordsController < BaseController
     def update
-      case ::User::Password::Updating.call(user: current_user, **password_params)
+      case ::User.update_password(user: current_user, **password_params)
       in Solid::Success
         render_json_with_success(status: :ok)
       in Solid::Failure(input:)

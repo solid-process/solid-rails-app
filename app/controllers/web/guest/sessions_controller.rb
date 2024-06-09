@@ -3,11 +3,11 @@
 module Web::Guest
   class SessionsController < BaseController
     def new
-      render("web/guest/sessions/new", locals: {user: User::Authentication::Input.new})
+      render("web/guest/sessions/new", locals: {user: User.authenticate.input.new})
     end
 
     def create
-      case User::Authentication.call(user_params)
+      case User.authenticate(user_params)
       in Solid::Success(user:)
         sign_in(user)
 

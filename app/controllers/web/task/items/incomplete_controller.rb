@@ -3,18 +3,18 @@
 module Web::Task
   class Items::IncompleteController < BaseController
     def index
-      task_list = Account::Task::List::Entity.new(id: current_member.task_list_id)
+      task_list = Account.task_list.entity(current_member)
 
-      case Account::Task::Item::Listing.call(task_list:, filter: "incomplete")
+      case Account.task_item.list(task_list:, filter: "incomplete")
       in Solid::Success(tasks:)
         render("web/task/items/index", locals: {tasks:, scope: "incomplete"})
       end
     end
 
     def update
-      task_list = Account::Task::List::Entity.new(id: current_member.task_list_id)
+      task_list = Account.task_list.entity(current_member)
 
-      case Account::Task::Item::Incomplete.call(task_list:, id: params[:id])
+      case Account.task_item.incomplete(task_list:, id: params[:id])
       in Solid::Success(task:)
         next_path = (params[:back_to] == "items") ? web_task_items_path : completed_web_task_items_path
 

@@ -5,13 +5,13 @@ module API::V1
     skip_before_action :authenticate_user!
 
     def create
-      ::User::Password::SendingResetInstructions.call(user_params)
+      ::User.send_reset_password_instructions(user_params)
 
       render_json_with_success(status: :ok)
     end
 
     def update
-      case ::User::Password::Resetting.call(password_params)
+      case ::User.reset_password(password_params)
       in Solid::Success
         render_json_with_success(status: :ok)
       in Solid::Failure(:user_not_found, _)

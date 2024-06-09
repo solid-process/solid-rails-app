@@ -3,9 +3,9 @@
 module Web::Task
   class Items::CompletedController < BaseController
     def index
-      task_list = Account::Task::List::Entity.new(id: current_member.task_list_id)
+      task_list = Account.task_list.entity(current_member)
 
-      case Account::Task::Item::Listing.call(task_list:, filter: "completed")
+      case Account.task_item.list(task_list:, filter: "completed")
       in Solid::Success(tasks:)
         render("web/task/items/index", locals: {tasks:, scope: "completed"})
       end
