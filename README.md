@@ -15,9 +15,9 @@ Web and REST API application made with [Ruby on Rails](https://guides.rubyonrail
 
 ## 💡 Branch summary
 
-This version implements the Ports and Adapters architectural pattern (Hexagonal Architecture).
+This version makes usage of another `Solid::Adapters` feature, the [interface mechanism](https://github.com/solid-process/solid-adapters?tab=readme-ov-file#solidadaptersinterface) to strengthen the contracts between the core and the application. Because of this, the core can [establish](https://github.com/solid-process/solid-rails-app/blob/solid-process-4/lib/core/user/adapters/repository_interface.rb) and [demand](https://github.com/solid-process/solid-rails-app/blob/solid-process-4/lib/core/user/registration.rb#L13) its contracts (ports).
 
-In version [2.99](https://github.com/solid-process/solid-rails-app/blob/solid-process-2.99), the account and user namespaces encapsulated the core business logic. They began to receive and expose objects that belonged to them, in other words, objects that did not directly relate to the framework (Rails). Because of this, it becomes feasible to isolate this core outside the app folder; for this reason, these components were moved to [lib/core](https://github.com/solid-process/solid-rails-app/tree/solid-process-3/lib/core). So, through a new lib, [Solid::Adapters](https://github.com/solid-process/solid-adapters) was added, it is possible to use [initializers](https://github.com/solid-process/solid-rails-app/tree/solid-process-3/config/initializers/solid_adapters) to plug the adapters defined in the app folder (framework side) into the core. This way, it becomes protected as the app uses/implements its ports (interfaces).
+Note: In case of a breach of contract, the system will raise an exception indicating what was compromised and needs to be fixed.
 
 ## 📣 Important info
 

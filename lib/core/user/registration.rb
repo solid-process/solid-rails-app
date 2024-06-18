@@ -9,9 +9,9 @@ class User::Registration < Solid::Process
     attribute :repository, default: -> { User::Adapters.repository }
     attribute :temporary_token, default: -> { User::Adapters.temporary_token }
 
-    validates :mailer, respond_to: [:send_email_confirmation]
-    validates :repository, respond_to: [:create!, :exists?]
-    validates :temporary_token, respond_to: [:to]
+    validates :mailer, kind_of: User::Adapters::MailerInterface
+    validates :repository, kind_of: User::Adapters::RepositoryInterface
+    validates :temporary_token, kind_of: User::Adapters::TemporaryTokenInterface
   end
 
   input do

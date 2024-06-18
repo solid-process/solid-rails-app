@@ -5,7 +5,7 @@ module User::Token
     deps do
       attribute :repository, default: -> { Adapters.repository }
 
-      validates :repository, respond_to: [:find_by_user, :create!]
+      validates :repository, kind_of: Adapters::RepositoryInterface
     end
 
     input do

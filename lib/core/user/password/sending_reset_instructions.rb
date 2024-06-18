@@ -6,9 +6,9 @@ class User::Password::SendingResetInstructions < Solid::Process
     attribute :repository, default: -> { User::Adapters.repository }
     attribute :temporary_token, default: -> { User::Adapters.temporary_token }
 
-    validates :mailer, respond_to: [:send_reset_password]
-    validates :repository, respond_to: [:find_by]
-    validates :temporary_token, respond_to: [:to]
+    validates :mailer, kind_of: User::Adapters::MailerInterface
+    validates :repository, kind_of: User::Adapters::RepositoryInterface
+    validates :temporary_token, kind_of: User::Adapters::TemporaryTokenInterface
   end
 
   input do

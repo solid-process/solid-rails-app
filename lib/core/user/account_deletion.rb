@@ -6,7 +6,7 @@ class User::AccountDeletion < Solid::Process
 
     attribute :account_deletion, default: Account::Member::Deletion
 
-    validates :repository, respond_to: [:destroy!]
+    validates :repository, kind_of: User::Adapters::RepositoryInterface
   end
 
   input do

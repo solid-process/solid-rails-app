@@ -2,6 +2,7 @@
 
 module Account::Task
   module Item::RepositoryAdapter
+    extend Item::Adapters::RepositoryInterface
     extend Solid::Output.mixin
     extend self
 

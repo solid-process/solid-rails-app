@@ -7,7 +7,7 @@ module Account::Member
 
       attribute :task_list_creation, default: Account::Task::List::Creation
 
-      validates :repository, respond_to: [:create!, :create_account!]
+      validates :repository, kind_of: Adapters::RepositoryInterface
     end
 
     input do

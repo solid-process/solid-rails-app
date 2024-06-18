@@ -9,7 +9,7 @@ module User::Token
 
       attribute :repository, default: -> { Adapters.repository }
 
-      validates :repository, respond_to: [:refresh]
+      validates :repository, kind_of: Adapters::RepositoryInterface
     end
 
     input do

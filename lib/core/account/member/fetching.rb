@@ -5,7 +5,7 @@ module Account::Member
     deps do
       attribute :repository, default: -> { Adapters.repository }
 
-      validates :repository, respond_to: [:find_including_task_list]
+      validates :repository, kind_of: Adapters::RepositoryInterface
     end
 
     input do

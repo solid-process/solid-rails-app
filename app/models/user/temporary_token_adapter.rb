@@ -2,6 +2,8 @@
 
 module User
   class TemporaryTokenAdapter
+    include Adapters::TemporaryTokenInterface
+
     def to(purpose, user)
       user.persisted? or raise ::ArgumentError, "User must be persisted"
 

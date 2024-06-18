@@ -5,7 +5,7 @@ module Account::Task
     deps do
       attribute :repository, default: -> { Item::Adapters.repository }
 
-      validates :repository, respond_to: [:create!]
+      validates :repository, kind_of: Item::Adapters::RepositoryInterface
     end
 
     input do

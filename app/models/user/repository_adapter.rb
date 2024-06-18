@@ -2,6 +2,7 @@
 
 module User
   module RepositoryAdapter
+    extend Adapters::RepositoryInterface
     extend Solid::Output.mixin
     extend self
 

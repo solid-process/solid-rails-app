@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class User::MailerAdapter
+  include User::Adapters::MailerInterface
+
   def send_email_confirmation(email:, token:)
     UserMailer.with(email:, token:).email_confirmation.deliver_later
   end

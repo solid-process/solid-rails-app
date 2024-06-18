@@ -2,6 +2,7 @@
 
 module User::Token
   module RepositoryAdapter
+    extend Adapters::RepositoryInterface
     extend Solid::Output.mixin
     extend self
 
