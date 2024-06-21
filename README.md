@@ -1,306 +1,37 @@
+<small>
+
+> `MENU` **README** | [How to run locally](./docs/00_INSTALLATION.md) | [REST API doc](./docs/01_REST_API_DOC.md) | [Web app screenshots](./docs/02_WEB_APP_SCREENSHOTS.md)
+
+</small>
+
 # ✨ Solid Rails App <!-- omit in toc -->
 
 Web and REST API application made with [Ruby on Rails](https://guides.rubyonrails.org/).
 
-## 🙌 Repository branches <!-- omit in toc -->
-
-This repository has three branches:
-1. [vanilla-rails](https://github.com/solid-process/solid-rails-app/blob/vanilla-rails/README.md): `100%` Rails way + `0%` solid-process. (**📍 you are here**)
-2. [main](https://github.com/solid-process/solid-rails-app/blob/main/README.md): `95%` Rails way + `5%` solid-process.
-3. [solid-process](https://github.com/solid-process/solid-rails-app/blob/solid-process/README.md): `20%` Rails way + `80%` solid-process.
-
-### 📊 Rails stats and code quality <!-- omit in toc -->
-
-| Branch  | LOC   | Rubycritic   | Tests coverage   |
-| ------- | :---: | :----------: | :--------------: |
-| [vanilla-rails](https://github.com/solid-process/solid-rails-app/blob/vanilla-rails) | 1407 | 94.26 | 98.5% |
-| [main](https://github.com/solid-process/solid-rails-app/blob/main) | 1517 | 94.30 | 98.57% |
-| [solid-process](https://github.com/solid-process/solid-rails-app/blob/solid-process) | 1883 | 93.93 | 97.13% |
-
-Use:
-- `bin/rails test` to generate the tests coverage report.
-- `bin/rails stats` to generate the LOC report.
-- `bin/rails rubycritic` to generate the rubycritic (code quality) report.
-
 ## 📚 Table of contents <!-- omit in toc -->
 
-- [System dependencies](#system-dependencies)
-- [Setup](#setup)
-- [How to run the test suite](#how-to-run-the-test-suite)
-- [How to run the application locally](#how-to-run-the-application-locally)
-- [API Documentation (cURL examples)](#api-documentation-curl-examples)
-  - [User](#user)
-    - [Registration](#registration)
-    - [Authentication](#authentication)
-    - [Account deletion](#account-deletion)
-    - [API token updating](#api-token-updating)
-    - [Password updating](#password-updating)
-    - [Password resetting - Link to change the password](#password-resetting---link-to-change-the-password)
-    - [Password resetting - Change the password](#password-resetting---change-the-password)
-  - [Task List](#task-list)
-    - [Listing](#listing)
-    - [Creation](#creation)
-    - [Updating](#updating)
-    - [Deletion](#deletion)
-  - [Task](#task)
-    - [Listing](#listing-1)
-    - [Creation](#creation-1)
-    - [Updating](#updating-1)
-    - [Deletion](#deletion-1)
-    - [Marking as completed](#marking-as-completed)
-    - [Marking as incomplete](#marking-as-incomplete)
-- [Web app screenshots](#web-app-screenshots)
+- [💡 Branch summary](#-branch-summary)
+- [📣 Important info](#-important-info)
 
-## System dependencies
-* SQLite3
-* Ruby `3.3.1`
-  * bundler `>= 2.5.6`
+## 💡 Branch summary
 
-## Setup
+It is the base version that implements a web application and REST API using the Rails Way approach. The business rules are mainly implemented around the ActiveRecord lifecycle/features (normalization, validation, callbacks, and macros), which the application controllers orchestrate.
 
-1. Install system dependencies
-2. Create a `config/master.key` file with the following content:
-  ```sh
-  echo 'a061933f96843c82342fb8ab9e9db503' > config/master.key
+However, with each new version, these models and controllers will have fewer responsibilities as we implement processes to wrap and orchestrate the core business logic.
 
-  chmod 600 config/master.key
-  ```
-3. Run `bin/setup`
+Note: Three concepts differ from a traditional CRUD. Are they:
 
-## How to run the test suite
+1. [Account Member](https://github.com/solid-process/solid-rails-app/blob/vanilla-rails/app/models/account/member.rb): This PORO performs access/scope control in the accounts.
 
-* `bin/rails test`
+2. [User Registration](https://github.com/solid-process/solid-rails-app/blob/vanilla-rails/app/models/user.rb#L18-L49): This operation consists of creating the user and its account, defining the user as the account's owner, creating the user API token, and sending an email to confirm the user email.
 
-## How to run the application locally
-1. `bin/rails s`
-2. Open in your browser: `http://localhost:3000`
+3. [User API token](https://github.com/solid-process/solid-rails-app/blob/vanilla-rails/app/models/user_token.rb): This implementation is based on the [prefixed API token concept](https://github.com/seamapi/prefixed-api-key), which consists of a short (public) and a long (encrypted) token.
 
-## API Documentation (cURL examples)
+## 📣 Important info
 
-Set the following environment variables to use the examples below:
+To understand the project's context, I'd like you to please read the [main branch's README](https://github.com/solid-process/solid-rails-app/tree/main?tab=readme-ov-file).
 
-```bash
-export API_HOST="http://localhost:3000"
-export API_TOKEN="MY_USER_TOKEN"
-```
-
-You can get the `API_TOKEN` by:
-1. Using the below `User / Registration` request.
-2. or performing the below `User / Authentication` request.
-3. or copying the `user token` from `Sign In >> Settings >> API` page.
-
-### User
-
-#### Registration
-
-```bash
-curl -X POST "$API_HOST/api/v1/user/registrations" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "user": {
-      "email": "email@example.com",
-      "password": "123123123",
-      "password_confirmation": "123123123"
-    }
-  }'
-```
-
-#### Authentication
-
-```bash
-curl -X POST "$API_HOST/api/v1/user/sessions" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "user": {
-      "email": "email@example.com",
-      "password": "123123123"
-    }
-  }'
-```
-
-#### Account deletion
-
-```bash
-curl -X DELETE "$API_HOST/api/v1/user/registrations" \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer $API_TOKEN"
-```
-
-#### API token updating
-
-```bash
-curl -X PUT "$API_HOST/api/v1/user/tokens" \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer $API_TOKEN"
-```
-
-#### Password updating
-
-```bash
-curl -X PUT "$API_HOST/api/v1/user/passwords" \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer $API_TOKEN" \
-  -d '{
-    "user": {
-      "current_password": "123123123",
-      "password": "321321321",
-      "password_confirmation": "321321321"
-    }
-  }'
-```
-
-#### Password resetting - Link to change the password
-
-```bash
-curl -X POST "$API_HOST/api/v1/user/passwords/reset" \
-  -H "Content-Type: application/json" \
-  -d '{"user": {"email": "email@example.com"}}'
-```
-
-#### Password resetting - Change the password
-
-```bash
-curl -X PUT "$API_HOST/api/v1/user/passwords/reset" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "user": {
-      "token": "TOKEN_RETRIEVED_BY_EMAIL",
-      "password": "123123123",
-      "password_confirmation": "123123123"
-    }
-  }'
-```
-
-### Task List
-
-#### Listing
-
-```bash
-curl -X GET "$API_HOST/api/v1/task/lists" \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer $API_TOKEN"
-```
-
-#### Creation
-
-```bash
-curl -X POST "$API_HOST/api/v1/task/lists" \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer $API_TOKEN" \
-  -d '{"task_list": {"name": "My Task List"}}'
-```
-
-#### Updating
-
-```bash
-curl -X PUT "$API_HOST/api/v1/task/lists/2" \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer $API_TOKEN" \
-  -d '{"task_list": {"name": "My List"}}'
-```
-
-#### Deletion
-
-```bash
-curl -X DELETE "$API_HOST/api/v1/task/lists/2" \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer $API_TOKEN"
-```
-
-### Task
-
-#### Listing
-
-```bash
-# ?filter=completed | incomplete
-
-curl -X GET "$API_HOST/api/v1/task/lists/1/items" \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer $API_TOKEN"
-```
-
-#### Creation
-
-```bash
-curl -X POST "$API_HOST/api/v1/task/lists/1/items" \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer $API_TOKEN" \
-  -d '{"task": {"name": "My Task"}}'
-```
-
-#### Updating
-
-```bash
-# "completed": true | 1 | false | 0
-
-curl -X PUT "$API_HOST/api/v1/task/lists/1/items/1" \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer $API_TOKEN" \
-  -d '{"task": {"name": "My Task", "completed": true}}'
-```
-
-#### Deletion
-
-```bash
-curl -X DELETE "$API_HOST/api/v1/task/lists/1/items/1" \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer $API_TOKEN"
-```
-
-#### Marking as completed
-
-```bash
-curl -X PUT "$API_HOST/api/v1/task/lists/1/items/1/complete" \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer $API_TOKEN"
-```
-
-#### Marking as incomplete
-
-```bash
-curl -X PUT "$API_HOST/api/v1/task/lists/1/items/1/incomplete" \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer $API_TOKEN"
-```
-
-## Web app screenshots
-
-### Sign in <!-- omit in toc -->
-
-<img src="/docs/screenshots/010_sign_in.jpg" width="400"/>
-<img src="/docs/screenshots/011_sign_in_error.jpg" width="400"/>
-
-### Forgot password <!-- omit in toc -->
-
-<img src="/docs/screenshots/020_forgot_password.jpg" width="400"/>
-
-### Sign up <!-- omit in toc -->
-
-<img src="/docs/screenshots/030_sign_up.jpg" width="400"/>
-<img src="/docs/screenshots/031_sign_up_errors.jpg" width="400"/>
-<img src="/docs/screenshots/032_sign_up_success.jpg" width="400"/>
-
-### Tasks <!-- omit in toc -->
-
-<img src="/docs/screenshots/040_new_task.jpg" width="400"/>
-<img src="/docs/screenshots/041_task_created.jpg" width="400"/>
-<img src="/docs/screenshots/042_task_completed.jpg" width="400"/>
-<img src="/docs/screenshots/043_tasks_completed.jpg" width="400"/>
-<img src="/docs/screenshots/044_tasks_incomplete.jpg" width="400"/>
-<img src="/docs/screenshots/045_edit_task.jpg" width="400"/>
-
-### Task Lists <!-- omit in toc -->
-
-<img src="/docs/screenshots/050_task_lists.jpg" width="400"/>
-<img src="/docs/screenshots/051_new_task_list.jpg" width="400"/>
-<img src="/docs/screenshots/052_select_task_list.jpg" width="400"/>
-
-### Settings <!-- omit in toc -->
-
-<img src="/docs/screenshots/060_settings_profile.jpg" width="400"/>
-<img src="/docs/screenshots/061_settings_account_deletion.jpg" width="400"/>
-<img src="/docs/screenshots/062_settings_api_token.jpg" width="400"/>
-
-### Sign out <!-- omit in toc -->
-
-<img src="/docs/screenshots/070_sign_out.jpg" width="400"/>
+Check out the:
+1. [disclaimer](https://github.com/solid-process/solid-rails-app/tree/main?tab=readme-ov-file#-disclaimer) to understand the project's purpose.
+2. [summary](https://github.com/solid-process/solid-rails-app/tree/main?tab=readme-ov-file#-repository-branches) of all branches.
+3. [highlights](https://github.com/solid-process/solid-rails-app/tree/main?tab=readme-ov-file#-highlights-of-what-solid-process-can-bring-to-youyour-team-) of what solid-process can bring to you/your team.
