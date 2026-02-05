@@ -11,6 +11,8 @@ Web and REST API application made with [Ruby on Rails](https://guides.rubyonrail
 ## 📚 Table of contents <!-- omit in toc -->
 
 - [📢 Disclaimer](#-disclaimer)
+- [🎯 The Pragmatic Sweet Spot](#-the-pragmatic-sweet-spot)
+- [🪶 Start Simple: No DSL Required](#-start-simple-no-dsl-required)
 - [🙌 Repository branches](#-repository-branches)
 - [🌟 Highlights of what solid-process can bring to you/your team](#-highlights-of-what-solid-process-can-bring-to-youyour-team)
 - [🤔 How can we be aware of critical system processes?](#-how-can-we-be-aware-of-critical-system-processes)
@@ -24,9 +26,72 @@ It's important to note that the **Rails Way** and the **Solid Process** are not 
 
 That said, this is not an invitation, guide, or recommendation to implement all applications in the more complex manner demonstrated in this project.
 
-I (Rodrigo Serradura) believe in a pragmatic approach using the best tool for the job. The _**vanilla-rails**_ version is excellent and capable of handling all the complexity within this system's scope.
+I (Rodrigo Serradura) believe in a pragmatic approach using the best tool for the job. The _**vanilla-rails**_ version is excellent and capable of handling all the complexity within this system's scope. **And if you want processes, branch `solid-process-2.00` represents a production-ready sweet spot for most Rails applications.**
 
 Therefore, view this project as a showcase of what the `solid-process` gem can achieve. You may discover valuable tools to add to your toolbox. Enjoy! ✌️😊
+
+<p align="right"><a href="#-table-of-contents-">⬆ back to top</a></p>
+
+## 🎯 The Pragmatic Sweet Spot
+
+**The Mantra:** _Make it Work_ → _Make it Better_ → _Make it Even Better_.
+
+This repository demonstrates the full spectrum of what `solid-process` can facilitate — from simple service objects to full hexagonal architecture. But here's the key insight:
+
+> **Stopping at branch `solid-process-2.00` is a production-ready win.**
+
+The later branches (3 and 4) demonstrate hexagonal architecture and ports/adapters — not because you _need_ them, but to show that `solid-process` _can_ facilitate these patterns when truly required (multi-team boundaries, distributed systems, etc.).
+
+| Archetype | Branches | When to Use |
+|-----------|----------|-------------|
+| 📦 **Rails Way** | `vanilla-rails` | Pure Rails — already excellent |
+| 🌱 **Getting Started** | `0` – `1` | Learning the gem basics |
+| 🏆 **Production Sweet Spot** | `2.00` | Most production Rails apps — **you've already won here** |
+| 🔧 **Exploring Patterns** | `2.20` – `2.99` | Experimenting with advanced patterns (optional) |
+| 🏛️ **Hexagonal Architecture** | `3` – `4` | Multi-team, multi-service boundaries (rarely needed) |
+
+Many developers believe you must master hexagonal architecture or DDD to "really know design." This repository exists to demonstrate two things:
+
+1. **Yes, I know how to apply these patterns** — branches 3 and 4 prove it.
+2. **These patterns are often overkill** — branch 2.00 handles real-world complexity beautifully.
+
+Choose the architecture that fits your team's actual needs, not the one that looks most impressive on a whiteboard.
+
+<p align="right"><a href="#-table-of-contents-">⬆ back to top</a></p>
+
+## 🪶 Start Simple: No DSL Required
+
+Not every process needs the steps DSL. Here's `User::Authentication` — a complete, production-ready process in **23 lines**:
+
+```ruby
+class User::Authentication < Solid::Process
+  input do
+    attribute :email, :string
+    attribute :password, :string
+
+    before_validation do
+      self.email = email.downcase.strip
+    end
+
+    with_options presence: true do
+      validates :email, format: User::Email::REGEXP
+      validates :password, length: {minimum: User::Password::MINIMUM_LENGTH}
+    end
+  end
+
+  def call(attributes)
+    user = User.authenticate_by(attributes)
+
+    user ? Success(:user_authenticated, user:) : Failure(:invalid_input, input:)
+  end
+end
+```
+
+**No `Given`. No `and_then`. No `rollback_on_failure`.** Just input validation and a result. This is a perfectly valid, production-ready `Solid::Process`.
+
+The steps DSL is an _optional upgrade_ for when workflows genuinely need orchestration — not a tax you pay to use the gem.
+
+<p align="right"><a href="#-table-of-contents-">⬆ back to top</a></p>
 
 ## 🙌 Repository branches
 
@@ -44,6 +109,7 @@ __*Click in the arrows*__ to see the summary of each branch:
 <thead>
 <tr>
   <th>Branch</th>
+  <th>Archetype</th>
   <th style="text-align:center">LOC / GRADE</th>
 </tr>
 </thead>
@@ -73,6 +139,7 @@ __*Click in the arrows*__ to see the summary of each branch:
 
   </details>
   </td>
+  <td>📦 Rails Way</td>
   <td style="text-align:center">1434 / 94.06</td>
 </tr>
 
@@ -94,6 +161,7 @@ __*Click in the arrows*__ to see the summary of each branch:
 
   </details>
   </td>
+  <td>🌱 Getting Started</td>
   <td style="text-align:center">1459 / 94.08</td>
 </tr>
 
@@ -115,6 +183,7 @@ __*Click in the arrows*__ to see the summary of each branch:
 
   </details>
   </td>
+  <td>🌱 Getting Started</td>
   <td style="text-align:center">1481 / 93.98</td>
 </tr>
 
@@ -122,9 +191,11 @@ __*Click in the arrows*__ to see the summary of each branch:
 <tr>
   <td>
   <details>
-  <summary>&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://github.com/solid-process/solid-rails-app/blob/solid-process-2.00?tab=readme-ov-file#-solid-rails-app-">solid-process-2.00</a></summary>
+  <summary>&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://github.com/solid-process/solid-rails-app/blob/solid-process-2.00?tab=readme-ov-file#-solid-rails-app-">solid-process-2.00</a> 🏆</summary>
 
   ---
+  **This is the recommended stopping point for most Rails applications.**
+
   From version 2 onwards, all contexts (Account and User) implement their operations through processes. Because of this, it becomes possible to create a composition of processes where they are defined as dependencies that will be orchestrated through their steps.
 
   Notes:
@@ -133,6 +204,15 @@ __*Click in the arrows*__ to see the summary of each branch:
 
   2. New features are added to input blocks, such as data normalization and validation.
 
+  3. **Rails coexistence:** Notice that `User` is still `User` and `Account` is still `Account`. ActiveRecord models keep their conventional names — Devise, Administrate, generators all continue to work normally.
+
+  **Dependency Wiring (for reference):**
+  | Process | Dependency | Default Implementation |
+  |---------|------------|------------------------|
+  | `User::Registration` | `token_creation` | `User::Token::Creation` |
+  | `User::Registration` | `mailer` | `UserMailer` |
+  | `User::Registration` | `task_list_creation` | `Account::Task::List::Creation` |
+
   **Version samples:**
   - [API Controller](./docs/versions/controller/api/solid-process-2.00--2.80.rb) ([Diff](./docs/versions/controller/api/README.md#solid-process-1solid-process-200--280))
   - [Web Controller](./docs/versions/controller/web/solid-process-1--2.95.rb) ([Diff](./docs/versions/controller/web/README.md#solid-process-0solid-process-1--295))
@@ -140,6 +220,7 @@ __*Click in the arrows*__ to see the summary of each branch:
 
   </details>
   </td>
+  <td>🏆 <strong>Sweet Spot</strong></td>
   <td style="text-align:center">1866 / 93.78</td>
 </tr>
 
@@ -154,6 +235,8 @@ __*Click in the arrows*__ to see the summary of each branch:
 
   What this version does is rename the ActiveRecord models as [Record](https://github.com/solid-process/solid-rails-app/blob/solid-process-2.20/app/models/user/record.rb) (for this, it is necessary to define the table_name and class_name in the classes) within the [Account](https://github.com/solid-process/solid-rails-app/tree/solid-process-2.20/app/models/account) and [User](https://github.com/solid-process/solid-rails-app/tree/solid-process-2.20/app/models/user) namespaces (they become mere modules since before both were also an ActiveRecord model)
 
+  > **Note:** This renaming pattern (`User` → `User::Record`) is **optional and exploratory**. Branch 2.00 works perfectly with standard Rails model names. This approach increases friction with Rails tooling (Devise, generators, etc.) and is shown here to demonstrate the pattern — not as a recommendation. Consider carefully before adopting this in your codebase.
+
   **Version samples:**
   - [API Controller](./docs/versions/controller/api/solid-process-2.00--2.80.rb) ([Diff](./docs/versions/controller/api/README.md#solid-process-1solid-process-200--280))
   - [Web Controller](./docs/versions/controller/web/solid-process-1--2.95.rb) ([Diff](./docs/versions/controller/web/README.md#solid-process-0solid-process-1--295))
@@ -161,6 +244,7 @@ __*Click in the arrows*__ to see the summary of each branch:
 
   </details>
   </td>
+  <td>🔧 Exploring</td>
   <td style="text-align:center">1894 / 93.74</td>
 </tr>
 
@@ -184,6 +268,7 @@ __*Click in the arrows*__ to see the summary of each branch:
 
   </details>
   </td>
+  <td>🔧 Exploring</td>
   <td style="text-align:center">1904 / 93.80</td>
 </tr>
 
@@ -205,6 +290,7 @@ __*Click in the arrows*__ to see the summary of each branch:
 
   </details>
   </td>
+  <td>🔧 Exploring</td>
   <td style="text-align:center">2144 / 91.14</td>
 </tr>
 
@@ -221,6 +307,8 @@ __*Click in the arrows*__ to see the summary of each branch:
 
   While we won't be using a foreign key, the plan is to start referencing the users' UUID in the account members table. This approach will allow us to transfer several associations from the [User::Record](https://github.com/solid-process/solid-rails-app/blob/solid-process-2.80/app/models/user/record.rb) model to [Account::Member::Record](https://github.com/solid-process/solid-rails-app/blob/solid-process-2.80/app/models/account/member/record.rb), effectively decoupling the User and Account contexts. This will significantly enhance the system's orthogonality, minimizing the risk of changes in one context affecting the other.
 
+  > **Note on data consistency:** When removing foreign keys for module independence, data consistency is maintained through: (1) `rollback_on_failure` transaction boundaries ensuring atomicity, and (2) application-level validations in the processes themselves. This is an advanced pattern — most applications benefit from keeping foreign key constraints.
+
   **Version samples:**
   - [API Controller](./docs/versions/controller/api/solid-process-2.00--2.80.rb) ([Diff](./docs/versions/controller/api/README.md#solid-process-1solid-process-200--280))
   - [Web Controller](./docs/versions/controller/web/solid-process-1--2.95.rb) ([Diff](./docs/versions/controller/web/README.md#solid-process-0solid-process-1--295))
@@ -228,6 +316,7 @@ __*Click in the arrows*__ to see the summary of each branch:
 
   </details>
   </td>
+  <td>🔧 Exploring</td>
   <td style="text-align:center">2234 / 91.34</td>
 </tr>
 
@@ -249,6 +338,7 @@ __*Click in the arrows*__ to see the summary of each branch:
 
   </details>
   </td>
+  <td>🔧 Exploring</td>
   <td style="text-align:center">2365 / 91.50</td>
 </tr>
 
@@ -268,6 +358,7 @@ __*Click in the arrows*__ to see the summary of each branch:
 
   </details>
   </td>
+  <td>🔧 Exploring</td>
   <td style="text-align:center">2474 / 92.40</td>
 </tr>
 
@@ -289,6 +380,7 @@ __*Click in the arrows*__ to see the summary of each branch:
 
   </details>
   </td>
+  <td>🏛️ Hexagonal</td>
   <td style="text-align:center">2527 / 93.42</td>
 </tr>
 
@@ -310,6 +402,7 @@ __*Click in the arrows*__ to see the summary of each branch:
 
   </details>
   </td>
+  <td>🏛️ Hexagonal</td>
   <td style="text-align:center">2947 / 93.42</td>
 </tr>
 </tbody>
