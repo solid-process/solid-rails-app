@@ -12,7 +12,6 @@ Web and REST API application made with [Ruby on Rails](https://guides.rubyonrail
 
 - [📢 Disclaimer](#-disclaimer)
 - [🎯 The Pragmatic Sweet Spot](#-the-pragmatic-sweet-spot)
-- [🪶 Start Simple: No DSL Required](#-start-simple-no-dsl-required)
 - [🙌 Repository branches](#-repository-branches)
 - [🌟 Highlights of what solid-process can bring to you/your team](#-highlights-of-what-solid-process-can-bring-to-youyour-team)
 - [🤔 How can we be aware of critical system processes?](#-how-can-we-be-aware-of-critical-system-processes)
@@ -56,40 +55,6 @@ Many developers believe you must master hexagonal architecture or DDD to "really
 2. **These patterns are often overkill** — branch 2.00 handles real-world complexity beautifully.
 
 Choose the architecture that fits your team's actual needs, not the one that looks most impressive on a whiteboard.
-
-<p align="right"><a href="#-table-of-contents-">⬆ back to top</a></p>
-
-## 🪶 Start Simple: No DSL Required
-
-Not every process needs the steps DSL. Here's `User::Authentication` — a complete, production-ready process in **23 lines**:
-
-```ruby
-class User::Authentication < Solid::Process
-  input do
-    attribute :email, :string
-    attribute :password, :string
-
-    before_validation do
-      self.email = email.downcase.strip
-    end
-
-    with_options presence: true do
-      validates :email, format: User::Email::REGEXP
-      validates :password, length: {minimum: User::Password::MINIMUM_LENGTH}
-    end
-  end
-
-  def call(attributes)
-    user = User.authenticate_by(attributes)
-
-    user ? Success(:user_authenticated, user:) : Failure(:invalid_input, input:)
-  end
-end
-```
-
-**No `Given`. No `and_then`. No `rollback_on_failure`.** Just input validation and a result. This is a perfectly valid, production-ready `Solid::Process`.
-
-The steps DSL is an _optional upgrade_ for when workflows genuinely need orchestration — not a tax you pay to use the gem.
 
 <p align="right"><a href="#-table-of-contents-">⬆ back to top</a></p>
 
